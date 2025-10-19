@@ -118,7 +118,7 @@ public class ProductDAO {
      * @throws java.sql.SQLException
      */
     public Product getProductById(int id) throws SQLException {
-        String sql = "SELECT * FROM products WHERE id = ?";
+        String sql = "SELECT * FROM products WHERE product_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -155,7 +155,7 @@ public class ProductDAO {
      * @throws java.sql.SQLException
      */
     public boolean updateProduct(Product product) throws SQLException {
-        String sql = "UPDATE products SET name = ?, category_id = ?, price = ?, description = ?, image_url = ?, stock_quantity = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, category_id = ?, price = ?, description = ?, image_url = ?, stock_quantity = ? WHERE product_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getName());
             ps.setInt(2, product.getCategoryId());
@@ -175,7 +175,7 @@ public class ProductDAO {
      * @throws java.sql.SQLException
      */
     public boolean deleteProduct(int id) throws SQLException {
-        String sql = "DELETE FROM products WHERE id = ?";
+        String sql = "DELETE FROM products WHERE product_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -190,7 +190,7 @@ public class ProductDAO {
      * @throws java.sql.SQLException
      */
     public void updateStock(Connection conn, int productId, int quantityChange) throws SQLException {
-        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity >= ?";
+        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantityChange);
             ps.setInt(2, productId);
@@ -204,7 +204,7 @@ public class ProductDAO {
 
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
-        product.setId(rs.getInt("id"));
+        product.setId(rs.getInt("product_id"));
         product.setName(rs.getString("name"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setPrice(rs.getBigDecimal("price"));

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-    private static final String URL = "jdbc:mysql://localhost:3306/pharmative?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/pharmative?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8";
     private static final String USER = "root"; 
     private static final String PASSWORD = ""; 
 
@@ -14,9 +14,8 @@ public class DBContext {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Failed to connect to the database.", e);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL JDBC Driver not found.", e);
         }
         return conn;
     }
