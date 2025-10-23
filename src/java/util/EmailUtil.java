@@ -15,6 +15,16 @@ public class EmailUtil {
     private static final boolean USE_TLS = true;
     private static final boolean USE_SSL = false;
 
+    public static void sendNewPasswordEmail(String toEmail, String newPassword) {
+        String subject = "Pharmative - Mật khẩu mới của bạn";
+        String body = "<h2>Mật khẩu mới đã được tạo</h2>"
+                  + "<p>Mật khẩu đăng nhập mới của bạn là: "
+                  + "<strong style=\"font-size:16px;\">" + newPassword + "</strong></p>"
+                  + "<p>Vì lý do an toàn, hãy đăng nhập và <b>đổi mật khẩu</b> ngay trong phần Tài khoản.</p>"
+                  + "<p>Nếu bạn không yêu cầu, hãy bỏ qua email này và liên hệ hỗ trợ.</p>";
+        sendHtml(toEmail, subject, body);
+    }
+
     public static void sendVerificationEmail(String toEmail, String code) {
         String subject = "Pharmative - Mã xác thực tài khoản";
         String body = "<h1>Chào mừng đến Pharmative!</h1>"

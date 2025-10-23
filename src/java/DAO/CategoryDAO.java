@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Category;
 
-/**
- * DAO for handling CRUD operations for the Category entity.
- */
 public class CategoryDAO {
 
     /**
