@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Pharmative/web/home.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/vnpay/vnpayRefund.java</file>
-            <file>file:/D:/Pharmative/src/java/vnpay/vnpayQuery.java</file>
-            <file>file:/D:/Pharmative/src/java/controler/CartController.java</file>
-            <file>file:/D:/Pharmative/src/java/vnpay/ajaxServlet.java</file>
-            <file>file:/D:/Pharmative/src/java/vnpay/Config.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Order.java</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/DAO/DBContext.java</file>
         </group>
     </open-files>
 </project-private>

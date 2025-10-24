@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-    private static final String URL = "jdbc:mysql://localhost:3306/pharmative?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/pharmative?useUnicode=true&characterEncoding=UTF-8&&useSSL=false&serverTimezone=UTC";
     private static final String USER = "root"; 
     private static final String PASSWORD = ""; 
 
