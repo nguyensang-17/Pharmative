@@ -1,33 +1,24 @@
 package util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtil {
+
+    // Giữ nguyên tên hàm
     public static String hashPassword(String password) {
-        if (password == null) {
-            return null;
-        }
-        try {            
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-                       
-            byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
-                        
-            return Base64.getEncoder().encodeToString(hashedBytes);
-        } catch (NoSuchAlgorithmException e) {            
-            throw new RuntimeException("Error: SHA-256 algorithm not found.", e);
-        }
+        if (password == null) return null;
+        // BCrypt với cost 10 (khớp dữ liệu seed trong db.sql)
+        return BCrypt.hashpw(password, BCrypt.gensalt(10));
     }
-    
+
+    // Giữ nguyên tên hàm
     public static boolean checkPassword(String plainPassword, String hashedPassword) {
-        if (plainPassword == null || hashedPassword == null) {
+        if (plainPassword == null || hashedPassword == null) return false;
+        // Hỗ trợ tương thích ngược: nếu hashedPassword trông như SHA-256 (không bắt đầu bằng $2a/$2b/..)
+        // thì coi như không hợp lệ với BCrypt
+        if (!hashedPassword.startsWith("$2a$") && !hashedPassword.startsWith("$2b$") && !hashedPassword.startsWith("$2y$")) {
             return false;
         }
-                
-        String hashedPlainPassword = hashPassword(plainPassword);
-                
-        return hashedPlainPassword.equals(hashedPassword);
+        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 }

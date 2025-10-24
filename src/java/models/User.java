@@ -13,20 +13,16 @@ public class User {
     private String role;
     private Timestamp createdAt;
 
+    private boolean isVerified;
+    private String verificationCode;
+    private String resetToken;
+    private Timestamp resetTokenExpiry;
+
+    // Constructor, Getters, Setters
     public User() {
     }
 
-    public User(int id, String fullname, String email, String phoneNumber, String address, String password, String role, Timestamp createdAt) {
-        this.id = id;
-        this.fullname = fullname;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.password = password;
-        this.role = role;
-        this.createdAt = createdAt;
-    }
-
+    // Getters and Setters cho tất cả các trường
     public int getId() {
         return id;
     }
@@ -91,4 +87,35 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public Timestamp getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(Timestamp resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
 }
