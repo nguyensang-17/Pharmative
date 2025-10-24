@@ -4,29 +4,18 @@ import java.math.BigDecimal;
 
 public class OrderDetail {
 
-    private int id;
+    private int orderDetailId;
     private int orderId;
     private int productId;
     private int quantity;
     private BigDecimal pricePerUnit;
-   
-    public OrderDetail() {
-    }
-    
-    public OrderDetail(int id, int orderId, int productId, int quantity, BigDecimal pricePerUnit) {
-        this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.pricePerUnit = pricePerUnit;
+
+    public int getOrderDetailId() {
+        return orderDetailId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setOrderDetailId(int orderDetailId) {
+        this.orderDetailId = orderDetailId;
     }
 
     public int getOrderId() {

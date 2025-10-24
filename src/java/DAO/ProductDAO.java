@@ -1,245 +1,141 @@
 package DAO;
 
-import models.Product;
-
 import java.sql.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import models.Product;
 
 public class ProductDAO {
 
-    /* ======================= Public APIs ======================= */
-    /**
-     * Lấy danh sách sản phẩm theo trang (mặc định sort mới nhất).
-     */
-    public List<Product> getAllProducts(int page, int pageSize) throws SQLException {
-        int p = Math.max(1, page);
-        int s = Math.max(1, pageSize);
-        int offset = (p - 1) * s;
-
-        String sql = """
-            SELECT product_id, name, category_id, price, stock_quantity, description, image_url, created_at
-            FROM products
-            ORDER BY created_at DESC, product_id DESC
-            LIMIT ? OFFSET ?
-        """;
-
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setInt(1, s);
-            ps.setInt(2, offset);
-            try ( ResultSet rs = ps.executeQuery()) {
-                List<Product> list = new ArrayList<>();
-                while (rs.next()) {
-                    list.add(map(rs));
-                }
-                return list;
-            }
-        }
-    }
-
-    /**
-     * Overload tiện: lấy 1000 bản ghi (giữ tương thích controller hiện tại).
-     */
-    public List<Product> getAllProducts() throws SQLException {
-        return getAllProducts(1, 1000);
-    }
-
-    /**
-     * Lấy 1 sản phẩm theo id.
-     */
-    public Product getProductById(int id) throws SQLException {
-        String sql = """
-            SELECT product_id, name, category_id, price, stock_quantity, description, image_url, created_at
-            FROM products
-            WHERE product_id = ?
-        """;
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql)) {
+    public Product getById(int id) throws SQLException {
+        String sql = "SELECT * FROM products WHERE product_id=?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
-            try ( ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? map(rs) : null;
-            }
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? map(rs) : null; }
         }
     }
 
-    /**
-     * Thêm mới sản phẩm, trả về id sinh ra.
-     */
-    public int addProduct(Product p) throws SQLException {
-        String sql = """
-            INSERT INTO products (name, category_id, price, stock_quantity, description, image_url, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, NOW())
-        """;
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            bindForInsertOrUpdate(ps, p);
-            ps.executeUpdate();
-            try ( ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Cập nhật sản phẩm theo id của p. Trả true nếu có bản ghi bị ảnh hưởng.
-     */
-    public boolean updateProduct(Product p) throws SQLException {
-        String sql = """
-            UPDATE products
-            SET name = ?, category_id = ?, price = ?, stock_quantity = ?, description = ?, image_url = ?
-            WHERE product_id = ?
-        """;
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql)) {
-            bindForInsertOrUpdate(ps, p);
-            ps.setInt(7, p.getId());
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    /**
-     * Xoá 1 sản phẩm theo id.
-     */
-    public boolean deleteProduct(int id) throws SQLException {
-        String sql = "DELETE FROM products WHERE product_id = ?";
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    /**
-     * Đếm tổng số sản phẩm (phục vụ phân trang).
-     */
-    public int countAllProducts() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM products";
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-            return rs.next() ? rs.getInt(1) : 0;
-        }
-    }
-
-    /**
-     * Lấy sản phẩm theo category (có trang).
-     */
-    public List<Product> getProductsByCategory(int categoryId, int page, int pageSize) throws SQLException {
-        int p = Math.max(1, page);
-        int s = Math.max(1, pageSize);
-        int offset = (p - 1) * s;
-
-        String sql = """
-            SELECT product_id, name, category_id, price, stock_quantity, description, image_url, created_at
-            FROM products
-            WHERE category_id = ?
-            ORDER BY created_at DESC, product_id DESC
-            LIMIT ? OFFSET ?
-        """;
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setInt(1, categoryId);
-            ps.setInt(2, s);
-            ps.setInt(3, offset);
-            try ( ResultSet rs = ps.executeQuery()) {
-                List<Product> list = new ArrayList<>();
-                while (rs.next()) {
-                    list.add(map(rs));
-                }
-                return list;
-            }
-        }
-    }
-
-    /**
-     * Tìm kiếm theo tên + lọc category (tham số tuỳ chọn), có trang.
-     */
-    public List<Product> searchProducts(String q, Integer categoryId, int page, int pageSize) throws SQLException {
-        int p = Math.max(1, page);
-        int s = Math.max(1, pageSize);
-        int offset = (p - 1) * s;
-
-        StringBuilder sb = new StringBuilder("""
-            SELECT product_id, name, category_id, price, stock_quantity, description, image_url, created_at
-            FROM products
-            WHERE 1=1
-        """);
+    public List<Product> getAll(int page, int pageSize, String keyword, Integer categoryId, Integer brandId, String sortBy) throws SQLException {
+        StringBuilder sql = new StringBuilder(
+            "SELECT * FROM products WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
-        if (q != null && !q.trim().isEmpty()) {
-            sb.append(" AND LOWER(name) LIKE ? ");
-            params.add("%" + q.trim().toLowerCase() + "%");
+        if (keyword != null && !keyword.isBlank()) {
+            sql.append(" AND product_name LIKE ? ");
+            params.add("%" + keyword.trim() + "%");
         }
         if (categoryId != null) {
-            sb.append(" AND category_id = ? ");
+            sql.append(" AND category_id = ? ");
             params.add(categoryId);
         }
-        sb.append(" ORDER BY created_at DESC, product_id DESC LIMIT ? OFFSET ? ");
-        params.add(s);
-        params.add(offset);
+        if (brandId != null) {
+            sql.append(" AND brand_id = ? ");
+            params.add(brandId);
+        }
 
-        try ( Connection cn = DBContext.getConnection();  PreparedStatement ps = cn.prepareStatement(sb.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                Object val = params.get(i);
-                if (val instanceof Integer) {
-                    ps.setInt(i + 1, (Integer) val);
-                } else if (val instanceof String) {
-                    ps.setString(i + 1, (String) val);
-                } else {
-                    ps.setObject(i + 1, val);
-                }
+        // sort
+        if ("price_asc".equalsIgnoreCase(sortBy)) sql.append(" ORDER BY price ASC ");
+        else if ("price_desc".equalsIgnoreCase(sortBy)) sql.append(" ORDER BY price DESC ");
+        else sql.append(" ORDER BY created_at DESC ");
+
+        // paging
+        if (pageSize > 0) {
+            sql.append(" LIMIT ? OFFSET ? ");
+            params.add(pageSize);
+            params.add(Math.max(0, (page - 1) * pageSize));
+        }
+
+        List<Product> list = new ArrayList<>();
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
             }
-            try ( ResultSet rs = ps.executeQuery()) {
-                List<Product> list = new ArrayList<>();
-                while (rs.next()) {
-                    list.add(map(rs));
-                }
-                return list;
-            }
+        }
+        return list;
+    }
+
+    public int countAll(String keyword, Integer categoryId, Integer brandId) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+        if (keyword != null && !keyword.isBlank()) { sql.append(" AND product_name LIKE ? "); params.add("%"+keyword.trim()+"%"); }
+        if (categoryId != null) { sql.append(" AND category_id=? "); params.add(categoryId); }
+        if (brandId != null) { sql.append(" AND brand_id=? "); params.add(brandId); }
+
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql.toString())) {
+            for (int i=0;i<params.size();i++) ps.setObject(i+1, params.get(i));
+            try (ResultSet rs = ps.executeQuery()) { rs.next(); return rs.getInt(1); }
         }
     }
 
-    /* ======================= Private helpers ======================= */
-    /**
-     * Gán tham số chung cho INSERT/UPDATE (không set id).
-     */
-    private void bindForInsertOrUpdate(PreparedStatement ps, Product p) throws SQLException {
-        ps.setString(1, nvl(p.getName()));
-        if (p.getCategoryId() != null) {
-            ps.setInt(2, p.getCategoryId());
-        } else {
-            ps.setNull(2, Types.INTEGER);
+    public boolean create(Product p) throws SQLException {
+        String sql = "INSERT INTO products(product_name, description, price, stock_quantity, image_url, category_id, brand_id, supplier_id) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, p.getProductName());
+            ps.setString(2, p.getDescription());
+            ps.setBigDecimal(3, p.getPrice());
+            ps.setInt(4, p.getStockQuantity());
+            ps.setString(5, p.getImageUrl());
+            if (p.getCategoryId()==null) ps.setNull(6, Types.INTEGER); else ps.setInt(6, p.getCategoryId());
+            if (p.getBrandId()==null) ps.setNull(7, Types.INTEGER); else ps.setInt(7, p.getBrandId());
+            if (p.getSupplierId()==null) ps.setNull(8, Types.INTEGER); else ps.setInt(8, p.getSupplierId());
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) p.setProductId(rs.getInt(1));
+                }
+            }
+            return ok;
         }
-        ps.setBigDecimal(3, safe(p.getPrice()));
-        ps.setInt(4, p.getStockQuantity() == null ? 0 : Math.max(0, p.getStockQuantity()));
-        ps.setString(5, nvl(p.getDescription()));
-        ps.setString(6, nvl(p.getImageUrl()));
+    }
+
+    public boolean update(Product p) throws SQLException {
+        String sql = "UPDATE products SET product_name=?, description=?, price=?, stock_quantity=?, image_url=?, category_id=?, brand_id=?, supplier_id=? "
+                   + "WHERE product_id=?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, p.getProductName());
+            ps.setString(2, p.getDescription());
+            ps.setBigDecimal(3, p.getPrice());
+            ps.setInt(4, p.getStockQuantity());
+            ps.setString(5, p.getImageUrl());
+            if (p.getCategoryId()==null) ps.setNull(6, Types.INTEGER); else ps.setInt(6, p.getCategoryId());
+            if (p.getBrandId()==null) ps.setNull(7, Types.INTEGER); else ps.setInt(7, p.getBrandId());
+            if (p.getSupplierId()==null) ps.setNull(8, Types.INTEGER); else ps.setInt(8, p.getSupplierId());
+            ps.setInt(9, p.getProductId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean delete(int id) throws SQLException {
+        String sql = "DELETE FROM products WHERE product_id=?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updateStock(int productId, int delta) throws SQLException {
+        String sql = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE product_id=?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, delta);
+            ps.setInt(2, productId);
+            return ps.executeUpdate() > 0;
+        }
     }
 
     private Product map(ResultSet rs) throws SQLException {
-        Product x = new Product();
-        x.setId(rs.getInt("product_id"));
-        x.setName(rs.getString("name"));
-        x.setCategoryId(getIntOrNull(rs, "category_id"));
-        x.setPrice(rs.getBigDecimal("price"));
-        x.setStockQuantity(getIntOrNull(rs, "stock_quantity"));
-        x.setDescription(rs.getString("description"));
-        x.setImageUrl(rs.getString("image_url"));
-        // Nếu Product có trường createdAt kiểu java.util.Date/Timestamp:
-        try {
-            x.setCreatedAt(rs.getTimestamp("created_at"));
-        } catch (SQLException ignored) {
-            /* cột có thể không tồn tại */ }
-        return x;
-    }
-
-    private static String nvl(String s) {
-        return s == null ? "" : s.trim();
-    }
-
-    private static BigDecimal safe(BigDecimal v) {
-        return v == null ? BigDecimal.ZERO : v;
-    }
-
-    private static Integer getIntOrNull(ResultSet rs, String col) throws SQLException {
-        int v = rs.getInt(col);
-        return rs.wasNull() ? null : v;
+        Product p = new Product();
+        p.setProductId(rs.getInt("product_id"));
+        p.setProductName(rs.getString("product_name"));
+        p.setDescription(rs.getString("description"));
+        p.setPrice(rs.getBigDecimal("price"));
+        p.setStockQuantity(rs.getInt("stock_quantity"));
+        p.setImageUrl(rs.getString("image_url"));
+        int v;
+        v = rs.getInt("category_id"); p.setCategoryId(rs.wasNull() ? null : v);
+        v = rs.getInt("brand_id");    p.setBrandId(rs.wasNull() ? null : v);
+        v = rs.getInt("supplier_id"); p.setSupplierId(rs.wasNull() ? null : v);
+        p.setCreatedAt(rs.getTimestamp("created_at"));
+        return p;
     }
 }
