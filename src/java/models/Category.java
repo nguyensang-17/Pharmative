@@ -1,32 +1,32 @@
 package models;
 
 public class Category {
-    private int id;
-    private String name;
 
-    public Category() {
+    private int categoryId;
+    private String categoryName;
+    private Integer parentCategoryId;
+
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public Category(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public int getId() {
-        return id;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public String getName() {
-        return name;
+    public Integer getParentCategoryId() {
+        return parentCategoryId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setParentCategoryId(Integer parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
     }
-    
-
 }

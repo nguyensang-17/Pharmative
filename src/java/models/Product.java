@@ -5,59 +5,31 @@ import java.sql.Timestamp;
 
 public class Product {
 
-    private int id;
-    private String name;
-    private int categoryId;
-    private BigDecimal price;
+    private int productId;
+    private String productName;
     private String description;
-    private String imageUrl;
+    private BigDecimal price;
     private int stockQuantity;
+    private String imageUrl;
+    private Integer categoryId; // nullable
+    private Integer brandId;    // nullable
+    private Integer supplierId; // nullable
     private Timestamp createdAt;
 
-    public Product() {
+    public int getProductId() {
+        return productId;
     }
 
-    public Product(int id, String name, int categoryId, BigDecimal price, String description, String imageUrl, int stockQuantity, Timestamp createdAt) {
-        this.id = id;
-        this.name = name;
-        this.categoryId = categoryId;
-        this.price = price;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.stockQuantity = stockQuantity;
-        this.createdAt = createdAt;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
-    public int getId() {
-        return id;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getDescription() {
@@ -68,12 +40,12 @@ public class Product {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public int getStockQuantity() {
@@ -84,6 +56,38 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Integer getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Integer brandId) {
+        this.brandId = brandId;
+    }
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -91,5 +95,4 @@ public class Product {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
-
 }
