@@ -5,28 +5,29 @@
   // đảm bảo response UTF-8
   response.setCharacterEncoding("UTF-8");
 %>
-<c:set var="cpath" value="${pageContext.request.contextPath}"/>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
 
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <title>Pharmative</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="${cpath}/fonts/icomoon/style.css">
+  <!-- ✅ DÒNG NÀY RẤT QUAN TRỌNG -->
+  <base href="${cpath}/">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="${cpath}/css/bootstrap.min.css">
-  <link rel="stylesheet" href="${cpath}/fonts/flaticon/font/flaticon.css">
-  <link rel="stylesheet" href="${cpath}/css/magnific-popup.css">
-  <link rel="stylesheet" href="${cpath}/css/jquery-ui.css">
-  <link rel="stylesheet" href="${cpath}/css/owl.carousel.min.css">
-  <link rel="stylesheet" href="${cpath}/css/owl.theme.default.min.css">
-  <link rel="stylesheet" href="${cpath}/css/aos.css">
-  <link rel="stylesheet" href="${cpath}/css/style.css">
+  <title>Pharmative</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- CSS (dùng đường dẫn tương đối, không cần ${cpath} nữa) -->
+  <link rel="stylesheet" href="fonts/icomoon/style.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/magnific-popup.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <link rel="stylesheet" href="css/owl.carousel.min.css">
+  <link rel="stylesheet" href="css/owl.theme.default.min.css">
+  <link rel="stylesheet" href="css/aos.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <jsp:include page="/common/headerChinh.jsp" />
@@ -204,9 +205,9 @@
     <div class="container">
       <div class="row justify-content-center text-center">
         <div class="col-lg-7">
-          <h3 class="text-white">Sign up for discount up to 55% OFF</h3>
-          <p class="text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam.</p>
-          <p class="mb-0"><a href="#" class="btn btn-outline-white">Sign up</a></p>
+          <h3 class="text-white">🔥 Giảm ngay 49% cho đơn đầu tiên!</h3>
+          <p class="text-white">Chỉ cần đăng ký tài khoản hôm nay – nhận ngay ưu đãi độc quyền.</p>
+          <p class="mb-0"><a href="#" class="btn btn-outline-white">Đăng Ký</a></p>
         </div>
       </div>
     </div>
@@ -218,7 +219,7 @@
       <div class="row justify-content-between">
         <div class="col-lg-6">
           <div class="title-section">
-            <h2>Happy <strong class="text-primary">Customers</strong></h2>
+            <h2>Chăm sóc <strong class="text-primary">Khách hàng</strong></h2>
           </div>
           <div class="block-3 products-wrap">
             <div class="owl-single no-direction owl-carousel">
@@ -227,28 +228,28 @@
                   <img src="${cpath}/images/person_1.jpg" alt="Image" class="img-fluid">
                   <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit...&rdquo;</p>
                 </blockquote>
-                <p class="author">&mdash; Kelly Holmes</p>
+                <p class="author">&mdash; Nguyễn Tiến Sơn</p>
               </div>
               <div class="testimony">
                 <blockquote>
                   <img src="${cpath}/images/person_2.jpg" alt="Image" class="img-fluid">
                   <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
                 </blockquote>
-                <p class="author">&mdash; Rebecca Morando</p>
+                <p class="author">&mdash; Vũ Văn Nam</p>
               </div>
               <div class="testimony">
                 <blockquote>
                   <img src="${cpath}/images/person_3.jpg" alt="Image" class="img-fluid">
                   <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
                 </blockquote>
-                <p class="author">&mdash; Lucas Gallone</p>
+                <p class="author">&mdash; Giang Minh Quân</p>
               </div>
               <div class="testimony">
                 <blockquote>
                   <img src="${cpath}/images/person_4.jpg" alt="Image" class="img-fluid">
                   <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
                 </blockquote>
-                <p class="author">&mdash; Andrew Neel</p>
+                <p class="author">&mdash; Nguyễn Văn Sáng</p>
               </div>
             </div>
           </div>
@@ -256,15 +257,15 @@
 
         <div class="col-lg-5">
           <div class="title-section">
-            <h2 class="mb-5">Why <strong class="text-primary">Us</strong></h2>
+            <h2 class="mb-5">Tại Sao<strong class="text-primary"> chọn chúng tôi</strong></h2>
             <div class="step-number d-flex mb-4">
-              <span>1</span><p>Lorem ipsum dolor sit amet...</p>
+              <span>1</span><p>Cam kết 100% chất lượng sản phẩm </p>
             </div>
             <div class="step-number d-flex mb-4">
-              <span>2</span><p>Lorem ipsum dolor sit amet...</p>
+              <span>2</span><p>Thuốc chính hãng(đa dạng và chuyên sâu)</p>
             </div>
             <div class="step-number d-flex mb-4">
-              <span>3</span><p>Lorem ipsum dolor sit amet...</p>
+              <span>3</span><p>Miễn phí vẫn chuyển theo chính sách giao hàng</p>
             </div>
           </div>
         </div>

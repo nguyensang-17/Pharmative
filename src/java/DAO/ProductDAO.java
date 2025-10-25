@@ -115,7 +115,7 @@ public class ProductDAO {
        ========================= */
 
     public void addProduct(Product p) throws SQLException {
-        String sql = "INSERT INTO product(product_name, description, price, stock_quantity, image_url, " +
+        String sql = "INSERT INTO products(product_name, description, price, stock_quantity, image_url, " +
                      "category_id, brand_id, supplier_id, created_at) " +
                      "VALUES(?,?,?,?,?,?,?,?,NOW())";
         try (Connection c = DBContext.getConnection();
@@ -161,7 +161,7 @@ public class ProductDAO {
 
     /** Trừ tồn kho khi đặt hàng (bảo vệ âm) */
     public void updateStock(Connection conn, int productId, int quantityChange) throws SQLException {
-        String sql = "UPDATE product SET stock_quantity = stock_quantity - ? " +
+        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? " +
                      "WHERE product_id=? AND stock_quantity >= ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantityChange);

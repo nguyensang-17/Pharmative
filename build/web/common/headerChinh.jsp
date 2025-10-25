@@ -23,8 +23,8 @@
       <div class="main-nav d-none d-lg-block">
         <nav class="site-navigation text-right text-md-center" role="navigation">
           <ul class="site-menu js-clone-nav d-none d-lg-block">
-            <li><a href="${cpath}/home">Home</a></li>
-            <li><a href="${cpath}/shop">Store</a></li>
+            <li><a href="${cpath}/home">Trang chủ</a></li>
+            <li><a href="${cpath}/shop">Sản phẩm</a></li>
             <li class="has-children">
               <a href="#">Products</a>
               <ul class="dropdown">
@@ -32,10 +32,10 @@
                 <li class="has-children">
                   <a href="#">Vitamins</a>
                   <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li><a href="#">Vitamins</a></li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
+                    <li><a href="#">Dinh dưỡng</a></li>
+                    <li><a href="#">Hỗ trợ sắc đẹp</a></li>
+                    <li><a href="#">Vitamin &amp; khoáng chất</a></li>
+                    <li><a href="#">Bổ não &amp; trí nhớ</a></li>
                   </ul>
                 </li>
                 <li><a href="#">Diet &amp; Nutrition</a></li>
