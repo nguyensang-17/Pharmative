@@ -32,7 +32,7 @@
 //        }
 //    }
 //}
-package controler;
+package controller;
 
 import DAO.ProductDAO;
 import models.Product;
@@ -48,7 +48,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 // Nếu bạn muốn map bằng annotation, bỏ comment dòng dưới:
-// @WebServlet(name = "HomeController", urlPatterns = {"/", "/index"})
+ @WebServlet(name = "HomeController", urlPatterns = {"/", "/home"})
 public class HomeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
