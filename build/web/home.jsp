@@ -41,13 +41,14 @@
         <div class="row">
           <div class="col-lg-12 mx-auto align-self-center">
             <div class="site-block-cover-content text-center">
-              <h1 class="mb-0"><strong class="text-primary">Pharmative</strong> Opens 24 Hours</h1>
+              <h1 class="mb-0"><strong class="text-primary">Thực phẩm chúc năng</strong> Mở cửa 24/7</h1>
               <div class="row justify-content-center mb-5">
                 <div class="col-lg-6 text-center">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis ex perspiciatis non quibusdam vel quidem.</p>
+                  <p>Sức khỏe toàn diện – Phục vụ mọi lúc, mọi nơi.</p>
+                  <p>  Sản phẩm chính hãng, tư vấn miễn phí 24/7.</p>
                 </div>
               </div>
-              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">Shop Now</a></p>
+              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
         </div>
@@ -59,13 +60,14 @@
         <div class="row">
           <div class="col-lg-12 mx-auto align-self-center">
             <div class="site-block-cover-content text-center">
-              <h1 class="mb-0">New Medicine <strong class="text-primary">Everyday</strong></h1>
+              <h1 class="mb-0">Thực phẩm chức năng <strong class="text-primary">mới mỗi ngày</strong></h1>
               <div class="row justify-content-center mb-5">
                 <div class="col-lg-6 text-center">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis ex perspiciatis non quibusdam vel quidem.</p>
+                  <p>Bảo vệ sức khỏe – Nâng cao chất lượng cuộc sống </p>
+                  <p>    cùng sản phẩm chính hãng, an toàn.</p>
                 </div>
               </div>
-              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">Shop Now</a></p>
+              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
         </div>
@@ -79,26 +81,26 @@
       <div class="row">
         <div class="col-lg-4">
           <div class="feature">
-            <span class="wrap-icon flaticon-24-hours-drugs-delivery"></span>
-            <h3><a href="#">Free Delivery</a></h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa laborum voluptates excepturi neque labore.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Learn more</span> <span class="icon-keyboard_arrow_right"></span></a></p>
+            <img src="${cpath}/images/freeship.jpg" alt="Image" class="img-fluid">
+            <h3><a href="#">Miễn phí vẫn chuyển</a></h3>
+            <p>Theo chính sách giao hàng.</p>
+            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
           </div>
         </div>
         <div class="col-lg-4">
           <div class="feature">
-            <span class="wrap-icon flaticon-medicine"></span>
-            <h3><a href="#">New Medicine Everyday</a></h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa laborum voluptates excepturi neque labore.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Learn more</span> <span class="icon-keyboard_arrow_right"></span></a></p>
+            <img src="${cpath}/images/uytin.jpg" alt="Image" class="img-fluid">
+            <h3><a href="#">Cam kết 100%</a></h3>
+            <p>Chất lượng sản phẩm.</p>
+            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
           </div>
         </div>
         <div class="col-lg-4">
           <div class="feature">
-            <span class="wrap-icon flaticon-test-tubes"></span>
-            <h3><a href="#">Medicines Guaranteed</a></h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa laborum voluptates excepturi neque labore.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Learn more</span> <span class="icon-keyboard_arrow_right"></span></a></p>
+            <img src="${cpath}/images/thuocchinhhang.jpg" alt="Image" class="img-fluid">
+            <h3><a href="#">Thuốc chính hãng</a></h3>
+            <p>Đa dạng và chuyên sâu.</p>
+            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
           </div>
         </div>
       </div>
@@ -110,7 +112,7 @@
     <div class="container">
       <div class="row">
         <div class="title-section text-center col-12">
-          <h2>Pharmacy <strong class="text-primary">Products</strong></h2>
+          <h2><strong class="text-primary">Thực phẩm chức năng</strong></h2>
         </div>
       </div>
 
@@ -205,76 +207,75 @@
     <div class="container">
       <div class="row justify-content-center text-center">
         <div class="col-lg-7">
-          <h3 class="text-white">🔥 Giảm ngay 49% cho đơn đầu tiên!</h3>
+          <h3 class="text-white">🔥 Giảm ngay 38% cho đơn đầu tiên!</h3>
           <p class="text-white">Chỉ cần đăng ký tài khoản hôm nay – nhận ngay ưu đãi độc quyền.</p>
-          <p class="mb-0"><a href="#" class="btn btn-outline-white">Đăng Ký</a></p>
+          <p class="mb-0"><a href="#" class="btn btn-outline-white">🟢 ĐĂNG KÝ NHẬN ƯU ĐÃI</a></p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Testimonials + Why us -->
-  <div class="site-section">
-    <div class="container">
-      <div class="row justify-content-between">
-        <div class="col-lg-6">
-          <div class="title-section">
-            <h2>Chăm sóc <strong class="text-primary">Khách hàng</strong></h2>
-          </div>
-          <div class="block-3 products-wrap">
-            <div class="owl-single no-direction owl-carousel">
-              <div class="testimony">
-                <blockquote>
-                  <img src="${cpath}/images/person_1.jpg" alt="Image" class="img-fluid">
-                  <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit...&rdquo;</p>
-                </blockquote>
-                <p class="author">&mdash; Nguyễn Tiến Sơn</p>
-              </div>
-              <div class="testimony">
-                <blockquote>
-                  <img src="${cpath}/images/person_2.jpg" alt="Image" class="img-fluid">
-                  <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
-                </blockquote>
-                <p class="author">&mdash; Vũ Văn Nam</p>
-              </div>
-              <div class="testimony">
-                <blockquote>
-                  <img src="${cpath}/images/person_3.jpg" alt="Image" class="img-fluid">
-                  <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
-                </blockquote>
-                <p class="author">&mdash; Giang Minh Quân</p>
-              </div>
-              <div class="testimony">
-                <blockquote>
-                  <img src="${cpath}/images/person_4.jpg" alt="Image" class="img-fluid">
-                  <p>&ldquo;Lorem ipsum dolor sit amet consectetur...&rdquo;</p>
-                </blockquote>
-                <p class="author">&mdash; Nguyễn Văn Sáng</p>
-              </div>
+<div class="site-section">
+  <div class="container">
+    <div class="row justify-content-between">
+      
+      <!-- Cột trái: Chăm sóc khách hàng -->
+      <div class="col-lg-6">
+        <div class="title-section">
+          <h2><strong class="text-primary">Chuyên gia</strong></h2>
+        </div>
+        <div class="block-3 products-wrap">
+          <div class="owl-single no-direction owl-carousel">
+            <div class="testimony">
+              <blockquote>
+                <img src="${cpath}/images/person_1.jpg" alt="Image" class="img-fluid">
+                <p>&ldquo;“Sử dụng thực phẩm chức năng đúng cách giúp tăng cường sức khỏe và phòng ngừa bệnh tật.”&rdquo;</p>
+              </blockquote>
+              <p class="author">&mdash; DS.Nguyễn Tiến Sơn</p>
+            </div>
+            <div class="testimony">
+              <blockquote>
+                <img src="${cpath}/images/person_2.jpg" alt="Image" class="img-fluid">
+                <p>&ldquo;“Cung cấp sản phẩm chính hãng, đảm bảo an toàn và phù hợp với mọi lứa tuổi.”&rdquo;</p>
+              </blockquote>
+              <p class="author">&mdash; DS.Vũ Văn Nam</p>
+            </div>
+            <div class="testimony">
+              <blockquote>
+                <img src="${cpath}/images/person_3.jpg" alt="Image" class="img-fluid">
+                <p>&ldquo;“Chế độ bổ sung dinh dưỡng hợp lý giúp cơ thể khỏe mạnh, tăng sức đề kháng tự nhiên.”&rdquo;</p>
+              </blockquote>
+              <p class="author">&mdash; DS.Giang Minh Quân</p>
+            </div>
+            <div class="testimony">
+              <blockquote>
+                <img src="${cpath}/images/person_4.jpg" alt="Image" class="img-fluid">
+                <p>&ldquo;“Chúng tôi luôn tư vấn đúng sản phẩm – đúng nhu cầu – đúng sức khỏe cho khách hàng.”&rdquo;</p>
+              </blockquote>
+              <p class="author">&mdash; DS.Nguyễn Văn Sáng</p>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-5">
-          <div class="title-section">
-            <h2 class="mb-5">Tại Sao<strong class="text-primary"> chọn chúng tôi</strong></h2>
-            <div class="step-number d-flex mb-4">
-              <span>1</span><p>Cam kết 100% chất lượng sản phẩm </p>
-            </div>
-            <div class="step-number d-flex mb-4">
-              <span>2</span><p>Thuốc chính hãng(đa dạng và chuyên sâu)</p>
-            </div>
-            <div class="step-number d-flex mb-4">
-              <span>3</span><p>Miễn phí vẫn chuyển theo chính sách giao hàng</p>
-            </div>
-          </div>
-        </div>
-
       </div>
+
+      <!-- Cột phải: Tại sao chọn chúng tôi -->
+      <div class="col-lg-5">
+  <div class="title-section">
+    <h2 class="mb-5">🌿 Tại sao nên chọn <strong class="text-primary">Chúng tôi</strong>?</h2>
+    <div class="step-number d-flex mb-4">
+      <span>1</span><p>Tư vấn bởi đội ngũ dược sĩ chuyên nghiệp – phục vụ 24/7</p>
+    </div>
+    <div class="step-number d-flex mb-4">
+      <span>2</span><p>Luôn bên bạn – vì sức khỏe cộng đồng.</p>
+    </div>
+    <div class="step-number d-flex mb-4">
+      <span>3</span><p>Kiểm định chất lượng nghiêm ngặt</p>
+    </div>
+    <div class="step-number d-flex mb-4">
+      <span>4</span><p>Ưu đãi hấp dẫn dành cho khách hàng mới</p>
     </div>
   </div>
-
-
 </div>
 <jsp:include page="/common/footerChinh.jsp" />
 <!-- JS -->

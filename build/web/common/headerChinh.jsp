@@ -17,7 +17,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <div class="logo">
         <div class="site-logo">
-          <a href="${cpath}/home" class="js-logo-clone"><strong class="text-primary">Pharma</strong>tive</a>
+            <a href="${cpath}/home" class="js-logo-clone"><strong class="text-primary">Thực phẩm</strong> Chức năng</a>
         </div>
       </div>
       <div class="main-nav d-none d-lg-block">
@@ -26,24 +26,23 @@
             <li><a href="${cpath}/home">Trang chủ</a></li>
             <li><a href="${cpath}/shop">Sản phẩm</a></li>
             <li class="has-children">
-              <a href="#">Products</a>
+              <a href="#">Danh mục sản phẩm</a>
               <ul class="dropdown">
-                <li><a href="#">Supplements</a></li>
+                <li><a href="#">Dinh dưỡng</a></li>
                 <li class="has-children">
-                  <a href="#">Vitamins</a>
+                  <a href="#">Vitamin &amp; khoáng chất</a>
                   <ul class="dropdown">
-                    <li><a href="#">Dinh dưỡng</a></li>
-                    <li><a href="#">Hỗ trợ sắc đẹp</a></li>
-                    <li><a href="#">Vitamin &amp; khoáng chất</a></li>
-                    <li><a href="#">Bổ não &amp; trí nhớ</a></li>
+                    <li><a href="#">Vitamin C</a></li>
+                    <li><a href="#">Vitamin D3</a></li>
+                    <li><a href="#">Vitamin B</a></li>
                   </ul>
                 </li>
-                <li><a href="#">Diet &amp; Nutrition</a></li>
-                <li><a href="#">Tea &amp; Coffee</a></li>
+                <li><a href="#">Diet &amp; Hỗ trợ sắc đẹp</a></li>
+                <li><a href="#">Bổ não &amp; trí nhớ</a></li>
               </ul>
             </li>
-            <li><a href="${cpath}/about.jsp">About</a></li>
-            <li><a href="${cpath}/contact.jsp">Contact</a></li>
+            <li><a href="${cpath}/about.jsp">Giới thiệu</a></li>
+            <li><a href="${cpath}/contact.jsp">Chăm sóc khách hàng</a></li>
           </ul>
         </nav>
       </div>
