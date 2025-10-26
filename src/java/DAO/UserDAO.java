@@ -200,6 +200,23 @@ public int getTotalUsers() throws SQLException {
     }
     return 0;
 }
+/**
+ * Đếm tổng số customer (không bao gồm admin)
+ */
+public int countCustomers() throws SQLException {
+    String sql = "SELECT COUNT(*) FROM users WHERE role = 'customer'";
+    
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    }
+    
+    return 0;
+}
 
 // 3. Tìm kiếm users (theo tên, email, SĐT)
 public List<User> searchUsers(String keyword, int page, int pageSize) throws SQLException {

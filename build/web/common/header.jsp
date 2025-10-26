@@ -49,7 +49,7 @@
                              <a href="${pageContext.request.contextPath}/logout" class="icons-btn d-inline-block"><span class="icon-sign-out"></span></a>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/login" class="icons-btn d-inline-block"><span class="icon-user"></span> Login</a>
+                            <a href="${pageContext.request.contextPath}/login" class="icons-btn d-inline-block"><span class="icon-user"></span></a>
                         </c:otherwise>
                     </c:choose>
                 </div>

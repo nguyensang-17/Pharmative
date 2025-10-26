@@ -131,6 +131,23 @@ public class ProductDAO {
             ps.executeUpdate();
         }
     }
+    /**
+ * Đếm tổng số sản phẩm
+ */
+public int countProducts() throws SQLException {
+    String sql = "SELECT COUNT(*) FROM products";
+    
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    }
+    
+    return 0;
+}
 
     public boolean updateProduct(Product p) throws SQLException {
         String sql = "UPDATE products SET product_name=?, description=?, price=?, stock_quantity=?, " +
