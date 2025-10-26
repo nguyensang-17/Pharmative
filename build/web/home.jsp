@@ -38,7 +38,11 @@
                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis ex perspiciatis non quibusdam vel quidem.</p>
                 </div>
               </div>
+<<<<<<< Updated upstream
               <p><a href="shop.jsp" class="btn btn-primary px-5 py-3">Shop Now</a></p>
+=======
+              <p><a href="${cpath}/shop" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
+>>>>>>> Stashed changes
             </div>
           </div>
         </div>
@@ -184,9 +188,15 @@
     <div class="container">
       <div class="row justify-content-center text-center">
         <div class="col-lg-7">
+<<<<<<< Updated upstream
           <h3 class="text-white">Sign up for discount up to 55% OFF</h3>
           <p class="text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam.</p>
           <p class="mb-0"><a href="#" class="btn btn-outline-white">Sign up</a></p>
+=======
+          <h3 class="text-white">🔥 Giảm ngay 38% cho đơn đầu tiên!</h3>
+          <p class="text-white">Chỉ cần đăng ký tài khoản hôm nay – nhận ngay ưu đãi độc quyền.</p>
+          <p class="mb-0"><a href="${cpath}/login.jsp" class="btn btn-outline-white">🟢 ĐĂNG KÝ NHẬN ƯU ĐÃI</a></p>
+>>>>>>> Stashed changes
         </div>
       </div>
     </div>

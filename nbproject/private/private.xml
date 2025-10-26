@@ -17,11 +17,25 @@
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/controller/ProductController.java</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/shop.jsp</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/shop-single.jsp</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/controller/LogoutController.java</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/DAO/ProductDAO.java</file>
+<<<<<<< Updated upstream
+=======
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/common/footerChinh.jsp</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/filter/EncodingFilter.java</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/models/Product.java</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/controller/ProductController.java</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/shop.jsp</file>
+>>>>>>> Stashed changes
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/about.jsp</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/home.jsp</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/common/footerChinh.jsp</file>
             <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/cart.jsp</file>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/TienSon/Documents/GitHub/Pharmative/src/java/controller/LoginController.java</file>
 >>>>>>> Stashed changes
         </group>
     </open-files>
