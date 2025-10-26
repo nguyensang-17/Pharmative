@@ -1,4 +1,5 @@
-package controller;
+
+/*package controller;
 
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
@@ -46,7 +47,7 @@ public class ProductController extends HttpServlet {
                 totalProducts = productDAO.getTotalProductCount();
             }
 
-            List<Category> categoryList = categoryDAO.getAllCategories();
+            List<Category> categoryList = categoryDAO.getAll();
             int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
 
             request.setAttribute("products", productList);
@@ -55,6 +56,80 @@ public class ProductController extends HttpServlet {
             request.setAttribute("currentPage", page);
             request.setAttribute("selectedCategoryId", categoryIdStr);
 
+            request.getRequestDispatcher("products.jsp").forward(request, response);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể tải danh sách sản phẩm.");
+        }
+    }
+}*/
+package controller;
+
+import DAO.CategoryDAO;
+import DAO.ProductDAO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import models.Category;
+import models.Product;
+
+@WebServlet("/products")
+public class ProductController extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    private final ProductDAO productDAO = new ProductDAO();
+    private final CategoryDAO categoryDAO = new CategoryDAO();
+    private static final int PAGE_SIZE = 9;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+              throws ServletException, IOException {
+        String categoryIdStr = request.getParameter("categoryId");
+        String searchQuery = request.getParameter("search");
+        String pageStr = request.getParameter("page");
+
+        int page = 1;
+        try {
+            if (pageStr != null) {
+                page = Math.max(1, Integer.parseInt(pageStr));
+            }
+        } catch (Exception ignore) {
+        }
+
+        try {
+            List<Product> productList;
+            int totalProducts;
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                productList = productDAO.searchProductsByName(searchQuery);
+                totalProducts = productList.size();
+            } else if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+                int categoryId = Integer.parseInt(categoryIdStr);
+                productList = productDAO.getProductsByCategory(categoryId);
+                totalProducts = productList.size();
+            } else {
+                productList = productDAO.getAllProducts(page, PAGE_SIZE);
+                totalProducts = productDAO.getTotalProductCount();
+            }
+
+            List<Category> categoryList = categoryDAO.getAll();
+            int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
+            if (totalPages == 0) {
+                totalPages = 1;
+            }
+
+            request.setAttribute("products", productList);
+            request.setAttribute("categories", categoryList);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("selectedCategoryId", categoryIdStr);
+            request.setAttribute("search", searchQuery);
+
+            // Đổi path này nếu JSP đặt nơi khác (ví dụ /WEB-INF/views/products.jsp)
             request.getRequestDispatcher("products.jsp").forward(request, response);
 
         } catch (SQLException e) {

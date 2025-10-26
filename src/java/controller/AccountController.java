@@ -34,14 +34,10 @@ public class AccountController extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
 
-        try {
-            // Lấy lịch sử đơn hàng của người dùng
-            List<Order> orderHistory = orderDAO.getOrdersByUserId(user.getId());
-            request.setAttribute("orderHistory", orderHistory);
-            request.getRequestDispatcher("/customer/account.jsp").forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Không thể tải lịch sử đơn hàng", e);
-        }
+        // Lấy lịch sử đơn hàng của người dùng
+        List<Order> orderHistory = orderDAO.getById(user.getId());
+        request.setAttribute("orderHistory", orderHistory);
+        request.getRequestDispatcher("/customer/account.jsp").forward(request, response);
     }
 
     @Override
