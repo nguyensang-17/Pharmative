@@ -28,17 +28,30 @@
             <li class="has-children">
               <a href="#">Danh mục sản phẩm</a>
               <ul class="dropdown">
-                <li><a href="#">Dinh dưỡng</a></li>
                 <li class="has-children">
                   <a href="#">Vitamin &amp; khoáng chất</a>
                   <ul class="dropdown">
+                    <li><a href="#">Vitamin tổng hợp</a></li>
                     <li><a href="#">Vitamin C</a></li>
-                    <li><a href="#">Vitamin D3</a></li>
-                    <li><a href="#">Vitamin B</a></li>
+                    <li><a href="#">Canxi & Vitamin D</a></li>
                   </ul>
                 </li>
-                <li><a href="#">Diet &amp; Hỗ trợ sắc đẹp</a></li>
-                <li><a href="#">Bổ não &amp; trí nhớ</a></li>
+                <li class="has-children">
+                  <a href="#">Thảo dược &amp;Bổ sung</a>
+                  <ul class="dropdown">
+                    <li><a href="#">Bổ não & Trí nhớ</a></li>
+                    <li><a href="#">Hỗ trợ tiêu hóa</a></li>
+                  </ul>
+                </li>
+                <li class="has-children">
+                   <a href="#">Dinh dưỡng thể thao</a>
+                  <ul class="dropdown">
+                    <li><a href="#">Whey Protein</a></li>
+                    <li><a href="#">BCAA & Amino</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Kiểm soát cân nặng</a></li>
+                <li><a href="#">Hỗ trợ sắc đẹp</a></li>
               </ul>
             </li>
             <li><a href="${cpath}/about.jsp">Giới thiệu</a></li>
