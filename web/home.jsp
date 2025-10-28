@@ -48,7 +48,7 @@
                   <p>  Sản phẩm chính hãng, tư vấn miễn phí 24/7.</p>
                 </div>
               </div>
-              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
+              <p><a href="${cpath}/shop" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
                   <p>    cùng sản phẩm chính hãng, an toàn.</p>
                 </div>
               </div>
-              <p><a href="${cpath}/shop.jsp" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
+              <p><a href="${cpath}/shop" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
         </div>
@@ -209,7 +209,7 @@
         <div class="col-lg-7">
           <h3 class="text-white">🔥 Giảm ngay 38% cho đơn đầu tiên!</h3>
           <p class="text-white">Chỉ cần đăng ký tài khoản hôm nay – nhận ngay ưu đãi độc quyền.</p>
-          <p class="mb-0"><a href="#" class="btn btn-outline-white">🟢 ĐĂNG KÝ NHẬN ƯU ĐÃI</a></p>
+          <p class="mb-0"><a href="${cpath}/login.jsp" class="btn btn-outline-white">🟢 ĐĂNG KÝ NHẬN ƯU ĐÃI</a></p>
         </div>
       </div>
     </div>
