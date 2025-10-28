@@ -1,4 +1,4 @@
-package controller;
+package controler;
 
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
@@ -46,7 +46,7 @@ public class ProductController extends HttpServlet {
                 totalProducts = productDAO.getTotalProductCount();
             }
 
-            List<Category> categoryList = categoryDAO.getAllCategories();
+            List<Category> categoryList = categoryDAO.getAll();
             int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
 
             request.setAttribute("products", productList);

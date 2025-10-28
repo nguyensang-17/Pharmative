@@ -1,218 +1,216 @@
 package DAO;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import models.Product;
 
-/**
- * DAO for handling all database operations for the Product entity.
- */
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.math.BigDecimal;
+
 public class ProductDAO {
 
-    /**
-     * Retrieves a paginated list of all products.
-     * @param page
-     * @param pageSize
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /* =========================
+       Mapping helper
+       ========================= */
+    private Product map(ResultSet rs) throws SQLException {
+        Product p = new Product();
+        p.setProductId(rs.getInt("product_id"));
+        p.setProductName(rs.getString("product_name"));
+        p.setDescription(rs.getString("description"));
+        p.setPrice(rs.getBigDecimal("price"));
+        p.setStockQuantity(rs.getInt("stock_quantity"));
+        p.setImageUrl(rs.getString("image_url"));
+        p.setCategoryId(rs.getInt("category_id"));
+        p.setBrandId(rs.getInt("brand_id"));
+        p.setSupplierId(rs.getInt("supplier_id"));
+        p.setCreatedAt(rs.getTimestamp("created_at"));
+        return p;
+    }
+
+    /* =========================
+       Public APIs (đúng schema)
+       ========================= */
+
+    /** Phân trang tất cả sản phẩm */
     public List<Product> getAllProducts(int page, int pageSize) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
         String sql = "SELECT * FROM products ORDER BY created_at DESC LIMIT ? OFFSET ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        List<Product> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, pageSize);
             ps.setInt(2, offset);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
+                while (rs.next()) list.add(map(rs));
             }
         }
-        return products;
+        return list;
     }
 
-    /**
-     * Gets the total count of products for pagination purposes.
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /** Đếm tổng số sản phẩm (để tính totalPages) */
     public int getTotalProductCount() throws SQLException {
-        String sql = "SELECT COUNT(id) FROM products";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+        String sql = "SELECT COUNT(*) FROM products";
+        try (Connection c = DBContext.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            return rs.next() ? rs.getInt(1) : 0;
         }
-        return 0;
     }
 
-    /**
-     * Retrieves products filtered by a category ID.
-     * @param categoryId
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /** Lọc theo danh mục (đơn giản, không phân trang) */
     public List<Product> getProductsByCategory(int categoryId) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE category_id = ? ORDER BY name ASC";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM products WHERE category_id=? ORDER BY created_at DESC";
+        List<Product> list = new ArrayList<>();
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
+                while (rs.next()) list.add(map(rs));
             }
         }
-        return products;
+        return list;
     }
 
-    /**
-     * Searches for products by name (case-insensitive).
-     * @param keyword
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /** Tìm theo tên (không phân trang) */
     public List<Product> searchProductsByName(String keyword) throws SQLException {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE name LIKE ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM products WHERE product_name LIKE ? ORDER BY created_at DESC";
+        List<Product> list = new ArrayList<>();
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, "%" + keyword + "%");
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
+                while (rs.next()) list.add(map(rs));
             }
         }
-        return products;
+        return list;
     }
 
-    /**
-     * Retrieves the latest products for the home page.
-     * @param limit
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /** Lấy n sản phẩm mới nhất cho trang chủ */
     public List<Product> getFeaturedProducts(int limit) throws SQLException {
-        List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products ORDER BY created_at DESC LIMIT ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        List<Product> list = new ArrayList<>();
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, limit);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    products.add(mapResultSetToProduct(rs));
-                }
+                while (rs.next()) list.add(map(rs));
             }
         }
-        return products;
+        return list;
     }
 
-    /**
-     * Retrieves a single product by its ID.
-     * @param id
-     * @return 
-     * @throws java.sql.SQLException
-     */
+    /** Lấy chi tiết 1 sản phẩm theo id */
     public Product getProductById(int id) throws SQLException {
         String sql = "SELECT * FROM products WHERE product_id = ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapResultSetToProduct(rs);
-                }
+                return rs.next() ? map(rs) : null;
             }
         }
-        return null;
     }
 
-    /**
-     * Adds a new product to the database.For admin use.
-     * @param product
-     * @throws java.sql.SQLException
-     */
-    public void addProduct(Product product) throws SQLException {
-        String sql = "INSERT INTO products (name, category_id, price, description, image_url, stock_quantity) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getCategoryId());
-            ps.setBigDecimal(3, product.getPrice());
-            ps.setString(4, product.getDescription());
-            ps.setString(5, product.getImageUrl());
-            ps.setInt(6, product.getStockQuantity());
+    /* =========================
+       CRUD admin (đúng cột)
+       ========================= */
+
+    public void addProduct(Product p) throws SQLException {
+        String sql = "INSERT INTO products(product_name, description, price, stock_quantity, image_url, " +
+                     "category_id, brand_id, supplier_id, created_at) " +
+                     "VALUES(?,?,?,?,?,?,?,?,NOW())";
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, p.getProductName());
+            ps.setString(2, p.getDescription());
+            ps.setBigDecimal(3, p.getPrice() == null ? BigDecimal.ZERO : p.getPrice());
+            ps.setInt(4, p.getStockQuantity());
+            ps.setString(5, p.getImageUrl());
+            ps.setInt(6, p.getCategoryId());
+            ps.setInt(7, p.getBrandId());
+            ps.setInt(8, p.getSupplierId());
             ps.executeUpdate();
         }
     }
 
-    /**
-     * Updates an existing product.For admin use.
-     * @param product
-     * @return 
-     * @throws java.sql.SQLException
-     */
-    public boolean updateProduct(Product product) throws SQLException {
-        String sql = "UPDATE products SET name = ?, category_id = ?, price = ?, description = ?, image_url = ?, stock_quantity = ? WHERE product_id = ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getCategoryId());
-            ps.setBigDecimal(3, product.getPrice());
-            ps.setString(4, product.getDescription());
-            ps.setString(5, product.getImageUrl());
-            ps.setInt(6, product.getStockQuantity());
-            ps.setInt(7, product.getId());
+    public boolean updateProduct(Product p) throws SQLException {
+        String sql = "UPDATE products SET product_name=?, description=?, price=?, stock_quantity=?, " +
+                     "image_url=?, category_id=?, brand_id=?, supplier_id=? WHERE product_id=?";
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, p.getProductName());
+            ps.setString(2, p.getDescription());
+            ps.setBigDecimal(3, p.getPrice());
+            ps.setInt(4, p.getStockQuantity());
+            ps.setString(5, p.getImageUrl());
+            ps.setInt(6, p.getCategoryId());
+            ps.setInt(7, p.getBrandId());
+            ps.setInt(8, p.getSupplierId());
+            ps.setInt(9, p.getProductId());
             return ps.executeUpdate() > 0;
         }
     }
 
-    /**
-     * Deletes a product from the database.For admin use.
-     * @param id
-     * @return 
-     * @throws java.sql.SQLException
-     */
     public boolean deleteProduct(int id) throws SQLException {
-        String sql = "DELETE FROM products WHERE product_id = ?";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM products WHERE product_id=?";
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
     }
 
-    /**
-     * Updates product stock quantity.Used within a transaction in OrderDAO.
-     * @param conn
-     * @param productId
-     * @param quantityChange
-     * @throws java.sql.SQLException
-     */
+    /** Trừ tồn kho khi đặt hàng (bảo vệ âm) */
     public void updateStock(Connection conn, int productId, int quantityChange) throws SQLException {
-        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
+        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? " +
+                     "WHERE product_id=? AND stock_quantity >= ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantityChange);
             ps.setInt(2, productId);
-            ps.setInt(3, quantityChange); // Ensure stock doesn't go negative
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new SQLException("Update stock failed, possibly insufficient stock for product ID: " + productId);
-            }
+            ps.setInt(3, quantityChange);
+            int rows = ps.executeUpdate();
+            if (rows == 0) throw new SQLException("Insufficient stock for product_id=" + productId);
         }
     }
 
-    private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
-        Product product = new Product();
-        product.setId(rs.getInt("product_id"));
-        product.setName(rs.getString("name"));
-        product.setCategoryId(rs.getInt("category_id"));
-        product.setPrice(rs.getBigDecimal("price"));
-        product.setDescription(rs.getString("description"));
-        product.setImageUrl(rs.getString("image_url"));
-        product.setStockQuantity(rs.getInt("stock_quantity"));
-        product.setCreatedAt(rs.getTimestamp("created_at"));
-        return product;
+    /* =========================
+       Hỗ trợ phân trang có lọc
+       ========================= */
+
+    public int countAllActive(Integer categoryId, String q) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1");
+        List<Object> args = new ArrayList<>();
+        if (categoryId != null) { sql.append(" AND category_id=?"); args.add(categoryId); }
+        if (q != null && !q.isEmpty()) { sql.append(" AND product_name LIKE ?"); args.add("%"+q+"%"); }
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+            for (int i = 0; i < args.size(); i++) ps.setObject(i + 1, args.get(i));
+            try (ResultSet rs = ps.executeQuery()) { rs.next(); return rs.getInt(1); }
+        }
     }
 
+    public List<Product> listPaged(int page, int size, Integer categoryId, String q) throws SQLException {
+        int offset = (page - 1) * size;
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
+        List<Object> args = new ArrayList<>();
+        if (categoryId != null) { sql.append(" AND category_id=?"); args.add(categoryId); }
+        if (q != null && !q.isEmpty()) { sql.append(" AND product_name LIKE ?"); args.add("%"+q+"%"); }
+        sql.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object a : args) ps.setObject(idx++, a);
+            ps.setInt(idx++, size);
+            ps.setInt(idx, offset);
+            List<Product> out = new ArrayList<>();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) out.add(map(rs));
+            }
+            return out;
+        }
+    }
+
+    /** “Hot” tạm thời = sp mới nhất */
+    public List<Product> getHot(int limit) throws SQLException {
+        return getFeaturedProducts(limit);
+    }
 }

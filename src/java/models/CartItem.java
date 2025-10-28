@@ -1,22 +1,37 @@
 package models;
 
-import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class CartItem {
-    private Product product;
+
+    private long cartItemId;
+    private long cartId;
+    private int productId;
     private int quantity;
+    private Timestamp addedAt;
 
-    public CartItem(Product product, int quantity) {
-        this.product = product;
-        this.quantity = quantity;
+    public long getCartItemId() {
+        return cartItemId;
     }
 
-    public Product getProduct() {
-        return product;
+    public void setCartItemId(long cartItemId) {
+        this.cartItemId = cartItemId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public long getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(long cartId) {
+        this.cartId = cartId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {
@@ -26,8 +41,12 @@ public class CartItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-   
-    public BigDecimal getSubtotal() {
-        return product.getPrice().multiply(new BigDecimal(quantity));
+
+    public Timestamp getAddedAt() {
+        return addedAt;
+    }
+
+    public void setAddedAt(Timestamp addedAt) {
+        this.addedAt = addedAt;
     }
 }
