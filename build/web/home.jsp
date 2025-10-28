@@ -2,24 +2,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-  // đảm bảo response UTF-8
   response.setCharacterEncoding("UTF-8");
 %>
 <c:set var="cpath" value="${pageContext.request.contextPath}" />
 
+<!DOCTYPE html>
+<html lang="vi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- ✅ DÒNG NÀY RẤT QUAN TRỌNG -->
   <base href="${cpath}/">
 
   <title>Pharmative</title>
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-
-  <!-- CSS (dùng đường dẫn tương đối, không cần ${cpath} nữa) -->
   <link rel="stylesheet" href="fonts/icomoon/style.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/magnific-popup.css">
@@ -28,26 +24,36 @@
   <link rel="stylesheet" href="css/owl.theme.default.min.css">
   <link rel="stylesheet" href="css/aos.css">
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .item-v2 img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .item-v2 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
 </head>
+
 <body>
 <jsp:include page="/common/headerChinh.jsp" />
 <div class="site-wrap">
-
 
   <!-- Hero -->
   <div class="owl-carousel owl-single px-0">
     <div class="site-blocks-cover overlay" style="background-image: url('${cpath}/images/hero_bg.jpg');">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12 mx-auto align-self-center">
-            <div class="site-block-cover-content text-center">
-              <h1 class="mb-0"><strong class="text-primary">Thực phẩm chúc năng</strong> Mở cửa 24/7</h1>
-              <div class="row justify-content-center mb-5">
-                <div class="col-lg-6 text-center">
-                  <p>Sức khỏe toàn diện – Phục vụ mọi lúc, mọi nơi.</p>
-                  <p>  Sản phẩm chính hãng, tư vấn miễn phí 24/7.</p>
-                </div>
-              </div>
+          <div class="col-lg-12 mx-auto align-self-center text-center">
+            <div class="site-block-cover-content">
+              <h1 class="mb-0"><strong class="text-primary">Thực phẩm chức năng</strong> Mở cửa 24/7</h1>
+              <p>Sức khỏe toàn diện – Sản phẩm chính hãng, tư vấn miễn phí.</p>
               <p><a href="${cpath}/shop" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
@@ -58,15 +64,10 @@
     <div class="site-blocks-cover overlay" style="background-image: url('${cpath}/images/hero_bg_2.jpg');">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12 mx-auto align-self-center">
-            <div class="site-block-cover-content text-center">
+          <div class="col-lg-12 mx-auto align-self-center text-center">
+            <div class="site-block-cover-content">
               <h1 class="mb-0">Thực phẩm chức năng <strong class="text-primary">mới mỗi ngày</strong></h1>
-              <div class="row justify-content-center mb-5">
-                <div class="col-lg-6 text-center">
-                  <p>Bảo vệ sức khỏe – Nâng cao chất lượng cuộc sống </p>
-                  <p>    cùng sản phẩm chính hãng, an toàn.</p>
-                </div>
-              </div>
+              <p>Bảo vệ sức khỏe – Nâng cao chất lượng cuộc sống cùng sản phẩm chính hãng, an toàn.</p>
               <p><a href="${cpath}/shop" class="btn btn-primary px-5 py-3">🟢 ĐẶT HÀNG NGAY</a></p>
             </div>
           </div>
@@ -78,74 +79,55 @@
   <!-- Features -->
   <div class="site-section py-5">
     <div class="container">
-      <div class="row">
+      <div class="row text-center">
         <div class="col-lg-4">
-          <div class="feature">
-            <img src="${cpath}/images/freeship.jpg" alt="Image" class="img-fluid">
-            <h3><a href="#">Miễn phí vẫn chuyển</a></h3>
-            <p>Theo chính sách giao hàng.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
-          </div>
+          <img src="${cpath}/images/freeship.jpg" alt="Image" class="img-fluid mb-3">
+          <h4>Miễn phí vận chuyển</h4>
+          <p>Theo chính sách giao hàng.</p>
         </div>
         <div class="col-lg-4">
-          <div class="feature">
-            <img src="${cpath}/images/uytin.jpg" alt="Image" class="img-fluid">
-            <h3><a href="#">Cam kết 100%</a></h3>
-            <p>Chất lượng sản phẩm.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
-          </div>
+          <img src="${cpath}/images/uytin.jpg" alt="Image" class="img-fluid mb-3">
+          <h4>Cam kết 100%</h4>
+          <p>Chất lượng sản phẩm chính hãng.</p>
         </div>
         <div class="col-lg-4">
-          <div class="feature">
-            <img src="${cpath}/images/thuocchinhhang.jpg" alt="Image" class="img-fluid">
-            <h3><a href="#">Thuốc chính hãng</a></h3>
-            <p>Đa dạng và chuyên sâu.</p>
-            <p><a href="#" class="d-flex align-items-center"><span class="mr-2">Tìm hiểu thêm</span> <span class="icon-keyboard_arrow_right"></span></a></p>
-          </div>
+          <img src="${cpath}/images/thuocchinhhang.jpg" alt="Image" class="img-fluid mb-3">
+          <h4>Đa dạng sản phẩm</h4>
+          <p>Chuyên sâu và an toàn cho sức khỏe.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Products (dynamic) -->
+  <!-- Thực phẩm chức năng (2 hàng x 3 sản phẩm) -->
   <div class="site-section bg-light">
     <div class="container">
-      <div class="row">
-        <div class="title-section text-center col-12">
-          <h2><strong class="text-primary">Thực phẩm chức năng</strong></h2>
-        </div>
+      <div class="text-center mb-4">
+        <h2><strong class="text-primary">Thực phẩm chức năng</strong></h2>
       </div>
 
       <div class="row">
-        <div class="col-md-12 block-3 products-wrap">
-          <div class="nonloop-block-3 owl-carousel">
-
-            <c:forEach var="p" items="${products}">
-              <div class="text-center item mb-4 item-v2">
-                <a href="${cpath}/product-detail?id=${p.productId}">
-                  <img src="${cpath}/${p.imageUrl}" alt="${p.productName}">
-                </a>
-                <h3 class="text-dark">
-                  <a href="${cpath}/product-detail?id=${p.productId}">${p.productName}</a>
-                </h3>
-                <p class="price">
-                  <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="₫"/>
-                </p>
-              </div>
-            </c:forEach>
-
-            <c:if test="${empty products}">
-              <div class="text-center item mb-4 item-v2">
-                <h5>Chưa có sản phẩm</h5>
-              </div>
-            </c:if>
-
+        <c:forEach var="p" items="${products}">
+          <div class="col-12 col-md-6 col-lg-4 text-center item mb-4 item-v2">
+            <a href="${cpath}/product-detail?id=${p.productId}">
+              <img src="${cpath}/${p.imageUrl}" alt="${p.productName}">
+            </a>
+            <h3 class="text-dark mt-3">
+              <a href="${cpath}/product-detail?id=${p.productId}">${p.productName}</a>
+            </h3>
+            <p class="price"><fmt:formatNumber value="${p.price}" type="currency" currencySymbol="₫"/></p>
           </div>
-        </div>
+        </c:forEach>
+
+        <c:if test="${empty products}">
+          <div class="col-12 text-center">
+            <div class="alert alert-info">Chưa có sản phẩm.</div>
+          </div>
+        </c:if>
       </div>
 
-      <!-- Pagination -->
-      <nav aria-label="pagination" class="mt-3">
+      <!-- Phân trang -->
+      <nav aria-label="pagination" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item ${page==1?'disabled':''}">
             <a class="page-link" href="${cpath}/home?page=${page-1}">«</a>
@@ -163,53 +145,34 @@
     </div>
   </div>
 
-  <!-- Hot products -->
+  <!-- 🔥 Sản phẩm hot (giữ nguyên dạng carousel) -->
   <div class="site-section">
     <div class="container">
-      <div class="row">
-        <div class="title-section text-center col-12">
-          <h2>🔥 <strong class="text-primary">Sản phẩm hot</strong></h2>
-        </div>
+      <div class="text-center mb-4">
+        <h2>🔥 <strong class="text-primary">Sản phẩm hot</strong></h2>
       </div>
 
       <div class="row">
         <div class="col-md-12 block-3 products-wrap">
           <div class="nonloop-block-3 owl-carousel">
-
             <c:forEach var="p" items="${hot}">
               <div class="text-center item mb-4 item-v2">
                 <a href="${cpath}/product-detail?id=${p.productId}">
                   <img src="${cpath}/${p.imageUrl}" alt="${p.productName}">
                 </a>
-                <h3 class="text-dark">
+                <h3 class="text-dark mt-3">
                   <a href="${cpath}/product-detail?id=${p.productId}">${p.productName}</a>
                 </h3>
-                <p class="price">
-                  <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="₫"/>
-                </p>
+                <p class="price"><fmt:formatNumber value="${p.price}" type="currency" currencySymbol="₫"/></p>
               </div>
             </c:forEach>
 
             <c:if test="${empty hot}">
               <div class="text-center item mb-4 item-v2">
-                <h5>Tạm thời chưa có dữ liệu hot</h5>
+                <h5>Tạm thời chưa có sản phẩm hot</h5>
               </div>
             </c:if>
-
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="site-section bg-image overlay" style="background-image: url('${cpath}/images/hero_bg_2.jpg');">
-    <div class="container">
-      <div class="row justify-content-center text-center">
-        <div class="col-lg-7">
-          <h3 class="text-white">🔥 Giảm ngay 38% cho đơn đầu tiên!</h3>
-          <p class="text-white">Chỉ cần đăng ký tài khoản hôm nay – nhận ngay ưu đãi độc quyền.</p>
-          <p class="mb-0"><a href="${cpath}/login.jsp" class="btn btn-outline-white">🟢 ĐĂNG KÝ NHẬN ƯU ĐÃI</a></p>
         </div>
       </div>
     </div>
@@ -277,7 +240,9 @@
     </div>
   </div>
 </div>
-<jsp:include page="/common/footerChinh.jsp" />
+  <jsp:include page="/common/footerChinh.jsp" />
+</div>
+
 <!-- JS -->
 <script src="${cpath}/js/jquery-3.3.1.min.js"></script>
 <script src="${cpath}/js/jquery-ui.js"></script>

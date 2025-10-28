@@ -19,7 +19,7 @@ public class HomeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private final ProductDAO productDAO = new ProductDAO();
-    private static final int PAGE_SIZE = 12; // số sp/trang
+    private static final int PAGE_SIZE = 6; // 3 cột x 2 hàng
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
