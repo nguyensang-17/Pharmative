@@ -27,12 +27,12 @@ public class AccountController extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         // Yêu cầu đăng nhập để truy cập trang này
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("currentUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("currentUser");
 
         try {
             // Lấy lịch sử đơn hàng của người dùng
@@ -48,12 +48,12 @@ public class AccountController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("currentUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        User currentUser = (User) session.getAttribute("user");
+        User currentUser = (User) session.getAttribute("currentUser");
         
         // Cập nhật thông tin người dùng
         currentUser.setFullname(request.getParameter("fullname"));
@@ -64,7 +64,7 @@ public class AccountController extends HttpServlet {
             boolean success = userDAO.updateUser(currentUser);
             if(success) {
                 // Cập nhật lại thông tin trong session
-                session.setAttribute("user", currentUser);
+                session.setAttribute("currentUser", currentUser);
                 request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
             } else {
                 request.setAttribute("errorMessage", "Cập nhật thông tin thất bại.");

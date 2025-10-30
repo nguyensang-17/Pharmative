@@ -44,8 +44,8 @@
                         </c:if>
                     </a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}">
-                             <a href="${pageContext.request.contextPath}/account" class="icons-btn d-inline-block"><span class="icon-user"></span> Hello, ${sessionScope.user.fullname}</a>
+                        <c:when test="${not empty sessionScope.currentUser}">
+                             <a href="${pageContext.request.contextPath}/account" class="icons-btn d-inline-block"><span class="icon-user"></span> Hello, ${sessionScope.currentUser.fullname}</a>
                              <a href="${pageContext.request.contextPath}/logout" class="icons-btn d-inline-block"><span class="icon-sign-out"></span></a>
                         </c:when>
                         <c:otherwise>
