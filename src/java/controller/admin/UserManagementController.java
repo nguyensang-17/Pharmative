@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/admin/users/*")  // Chú ý: thêm /* để handle sub-paths
+@WebServlet(urlPatterns = {"/admin/users", "/admin/users/*"})
 public class UserManagementController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final UserDAO userDAO = new UserDAO();
