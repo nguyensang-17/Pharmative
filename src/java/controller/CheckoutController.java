@@ -28,7 +28,7 @@ public class CheckoutController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") == null) {
+        if (session.getAttribute("currentUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -39,7 +39,7 @@ public class CheckoutController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("currentUser");
         @SuppressWarnings("unchecked")
         Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
 
