@@ -22,12 +22,12 @@ public class UserManagementController extends HttpServlet {
         
         // ====== KIỂM TRA QUYỀN ADMIN ======
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("currentUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        User currentUser = (User) session.getAttribute("user");
+        User currentUser = (User) session.getAttribute("currentUser");
         if (!"admin".equals(currentUser.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, 
                 "Bạn không có quyền truy cập trang này!");
@@ -299,7 +299,7 @@ public class UserManagementController extends HttpServlet {
             
             // Không cho toggle chính mình
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            User currentUser = (User) session.getAttribute("currentUser");
             if (currentUser.getId() == userId) {
                 session.setAttribute("error", 
                     "⚠️ Không thể thay đổi trạng thái của chính mình!");
@@ -341,7 +341,7 @@ public class UserManagementController extends HttpServlet {
             
             // Không cho xóa chính mình
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            User currentUser = (User) session.getAttribute("currentUser");
             if (currentUser.getId() == userId) {
                 session.setAttribute("error", 
                     "⚠️ Không thể xóa tài khoản của chính mình!");
