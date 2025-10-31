@@ -1,93 +1,137 @@
 package controller;
 
-import DAO.ProductDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import models.CartItem;
+import DAO.ProductDAO;
 import models.Product;
 
 @WebServlet("/cart")
 public class CartController extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
-    private final ProductDAO productDAO = new ProductDAO();
+    private ProductDAO productDAO;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("cart.jsp").forward(request, response);
+    public void init() {
+        productDAO = new ProductDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        @SuppressWarnings("unchecked")
-        Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new HashMap<>();
-        }
+            throws IOException, ServletException {
 
         String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
+        if (cart == null) cart = new HashMap<>();
+
         try {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-
             switch (action) {
-                case "add":
+                case "add": {
+                    int productId = Integer.parseInt(request.getParameter("productId"));
                     int quantity = Integer.parseInt(request.getParameter("quantity"));
-                    addToCart(productId, quantity, cart);
-                    break;
-                case "update":
-                    int newQuantity = Integer.parseInt(request.getParameter("quantity"));
-                    updateCart(productId, newQuantity, cart);
-                    break;
-                case "remove":
-                    removeFromCart(productId, cart);
-                    break;
+                    Product product = productDAO.getProductById(productId);
+
+                    if (product != null) {
+                        if (product.getPrice() == null) product.setPrice(BigDecimal.ZERO);
+
+                        CartItem item = cart.get(productId);
+                        if (item == null) {
+                            item = new CartItem(product, quantity);
+                        } else {
+                            item.setQuantity(item.getQuantity() + quantity);
+                        }
+
+                        cart.put(productId, item);
+                        session.setAttribute("cart", cart);
+                    }
+                    response.sendRedirect(request.getContextPath() + "/cart.jsp?success=added");
+                    return;
+                }
+
+                case "remove": {
+                    int productId = Integer.parseInt(request.getParameter("productId"));
+                    cart.remove(productId);
+                    session.setAttribute("cart", cart);
+                    response.sendRedirect(request.getContextPath() + "/cart.jsp?success=removed");
+                    return;
+                }
+
+                case "update": {
+                    response.setContentType("application/json;charset=UTF-8");
+
+                    int productId = Integer.parseInt(request.getParameter("productId"));
+                    int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+                    if (cart.containsKey(productId)) {
+                        CartItem item = cart.get(productId);
+                        item.setQuantity(quantity);
+                    }
+
+                    // Tính lại tổng dòng và tổng giỏ
+                    BigDecimal lineTotal = BigDecimal.ZERO;
+                    BigDecimal cartTotal = BigDecimal.ZERO;
+
+                    for (CartItem i : cart.values()) {
+                        BigDecimal price = (i.getProduct().getPrice() == null)
+                                ? BigDecimal.ZERO
+                                : i.getProduct().getPrice();
+                        BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(i.getQuantity()));
+
+                        if (i.getProduct().getProductId() == productId) {
+                            lineTotal = itemTotal;
+                        }
+                        cartTotal = cartTotal.add(itemTotal);
+                    }
+
+                    // Lưu lại vào session
+                    session.setAttribute("cart", cart);
+
+                    // Trả về JSON cho AJAX
+                    String lineTotalFormatted = String.format("%,.0f₫", lineTotal);
+                    String cartTotalFormatted = String.format("%,.0f₫", cartTotal);
+
+                    String json = String.format(
+                            "{\"lineTotalFormatted\":\"%s\",\"cartTotalFormatted\":\"%s\"}",
+                            lineTotalFormatted, cartTotalFormatted
+                    );
+
+                    response.getWriter().write(json);
+                    return;
+                }
+
+                default:
+                    response.sendRedirect(request.getContextPath() + "/cart.jsp");
             }
-        } catch (NumberFormatException | SQLException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
-            // Xử lý lỗi
-        }
-
-        session.setAttribute("cart", cart);
-        response.sendRedirect(request.getContextPath() + "/cart");
-    }
-
-    private void addToCart(int productId, int quantity, Map<Integer, CartItem> cart) throws SQLException {
-        if (cart.containsKey(productId)) {
-            // Nếu sản phẩm đã có trong giỏ, tăng số lượng
-            CartItem item = cart.get(productId);
-            item.setQuantity(item.getQuantity() + quantity);
-        } else {
-            // Nếu chưa có, thêm mới
-            Product product = productDAO.getProductById(productId);
-            if (product != null) {
-                cart.put(productId, new CartItem(product, quantity));
-            }
+            response.sendRedirect(request.getContextPath() + "/cart.jsp?error=true");
         }
     }
 
-    private void updateCart(int productId, int newQuantity, Map<Integer, CartItem> cart) {
-        if (cart.containsKey(productId)) {
-            if (newQuantity > 0) {
-                cart.get(productId).setQuantity(newQuantity);
-            } else {
-                cart.remove(productId); // Nếu số lượng <= 0, xóa sản phẩm
-            }
-        }
-    }
+    // ===============================
+    // Lớp CartItem phụ trợ
+    // ===============================
+    public static class CartItem {
+        private Product product;
+        private int quantity;
 
-    private void removeFromCart(int productId, Map<Integer, CartItem> cart) {
-        cart.remove(productId);
+        public CartItem(Product product, int quantity) {
+            this.product = product;
+            this.quantity = quantity;
+        }
+
+        public Product getProduct() { return product; }
+        public int getQuantity() { return quantity; }
+        public void setQuantity(int q) { this.quantity = q; }
+
+        public BigDecimal getTotal() {
+            BigDecimal price = (product.getPrice() == null ? BigDecimal.ZERO : product.getPrice());
+            return price.multiply(BigDecimal.valueOf(quantity));
+        }
     }
 }

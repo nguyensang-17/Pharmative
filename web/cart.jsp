@@ -1,299 +1,192 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
-  <title>Pharmative &mdash; Colorlib Template</title>
   <meta charset="utf-8">
+  <title>Giỏ hàng | Pharmative</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="fonts/icomoon/style.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-  <link rel="stylesheet" href="css/magnific-popup.css">
-  <link rel="stylesheet" href="css/jquery-ui.css">
-  <link rel="stylesheet" href="css/owl.carousel.min.css">
-  <link rel="stylesheet" href="css/owl.theme.default.min.css">
-
-  
-
-  <link rel="stylesheet" href="css/aos.css">
-
-  <link rel="stylesheet" href="css/style.css">
-
+  <style>
+    .table th, .table td {
+      vertical-align: middle !important;
+    }
+    .btn-update {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    .btn-update:hover {
+      background-color: #43A047;
+    }
+    .btn-remove {
+      border: none;
+      background-color: #f44336;
+      color: white;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    .btn-remove:hover {
+      background-color: #e53935;
+    }
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
 </head>
 
 <body>
+<div class="site-wrap">
+  <jsp:include page="/common/headerChinh.jsp" />
 
-  <div class="site-wrap">
-
-
-    <div class="site-navbar py-2">
-
-      <div class="search-wrap">
-        <div class="container">
-          <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-          <form action="#" method="post">
-            <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
-          </form>
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="logo">
-            <div class="site-logo">
-              <a href="index.jsp" class="js-logo-clone"><strong class="text-primary">Pharma</strong>tive</a>
-            </div>
-          </div>
-          <div class="main-nav d-none d-lg-block">
-            <nav class="site-navigation text-right text-md-center" role="navigation">
-              <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li><a href="index.jsp">Home</a></li>
-                <li class="active"><a href="shop.jsp">Store</a></li>
-                <li class="has-children">
-                  <a href="#">Products</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li class="has-children">
-                      <a href="#">Vitamins</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-                    
-                  </ul>
-                </li>
-                <li><a href="about.jsp">About</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
-              </ul>
-            </nav>
-          </div>
-          <div class="icons">
-            <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
-            <a href="cart.jsp" class="icons-btn d-inline-block bag">
-              <span class="icon-shopping-bag"></span>
-              <span class="number">2</span>
-            </a>
-            <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
-                class="icon-menu"></span></a>
-          </div>
-        </div>
-      </div>
+  <div class="bg-light py-3">
+    <div class="container">
+      <a href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
+      <span class="mx-2 mb-0">/</span>
+      <strong class="text-black">Giỏ hàng</strong>
     </div>
-
-    <div class="bg-light py-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 mb-0">
-            <a href="index.jsp">Home</a> <span class="mx-2 mb-0">/</span> 
-            <strong class="text-black">Cart</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="site-section">
-      <div class="container">
-        <div class="row mb-5">
-          <form class="col-md-12" method="post">
-            <div class="site-blocks-table">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th class="product-thumbnail">Image</th>
-                    <th class="product-name">Product</th>
-                    <th class="product-price">Price</th>
-                    <th class="product-quantity">Quantity</th>
-                    <th class="product-total">Total</th>
-                    <th class="product-remove">Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="product-thumbnail">
-                      <img src="images/product_02.png" alt="Image" class="img-fluid">
-                    </td>
-                    <td class="product-name">
-                      <h2 class="h5 text-black">Ibuprofen</h2>
-                    </td>
-                    <td>$55.00</td>
-                    <td>
-                      <div class="input-group mb-3" style="max-width: 120px;">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                        </div>
-                        <input type="text" class="form-control text-center" value="1" placeholder=""
-                          aria-label="Example text with button addon" aria-describedby="button-addon1">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                        </div>
-                      </div>
-    
-                    </td>
-                    <td>$49.00</td>
-                    <td><a href="#" class="btn btn-primary height-auto btn-sm">X</a></td>
-                  </tr>
-    
-                  <tr>
-                    <td class="product-thumbnail">
-                      <img src="images/product_01.png" alt="Image" class="img-fluid">
-                    </td>
-                    <td class="product-name">
-                      <h2 class="h5 text-black">Bioderma</h2>
-                    </td>
-                    <td>$49.00</td>
-                    <td>
-                      <div class="input-group mb-3" style="max-width: 120px;">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                        </div>
-                        <input type="text" class="form-control text-center" value="1" placeholder=""
-                          aria-label="Example text with button addon" aria-describedby="button-addon1">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                        </div>
-                      </div>
-    
-                    </td>
-                    <td>$49.00</td>
-                    <td><a href="#" class="btn btn-primary height-auto btn-sm">X</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </form>
-        </div>
-    
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row mb-5">
-              <div class="col-md-6 mb-3 mb-md-0">
-                <button class="btn btn-primary btn-md btn-block">Update Cart</button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-outline-primary btn-md btn-block">Continue Shopping</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <label class="text-black h4" for="coupon">Coupon</label>
-                <p>Enter your coupon code if you have one.</p>
-              </div>
-              <div class="col-md-8 mb-3 mb-md-0">
-                <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-              </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary btn-md px-4">Apply Coupon</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 pl-5">
-            <div class="row justify-content-end">
-              <div class="col-md-7">
-                <div class="row">
-                  <div class="col-md-12 text-right border-bottom mb-5">
-                    <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <span class="text-black">Subtotal</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <strong class="text-black">$230.00</strong>
-                  </div>
-                </div>
-                <div class="row mb-5">
-                  <div class="col-md-6">
-                    <span class="text-black">Total</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <strong class="text-black">$230.00</strong>
-                  </div>
-                </div>
-    
-                <div class="row">
-                  <div class="col-md-12">
-                    <button class="btn btn-primary btn-lg btn-block" onclick="window.location='checkout.jsp'">Proceed To
-                      Checkout</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer class="site-footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-
-            <div class="block-7">
-              <h3 class="footer-heading mb-4">About <strong class="text-primary">Pharmative</strong></h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quae reiciendis distinctio voluptates
-                sed dolorum excepturi iure eaque, aut unde.</p>
-            </div>
-
-          </div>
-          <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-            <h3 class="footer-heading mb-4">Navigation</h3>
-            <ul class="list-unstyled">
-              <li><a href="#">Supplements</a></li>
-              <li><a href="#">Vitamins</a></li>
-              <li><a href="#">Diet &amp; Nutrition</a></li>
-              <li><a href="#">Tea &amp; Coffee</a></li>
-            </ul>
-          </div>
-
-          <div class="col-md-6 col-lg-3">
-            <div class="block-5 mb-5">
-              <h3 class="footer-heading mb-4">Contact Info</h3>
-              <ul class="list-unstyled">
-                <li class="address">203 Fake St. Mountain View, San Francisco, California, USA</li>
-                <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
-                <li class="email">emailaddress@domain.com</li>
-              </ul>
-            </div>
-
-
-          </div>
-        </div>
-        <div class="row pt-5 mt-5 text-center">
-          <div class="col-md-12">
-            <p>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;
-              <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
-              with <i class="icon-heart text-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"
-                class="text-primary">Colorlib</a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </footer>
   </div>
 
-  <script src="js/jquery-3.3.1.min.js"></script>
-  <script src="js/jquery-ui.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/owl.carousel.min.js"></script>
-  <script src="js/jquery.magnific-popup.min.js"></script>
-  <script src="js/aos.js"></script>
+  <div class="site-section">
+    <div class="container">
 
-  <script src="js/main.js"></script>
+      <c:if test="${param.success == 'added'}">
+        <div class="alert alert-success text-center mb-4">✅ Sản phẩm đã được thêm vào giỏ hàng!</div>
+      </c:if>
+
+      <c:choose>
+        <c:when test="${not empty sessionScope.cart}">
+          <c:set var="cartTotal" value="0" scope="page"/>
+
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <div class="site-blocks-table">
+                <table class="table table-bordered text-center align-middle">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Ảnh</th>
+                      <th>Sản phẩm</th>
+                      <th>Giá</th>
+                      <th>Số lượng</th>
+                      <th>Tổng</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <c:forEach var="item" items="${sessionScope.cart.values()}">
+                      <c:if test="${not empty item and not empty item.product}">
+                        <c:set var="lineTotal" value="${item.product.price * item.quantity}" />
+                        <c:set var="cartTotal" value="${cartTotal + lineTotal}" scope="page" />
+
+                        <tr data-product-id="${item.product.productId}">
+                          <td>
+                            <img src="${pageContext.request.contextPath}/${item.product.imageUrl}"
+                                 alt="${item.product.productName}"
+                                 class="img-thumbnail rounded"
+                                 style="width:80px; height:80px; object-fit:cover;">
+                          </td>
+                          <td><strong>${item.product.productName}</strong></td>
+                          <td><fmt:formatNumber value="${item.product.price}" pattern="#,###₫" /></td>
+                          <td>
+                            <input type="number" min="1" value="${item.quantity}" 
+                                   class="form-control text-center quantity-input"
+                                   style="width:80px; display:inline-block;">
+                          </td>
+                          <td class="line-total"><fmt:formatNumber value="${lineTotal}" pattern="#,###₫" /></td>
+                          <td>
+                            <button class="btn-update update-btn">Cập nhật</button>
+                            <form action="${pageContext.request.contextPath}/cart" method="post" class="d-inline">
+                              <input type="hidden" name="action" value="remove">
+                              <input type="hidden" name="productId" value="${item.product.productId}">
+                              <button type="submit" class="btn-remove">Xóa</button>
+                            </form>
+                          </td>
+                        </tr>
+                      </c:if>
+                    </c:forEach>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="row justify-content-end">
+            <div class="col-md-5">
+              <div class="p-4 border bg-light rounded">
+                <h4 class="mb-3">Tổng cộng</h4>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Tạm tính:</span>
+                  <strong id="subtotal"><fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/></strong>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Tổng thanh toán:</span>
+                  <strong id="grandtotal" class="text-primary"><fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/></strong>
+                </div>
+                <a href="checkout.jsp" class="btn btn-primary btn-block">Thanh toán</a>
+                <a href="shop" class="btn btn-outline-secondary btn-block mt-2">← Tiếp tục mua hàng</a>
+              </div>
+            </div>
+          </div>
+        </c:when>
+
+        <c:otherwise>
+          <div class="alert alert-warning text-center">
+            <h4>🛒 Giỏ hàng của bạn đang trống.</h4>
+            <a href="shop" class="btn btn-outline-primary mt-3">Tiếp tục mua sắm</a>
+          </div>
+        </c:otherwise>
+      </c:choose>
+    </div>
+  </div>
+
+  <jsp:include page="/common/footerChinh.jsp" />
+</div>
+
+<script src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $(".update-btn").click(function() {
+      const row = $(this).closest("tr");
+      const productId = row.data("product-id");
+      const quantity = row.find(".quantity-input").val();
+
+      $.ajax({
+        url: "${pageContext.request.contextPath}/cart",
+        type: "POST",
+        data: {
+          action: "update",
+          productId: productId,
+          quantity: quantity
+        },
+        success: function(response) {
+          // Cập nhật lại dòng sản phẩm và tổng tiền
+          row.find(".line-total").text(response.lineTotalFormatted);
+          $("#subtotal").text(response.cartTotalFormatted);
+          $("#grandtotal").text(response.cartTotalFormatted);
+        },
+        error: function() {
+          alert("Cập nhật giỏ hàng thất bại, vui lòng thử lại.");
+        }
+      });
+    });
+  });
+</script>
 
 </body>
-
 </html>
