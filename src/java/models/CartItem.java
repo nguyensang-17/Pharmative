@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class CartItem {
@@ -9,7 +10,18 @@ public class CartItem {
     private int productId;
     private int quantity;
     private Timestamp addedAt;
+    private Product product; // 🔗 Liên kết tới sản phẩm (nếu có)
 
+    // === Constructors ===
+    public CartItem() {}
+
+    public CartItem(Product product, int quantity) {
+        this.product = product;
+        this.productId = (product != null) ? product.getProductId() : 0;
+        this.quantity = quantity;
+    }
+
+    // === Getters & Setters ===
     public long getCartItemId() {
         return cartItemId;
     }
@@ -48,5 +60,32 @@ public class CartItem {
 
     public void setAddedAt(Timestamp addedAt) {
         this.addedAt = addedAt;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    // === Tính tổng tiền ===
+    public BigDecimal getTotalPrice() {
+        if (product == null || product.getPrice() == null) {
+            return BigDecimal.ZERO;
+        }
+        return product.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
+    // === Hỗ trợ hiển thị tiện lợi ===
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "cartItemId=" + cartItemId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                ", total=" + getTotalPrice() +
+                '}';
     }
 }

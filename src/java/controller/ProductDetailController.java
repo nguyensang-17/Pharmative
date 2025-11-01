@@ -26,7 +26,7 @@ public class ProductDetailController extends HttpServlet {
 
             if (product != null) {
                 request.setAttribute("product", product);
-                request.getRequestDispatcher("product-detail.jsp").forward(request, response);
+                request.getRequestDispatcher("shop-single.jsp").forward(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy sản phẩm.");
             }
