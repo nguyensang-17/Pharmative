@@ -23,7 +23,7 @@ public class UserManagementController extends HttpServlet {
         // ====== KIỂM TRA QUYỀN ADMIN ======
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/loginfff");
             return;
         }
         

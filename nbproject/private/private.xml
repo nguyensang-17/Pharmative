@@ -3,37 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/bg_2.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p09.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/DAO/UserDAO.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/product_07_large.png</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CartController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/CategoryManagementController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/ProductManagementController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/hero_bg.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/person_1.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p04.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/User.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/bg_1.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p20.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/product_01.png</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/women.jpg</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/view.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/dashboard.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/css/admin.css</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/UserManagementController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/LoginController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/list.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/login.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/edits.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CheckoutController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Cart.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/person_2.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/product_05.png</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p12.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p07.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p03.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p10.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p15.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p06.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p02.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/hero_bg_2.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/product_06.png</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/hero_1.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/freeship.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/images/p18.jpg</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/ShopController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/DashboardController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/OrderManagementController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/filter/AdminAuthFilter.java</file>
         </group>
     </open-files>
 </project-private>
