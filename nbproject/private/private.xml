@@ -5,6 +5,7 @@
         <group>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <file>file:/D:/Pharmative/src/java/controller/ForgotPasswordController.java</file>
             <file>file:/D:/Pharmative/web/register.jsp</file>
             <file>file:/D:/Pharmative/src/java/controller/RegisterController.java</file>
@@ -21,6 +22,8 @@
             <file>file:/D:/Pharmative/src/java/DAO/DBContext.java</file>
             <file>file:/D:/Pharmative/src/java/controller/ResetPasswordController.java</file>
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             <file>file:/D:/Pharmative/src/java/controller/admin/ProductManagementController.java</file>
@@ -49,15 +52,21 @@
             <file>file:/D:/Pharmative/src/java/models/Address.java</file>
             <file>file:/D:/Pharmative/src/java/controller/AccountController.java</file>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <file>file:/D:/Pharmative/web/products.jsp</file>
             <file>file:/D:/Pharmative/src/java/DAO/ProductDAO.java</file>
             <file>file:/D:/Pharmative/src/java/models/Customer.java</file>
 >>>>>>> Stashed changes
 =======
+=======
+>>>>>>> Stashed changes
             <file>file:/D:/Pharmative/web/index.jsp</file>
             <file>file:/D:/Pharmative/src/java/controller/LoginController.java</file>
             <file>file:/D:/Pharmative/src/java/DAO/ProductDAO.java</file>
             <file>file:/D:/Pharmative/src/java/models/Customer.java</file>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         </group>
     </open-files>
