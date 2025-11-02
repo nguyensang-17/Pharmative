@@ -60,6 +60,8 @@ public class AdminAuthFilter implements Filter {
         
         // If the user is an admin, allow the request to proceed
         if (isAdmin) {
+            // Thêm vào AdminAuthFilter, trước khi chain.doFilter
+System.out.println("✓ Forwarding to: " + httpRequest.getRequestURI());
             chain.doFilter(request, response);
         } else {
             // If the user is not an admin, redirect to login page

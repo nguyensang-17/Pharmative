@@ -3,19 +3,19 @@
 <!DOCTYPE html>
 <html lang="vi">
     <head>
-        <jsp:include page="/WEB-INF/views/admin/fragments/_head.jspf"/>
+        <jsp:include page="/WEB-INF/views/admin/fragments/_head.jsp"/>
     </head>
     <body>
         <div class="admin-shell">
             <aside class="sidebar">
-                <jsp:include page="/WEB-INF/views/admin/fragments/_sidebar.jspf"/>
+                <jsp:include page="/WEB-INF/views/admin/fragments/_sidebar.jsp"/>
             </aside>
             <main class="main">
                 <header class="topbar">
-                    <jsp:include page="/WEB-INF/views/admin/fragments/_topbar.jspf"/>
+                    <jsp:include page="/WEB-INF/views/admin/fragments/_topbar.jsp"/>
                 </header>
                 <section class="content">
-                    <jsp:include page="/WEB-INF/views/admin/fragments/_flash.jspf"/>
+                    <jsp:include page="/WEB-INF/views/admin/fragments/_flash.jsp"/>
                     <!-- vùng nội dung động -->
                     <jsp:include page="${contentPage}"/>
                 </section>

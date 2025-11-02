@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/admin/users", "/admin/users/*"})
+@WebServlet("/admin/users")
 public class UserManagementController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final UserDAO userDAO = new UserDAO();
@@ -35,25 +35,33 @@ public class UserManagementController extends HttpServlet {
         }
         
         // ====== ROUTING ======
-        String pathInfo = request.getPathInfo();
+        String action = request.getParameter("action");
+        
+        // Debug logging
+        System.out.println("=== UserManagementController ===");
+        System.out.println("Request URI: " + request.getRequestURI());
+        System.out.println("Action: " + (action == null ? "null (default to list)" : action));
         
         try {
-            if (pathInfo == null || pathInfo.equals("/") || pathInfo.equals("/list")) {
+            if (action == null || action.isEmpty() || "list".equals(action)) {
+                // Mặc định hiển thị danh sách
+                System.out.println("Routing to listUsers()");
                 listUsers(request, response);
             } 
-            else if (pathInfo.equals("/view")) {
+            else if ("view".equals(action)) {
                 viewUser(request, response);
             } 
-            else if (pathInfo.equals("/edit")) {
+            else if ("edit".equals(action)) {
                 showEditForm(request, response);
             } 
-            else if (pathInfo.equals("/toggle-status")) {
+            else if ("toggle-status".equals(action)) {
                 toggleUserStatus(request, response);
             } 
-            else if (pathInfo.equals("/delete")) {
+            else if ("delete".equals(action)) {
                 deleteUser(request, response);
             } 
             else {
+                System.out.println("Action not recognized: '" + action + "' - returning 404");
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (SQLException e) {
@@ -69,10 +77,10 @@ public class UserManagementController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         
-        String pathInfo = request.getPathInfo();
+        String action = request.getParameter("action");
         
         try {
-            if (pathInfo != null && pathInfo.equals("/update")) {
+            if ("update".equals(action)) {
                 updateUser(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -157,7 +165,7 @@ public class UserManagementController extends HttpServlet {
         
         if (userIdParam == null || userIdParam.isEmpty()) {
             request.getSession().setAttribute("error", "Thiếu ID người dùng!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
             return;
         }
         
@@ -167,7 +175,7 @@ public class UserManagementController extends HttpServlet {
             
             if (user == null) {
                 request.getSession().setAttribute("error", "Không tìm thấy người dùng!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/list");
+                response.sendRedirect(request.getContextPath() + "/admin/users");
                 return;
             }
             
@@ -186,7 +194,7 @@ public class UserManagementController extends HttpServlet {
                    
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("error", "ID không hợp lệ!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
         }
     }
     
@@ -198,7 +206,7 @@ public class UserManagementController extends HttpServlet {
         
         if (userIdParam == null || userIdParam.isEmpty()) {
             request.getSession().setAttribute("error", "Thiếu ID người dùng!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
             return;
         }
         
@@ -208,78 +216,90 @@ public class UserManagementController extends HttpServlet {
             
             if (user == null) {
                 request.getSession().setAttribute("error", "Không tìm thấy người dùng!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/list");
+                response.sendRedirect(request.getContextPath() + "/admin/users");
                 return;
             }
             
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/admin/users/edit.jsp")
+            request.getRequestDispatcher("/admin/users/edits.jsp")
                    .forward(request, response);
                    
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("error", "ID không hợp lệ!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
         }
     }
     
     // ========== 4. CẬP NHẬT USER ==========
-    private void updateUser(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+   private void updateUser(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException, SQLException {
+    System.out.println("=== UPDATE USER CALLED ===");
+    System.out.println("User ID: " + request.getParameter("userId"));
+    System.out.println("Fullname: " + request.getParameter("fullname"));
+    System.out.println("Email: " + request.getParameter("email"));
+    System.out.println("Role: " + request.getParameter("role"));
+    System.out.println("isVerified: " + request.getParameter("isVerified"));
+    try {
+        int userId = Integer.parseInt(request.getParameter("userId"));
         
+        // Kiểm tra email trùng
+        String newEmail = request.getParameter("email");
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            
-            // Kiểm tra email trùng (nếu có method isEmailExist)
-            String newEmail = request.getParameter("email");
-            try {
-                if (userDAO.isEmailExist(newEmail, userId)) {
-                    request.getSession().setAttribute("error", 
-                        "Email " + newEmail + " đã được sử dụng bởi tài khoản khác!");
-                    response.sendRedirect(request.getContextPath() + "/admin/users/edit?id=" + userId);
-                    return;
-                }
-            } catch (Exception e) {
-                // Nếu chưa có method isEmailExist thì bỏ qua
-            }
-            
-            // Tạo user object
-            User user = new User();
-            user.setId(userId);
-            user.setFullname(request.getParameter("fullname"));
-            user.setEmail(newEmail);
-            
-            String phone = request.getParameter("phoneNumber");
-            user.setPhoneNumber(phone != null && !phone.trim().isEmpty() ? phone.trim() : null);
-            
-            user.setRole(request.getParameter("role"));
-            
-            // Checkbox: nếu checked thì value = "on"
-            boolean isVerified = "on".equals(request.getParameter("isVerified"));
-            user.setVerified(isVerified);
-            
-            // Update
-            boolean success = false;
-            try {
-                success = userDAO.updateUserByAdmin(user);
-            } catch (Exception e) {
-                // Nếu chưa có updateUserByAdmin, dùng updateUser
-                success = userDAO.updateUser(user);
-            }
-            
-            if (success) {
-                request.getSession().setAttribute("message", 
-                    "✅ Cập nhật thông tin người dùng thành công!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/view?id=" + userId);
-            } else {
+            if (userDAO.isEmailExist(newEmail, userId)) {
                 request.getSession().setAttribute("error", 
-                    "❌ Không thể cập nhật thông tin người dùng!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/edit?id=" + userId);
+                    "Email " + newEmail + " đã được sử dụng bởi tài khoản khác!");
+                response.sendRedirect(request.getContextPath() + "/admin/users?action=edit&id=" + userId);
+                return;
             }
-            
-        } catch (NumberFormatException e) {
-            request.getSession().setAttribute("error", "Dữ liệu không hợp lệ!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+        } catch (Exception e) {
+            // Nếu chưa có method isEmailExist thì bỏ qua
         }
+        
+        // Tạo user object
+        User user = new User();
+        user.setId(userId);
+        user.setFullname(request.getParameter("fullname"));
+        user.setEmail(newEmail);
+        
+        String phone = request.getParameter("phoneNumber");
+        user.setPhoneNumber(phone != null && !phone.trim().isEmpty() ? phone.trim() : null);
+        
+        user.setRole(request.getParameter("role"));
+        
+        // ✅ SỬA CÁCH XỬ LÝ CHECKBOX
+        String isVerifiedParam = request.getParameter("isVerified");
+        boolean isVerified = "true".equals(isVerifiedParam);  // ✅ ĐÚNG
+        user.setVerified(isVerified);
+        
+        // Update
+        boolean success = false;
+        try {
+            success = userDAO.updateUserByAdmin(user);
+        } catch (Exception e) {
+            // Nếu chưa có updateUserByAdmin, dùng updateUser
+            success = userDAO.updateUser(user);
+        }
+        
+        if (success) {
+            request.getSession().setAttribute("message", 
+                "✅ Cập nhật thông tin người dùng thành công!");
+            response.sendRedirect(request.getContextPath() + "/admin/users?action=view&id=" + userId);
+        } else {
+            request.getSession().setAttribute("error", 
+                "❌ Không thể cập nhật thông tin người dùng!");
+            response.sendRedirect(request.getContextPath() + "/admin/users?action=edit&id=" + userId);
+        }
+        
+    } catch (NumberFormatException e) {
+        request.getSession().setAttribute("error", "Dữ liệu không hợp lệ!");
+        response.sendRedirect(request.getContextPath() + "/admin/users");
+    }
+}
+        
+    } catch (NumberFormatException e) {
+        request.getSession().setAttribute("error", "Dữ liệu không hợp lệ!");
+        response.sendRedirect(request.getContextPath() + "/admin/users");
+    }
     }
     
     // ========== 5. KHÓA/MỞ KHÓA USER ==========
@@ -290,7 +310,7 @@ public class UserManagementController extends HttpServlet {
         
         if (userIdParam == null || userIdParam.isEmpty()) {
             request.getSession().setAttribute("error", "Thiếu ID người dùng!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
             return;
         }
         
@@ -303,7 +323,7 @@ public class UserManagementController extends HttpServlet {
             if (currentUser.getId() == userId) {
                 session.setAttribute("error", 
                     "⚠️ Không thể thay đổi trạng thái của chính mình!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/list");
+                response.sendRedirect(request.getContextPath() + "/admin/users");
                 return;
             }
             
@@ -321,7 +341,7 @@ public class UserManagementController extends HttpServlet {
             request.getSession().setAttribute("error", "ID không hợp lệ!");
         }
         
-        response.sendRedirect(request.getContextPath() + "/admin/users/list");
+        response.sendRedirect(request.getContextPath() + "/admin/users");
     }
     
     // ========== 6. XÓA USER ==========
@@ -332,7 +352,7 @@ public class UserManagementController extends HttpServlet {
         
         if (userIdParam == null || userIdParam.isEmpty()) {
             request.getSession().setAttribute("error", "Thiếu ID người dùng!");
-            response.sendRedirect(request.getContextPath() + "/admin/users/list");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
             return;
         }
         
@@ -345,7 +365,7 @@ public class UserManagementController extends HttpServlet {
             if (currentUser.getId() == userId) {
                 session.setAttribute("error", 
                     "⚠️ Không thể xóa tài khoản của chính mình!");
-                response.sendRedirect(request.getContextPath() + "/admin/users/list");
+                response.sendRedirect(request.getContextPath() + "/admin/users");
                 return;
             }
             
@@ -356,7 +376,7 @@ public class UserManagementController extends HttpServlet {
                 if (adminCount <= 1) {
                     session.setAttribute("error", 
                         "⚠️ Không thể xóa admin duy nhất trong hệ thống!");
-                    response.sendRedirect(request.getContextPath() + "/admin/users/list");
+                    response.sendRedirect(request.getContextPath() + "/admin/users");
                     return;
                 }
             }
@@ -381,6 +401,6 @@ public class UserManagementController extends HttpServlet {
             request.getSession().setAttribute("error", "ID không hợp lệ!");
         }
         
-        response.sendRedirect(request.getContextPath() + "/admin/users/list");
+        response.sendRedirect(request.getContextPath() + "/admin/users");
     }
 }

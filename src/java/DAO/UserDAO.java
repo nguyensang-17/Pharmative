@@ -157,16 +157,27 @@ public class UserDAO {
     }
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("user_id"));
-        user.setFullname(rs.getString("fullname"));
-        user.setEmail(rs.getString("email"));        
-        user.setPassword(rs.getString("password_hash"));
-        user.setRole(rs.getString("role"));
-        user.setVerified(rs.getBoolean("is_verified"));
-        user.setVerificationCode(rs.getString("verification_code"));
-        return user;
+    User user = new User();
+    user.setId(rs.getInt("user_id"));
+    user.setFullname(rs.getString("fullname"));
+    user.setEmail(rs.getString("email"));        
+    user.setPassword(rs.getString("password_hash"));
+    user.setRole(rs.getString("role"));
+    user.setVerified(rs.getBoolean("is_verified"));
+    user.setVerificationCode(rs.getString("verification_code"));
+    
+    // ✅ THÊM DÒNG NÀY
+    user.setPhoneNumber(rs.getString("phone_number"));
+    
+    // ✅ THÊM created_at nếu có trong model
+    try {
+        user.setCreatedAt(rs.getTimestamp("created_at"));
+    } catch (Exception e) {
+        // Nếu không có field created_at trong model thì bỏ qua
     }
+    
+    return user;
+}
     // ============ PHẦN BỔ SUNG CHO ADMIN USER MANAGEMENT ============
 
 // 1. Lấy users với phân trang

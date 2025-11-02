@@ -506,30 +506,24 @@
                     <span>Dashboard</span>
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="${pageContext.request.contextPath}/admin/users" class="nav-link">
-                    <i class="fas fa-users-cog"></i>
-                    <span>Quản lý Users</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="${pageContext.request.contextPath}/admin/orders" class="nav-link">
-                    <i class="fas fa-file-invoice"></i>
-                    <span>Quản lý Orders</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="${pageContext.request.contextPath}/admin/products" class="nav-link">
-                    <i class="fas fa-box-open"></i>
-                    <span>Quản lý Products</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="${pageContext.request.contextPath}/admin/categories" class="nav-link">
-                    <i class="fas fa-tags"></i>
-                    <span>Quản lý Danh mục</span>
-                </a>
-            </div>
+           <div class="action-buttons">
+    <a href="${pageContext.request.contextPath}/admin/users" class="nav-link">
+        <i class="fas fa-users-cog"></i>
+        <span>Quản lý Users</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/orders" class="nav-link">
+        <i class="fas fa-file-invoice"></i>
+        <span>Quản lý Orders</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/products" class="nav-link">
+        <i class="fas fa-box-open"></i>
+        <span>Quản lý Products</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/categories" class="nav-link">
+        <i class="fas fa-tags"></i>
+        <span>Quản lý Danh mục</span>
+    </a>
+</div>
             <div class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="fas fa-chart-bar"></i>
