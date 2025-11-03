@@ -15,7 +15,7 @@
                     <jsp:include page="/WEB-INF/views/admin/fragments/_topbar.jsp"/>
                 </header>
                 <section class="content">
-                    <jsp:include page="/WEB-INF/views/admin/fragments/_flash.jspf"/>
+                    <jsp:include page="/WEB-INF/views/admin/fragments/_flash.jsp"/>
                     <!-- vùng nội dung động -->
                     <jsp:include page="${contentPage}"/>
                 </section>
