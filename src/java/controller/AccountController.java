@@ -35,7 +35,7 @@ public class AccountController extends HttpServlet {
         User user = (User) session.getAttribute("currentUser");
 
         // Lấy lịch sử đơn hàng của người dùng
-        List<Order> orderHistory = orderDAO.getById(user.getId());
+        List<Order> orderHistory = orderDAO.getOrdersByUserId(user.getId());
         request.setAttribute("orderHistory", orderHistory);
         request.getRequestDispatcher("/customer/account.jsp").forward(request, response);
     }
