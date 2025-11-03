@@ -483,7 +483,7 @@ a {
 
 /* Blocks */
 .site-wrap {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   background: #fff;
   -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);

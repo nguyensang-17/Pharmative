@@ -3,6 +3,78 @@
 
 <c:set var="cpath" value="${pageContext.request.contextPath}" />
 
+<style>
+    /* OVERRIDE CSS - Fix chiều rộng header */
+    .site-navbar {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .site-navbar .container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Đảm bảo header chiếm toàn bộ chiều rộng */
+    .site-navbar > .container {
+        max-width: 100% !important;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Fix cho các phần tử bên trong */
+    .d-flex.align-items-center.justify-content-between {
+        width: 100% !important;
+    }
+    
+    /* Custom styles cho header */
+    .icons-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .icons-btn {
+        position: relative;
+        color: #333;
+        text-decoration: none;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .icons-btn:hover {
+        background: #f8f9fa;
+        color: #007bff;
+        transform: translateY(-2px);
+    }
+    
+    .bag {
+        position: relative;
+    }
+    
+    .number {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
 <div class="site-navbar py-2">
   <div class="search-wrap">
     <div class="container">
@@ -15,14 +87,16 @@
 
   <div class="container">
     <div class="d-flex align-items-center justify-content-between">
+      <!-- Logo -->
       <div class="logo">
         <div class="site-logo">
           <a href="${cpath}/home" class="js-logo-clone">
-            <strong class="text-primary">Thực phẩm</strong> Chức năng
+            Pharma<strong class="text-primary">tive</strong>
           </a>
         </div>
       </div>
 
+      <!-- Main Navigation -->
       <div class="main-nav d-none d-lg-block">
         <nav class="site-navigation text-right text-md-center" role="navigation">
           <ul class="site-menu js-clone-nav d-none d-lg-block">
@@ -71,34 +145,73 @@
         </nav>
       </div>
 
-      <!-- Icons góc phải -->
-      <div class="icons">
-<<<<<<< HEAD
-        <!-- 🧑 Icon user dẫn đến login.jsp -->
-        <a href="${cpath}/login.jsp" class="icons-btn d-inline-block">
-          <span class="icon-user"></span>
+      <!-- Icons góc phải - Sắp xếp lại theo hàng ngang -->
+      <div class="icons-container">
+        <!-- 🔍 Tìm kiếm -->
+        <a href="#" class="icons-btn js-search-open" title="Tìm kiếm">
+          <span class="icon-search"></span>
         </a>
 
         <!-- 🛒 Giỏ hàng -->
-=======
-          
-        <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
->>>>>>> quan-Admin/user
-        <a href="${cpath}/cart" class="icons-btn d-inline-block bag">
+        <a href="${cpath}/cart" class="icons-btn bag" title="Giỏ hàng">
           <span class="icon-shopping-bag"></span>
           <span class="number">2</span>
         </a>
-<<<<<<< HEAD
 
-        <!-- Icon menu (mobile) -->
-=======
-        
->>>>>>> quan-Admin/user
-        <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none">
+        <!-- 👤 Đăng nhập -->
+        <a href="${cpath}/login.jsp" class="icons-btn" title="Đăng nhập">
+          <span class="icon-user"></span>
+        </a>
+
+        <!-- Menu mobile -->
+        <a href="#" class="icons-btn d-lg-none js-menu-toggle" title="Menu">
           <span class="icon-menu"></span>
         </a>
-        
       </div>
     </div>
   </div>
 </div>
+
+<script>
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchOpen = document.querySelector('.js-search-open');
+        const searchClose = document.querySelector('.js-search-close');
+        const searchWrap = document.querySelector('.search-wrap');
+        
+        if (searchOpen && searchWrap) {
+            searchOpen.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchWrap.classList.add('active');
+                // Focus on search input
+                const searchInput = searchWrap.querySelector('input');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            });
+        }
+        
+        if (searchClose && searchWrap) {
+            searchClose.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchWrap.classList.remove('active');
+            });
+        }
+        
+        // Close search when clicking outside
+        if (searchWrap) {
+            searchWrap.addEventListener('click', function(e) {
+                if (e.target === searchWrap) {
+                    searchWrap.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close search with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchWrap.classList.contains('active')) {
+                searchWrap.classList.remove('active');
+            }
+        });
+    });
+</script>

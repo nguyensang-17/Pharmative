@@ -13,146 +13,269 @@ import models.Product;
 @WebServlet(name = "ProductManagementController", urlPatterns = {"/admin/products"})
 public class ProductManagementController extends HttpServlet {
 
-<<<<<<< HEAD
-=======
     private static final long serialVersionUID = 1L;
 
-<<<<<<< Updated upstream
-    // View constants
-    private static final String LAYOUT = "/WEB-INF/admin/layout.jsp";
-    private static final String PRODUCT_INDEX = "/WEB-INF/admin/products/index.jsp";
-    private static final String PRODUCT_FORM  = "/WEB-INF/admin/products/form.jsp";
-
-=======
->>>>>>> Stashed changes
->>>>>>> sang
     private final ProductDAO productDAO = new ProductDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
     private final BrandDAO brandDAO = new BrandDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-              throws ServletException, IOException {
-        // TODO: check admin
+            throws ServletException, IOException {
+        
+        // Check admin authentication
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("currentUser") == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        
         String action = req.getParameter("action");
+        
         try {
-<<<<<<< HEAD
-            if ("edit".equals(action)) {
-                Integer id = parseInt(req.getParameter("id"));
-                req.setAttribute("product", id == null ? null : productDAO.getById(id));
-=======
-<<<<<<< Updated upstream
-            if (pathInfo != null && !pathInfo.equals("/")) {
-                String[] parts = pathInfo.split("/");
-                // parts[0] = "" (leading slash)
-                if (parts.length == 2 && "new".equals(parts[1])) {
-                    showProductForm(req, resp, null);
-                    return;
-                }
-                if (parts.length == 3) {
-                    Integer id = parseIntSafe(parts[1]);
-                    if (id == null) { resp.sendError(400, "Invalid product id"); return; }
-                    switch (parts[2]) {
-                        case "edit":
-                            showProductForm(req, resp, id);
-                            return;
-                        case "delete":
-                            deleteProduct(req, resp, id);
-                            return;
-                    }
-                }
-=======
-            if ("edit".equals(action)) {
-                Integer id = parseInt(req.getParameter("id"));
-                req.setAttribute("product", id == null ? null : productDAO.getProductById(id));
->>>>>>> sang
-                req.setAttribute("categories", categoryDAO.getAll());
-                req.setAttribute("brands", brandDAO.getAll());
-                req.getRequestDispatcher("/WEB-INF/views/admin/product-edit.jsp").forward(req, resp);
-            } else {
-<<<<<<< HEAD
-                req.setAttribute("products", productDAO.getAll(1, 1000, null, null, null, "created"));
-                req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
-=======
-                //req.setAttribute("products", productDAO.getAllProducts(1, 1000, null, null, null, "created"));
-                req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
->>>>>>> Stashed changes
->>>>>>> sang
+            if (action == null || action.isEmpty()) {
+                // Default: show product list
+                listProducts(req, resp);
+            } 
+            else if ("edit".equals(action)) {
+                showEditForm(req, resp);
+            } 
+            else if ("new".equals(action)) {
+                showNewForm(req, resp);
+            } 
+            else if ("delete".equals(action)) {
+                deleteProduct(req, resp);
+            } 
+            else {
+                listProducts(req, resp);
             }
         } catch (Exception e) {
-            throw new ServletException(e);
+            e.printStackTrace();
+            throw new ServletException("Lỗi: " + e.getMessage(), e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-              throws ServletException, IOException {
-        // TODO: check admin
+            throws ServletException, IOException {
+        
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        
         String action = req.getParameter("action");
+        
         try {
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-            // also accept REST-like save via POST to /admin/products (create) or /admin/products/{id} (update)
-            String pathInfo = req.getPathInfo(); // may be null
-            if (pathInfo != null && pathInfo.matches("^/\\d+$")) {
-                // update
-                Integer id = parseIntSafe(pathInfo.substring(1));
-                saveProduct(req, resp, id);
-                return;
-=======
             if ("save".equals(action)) {
-                Integer id = parseInt(req.getParameter("product_id"));
-                Product p = id == null ? new Product() : productDAO.getProductById(id);
-                p.setProductName(req.getParameter("product_name"));
-                p.setDescription(req.getParameter("description"));
-                p.setPrice(new BigDecimal(req.getParameter("price")));
-                p.setStockQuantity(Integer.parseInt(req.getParameter("stock_quantity")));
-                p.setImageUrl(req.getParameter("image_url"));
-                p.setCategoryId(parseInt(req.getParameter("category_id")));
-                p.setBrandId(parseInt(req.getParameter("brand_id")));
-                p.setSupplierId(parseInt(req.getParameter("supplier_id")));
-                if (id == null) {
-                    productDAO.addProduct(p);
-                } else {
-                    productDAO.updateProduct(p);
-                }
-            } else if ("delete".equals(action)) {
-                productDAO.deleteProduct(Integer.parseInt(req.getParameter("product_id")));
->>>>>>> Stashed changes
+                saveProduct(req, resp);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/admin/products");
             }
-
->>>>>>> sang
-            if ("save".equals(action)) {
-                Integer id = parseInt(req.getParameter("product_id"));
-                Product p = id == null ? new Product() : productDAO.getById(id);
-                p.setProductName(req.getParameter("product_name"));
-                p.setDescription(req.getParameter("description"));
-                p.setPrice(new BigDecimal(req.getParameter("price")));
-                p.setStockQuantity(Integer.parseInt(req.getParameter("stock_quantity")));
-                p.setImageUrl(req.getParameter("image_url"));
-                p.setCategoryId(parseInt(req.getParameter("category_id")));
-                p.setBrandId(parseInt(req.getParameter("brand_id")));
-                p.setSupplierId(parseInt(req.getParameter("supplier_id")));
-                if (id == null) {
-                    productDAO.create(p);
-                } else {
-                    productDAO.update(p);
-                }
-            } else if ("delete".equals(action)) {
-                productDAO.delete(Integer.parseInt(req.getParameter("product_id")));
-            }
-            resp.sendRedirect(req.getContextPath() + "/admin/products");
         } catch (Exception e) {
-            throw new ServletException(e);
+            e.printStackTrace();
+            throw new ServletException("Lỗi: " + e.getMessage(), e);
         }
     }
 
+    // 1. LIST PRODUCTS
+    private void listProducts(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, Exception {
+        
+        // Get all products for admin
+        var products = productDAO.getAllProducts();
+        req.setAttribute("products", products);
+        
+        // Forward to product list page
+        req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
+    }
+
+    // 2. SHOW EDIT FORM
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, Exception {
+        
+        String idParam = req.getParameter("id");
+        
+        if (idParam == null || idParam.isEmpty()) {
+            setSessionError(req, "Thiếu ID sản phẩm!");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+        
+        try {
+            int productId = Integer.parseInt(idParam);
+            Product product = productDAO.getProductById(productId);
+            
+            if (product == null) {
+                setSessionError(req, "Không tìm thấy sản phẩm!");
+                resp.sendRedirect(req.getContextPath() + "/admin/products");
+                return;
+            }
+            
+            // Get categories and brands for dropdowns
+            var categories = categoryDAO.getAll();
+            var brands = brandDAO.getAll();
+            
+            req.setAttribute("product", product);
+            req.setAttribute("categories", categories);
+            req.setAttribute("brands", brands);
+            
+            req.getRequestDispatcher("/WEB-INF/views/admin/product-edit.jsp").forward(req, resp);
+            
+        } catch (NumberFormatException e) {
+            setSessionError(req, "ID sản phẩm không hợp lệ!");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+        }
+    }
+
+    // 3. SHOW NEW FORM
+    private void showNewForm(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, Exception {
+        
+        // Get categories and brands for dropdowns
+        var categories = categoryDAO.getAll();
+        var brands = brandDAO.getAll();
+        
+        req.setAttribute("categories", categories);
+        req.setAttribute("brands", brands);
+        
+        req.getRequestDispatcher("/WEB-INF/views/admin/product-edit.jsp").forward(req, resp);
+    }
+
+    // 4. SAVE PRODUCT (Create or Update)
+    private void saveProduct(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, Exception {
+        
+        try {
+            String idParam = req.getParameter("product_id");
+            Integer productId = parseInt(idParam);
+            
+            Product product;
+            boolean isNew = (productId == null);
+            
+            if (isNew) {
+                product = new Product();
+            } else {
+                product = productDAO.getProductById(productId);
+                if (product == null) {
+                    setSessionError(req, "Không tìm thấy sản phẩm để cập nhật!");
+                    resp.sendRedirect(req.getContextPath() + "/admin/products");
+                    return;
+                }
+            }
+            
+            // Set product properties from form data
+            product.setProductName(req.getParameter("product_name"));
+            product.setDescription(req.getParameter("description"));
+            
+            // Handle price
+            try {
+                String priceStr = req.getParameter("price");
+                if (priceStr != null && !priceStr.trim().isEmpty()) {
+                    product.setPrice(new BigDecimal(priceStr));
+                }
+            } catch (NumberFormatException e) {
+                setSessionError(req, "Giá sản phẩm không hợp lệ!");
+                redirectBackToForm(req, resp, productId);
+                return;
+            }
+            
+            // Handle stock quantity
+            try {
+                String stockStr = req.getParameter("stock_quantity");
+                if (stockStr != null && !stockStr.trim().isEmpty()) {
+                    product.setStockQuantity(Integer.parseInt(stockStr));
+                }
+            } catch (NumberFormatException e) {
+                setSessionError(req, "Số lượng tồn kho không hợp lệ!");
+                redirectBackToForm(req, resp, productId);
+                return;
+            }
+            
+            product.setImageUrl(req.getParameter("image_url"));
+            product.setCategoryId(parseInt(req.getParameter("category_id")));
+            product.setBrandId(parseInt(req.getParameter("brand_id")));
+            product.setSupplierId(parseInt(req.getParameter("supplier_id")));
+            
+            // Save product
+            boolean success;
+            if (isNew) {
+                productDAO.addProduct(product);
+                success = true;
+                setSessionMessage(req, "✅ Thêm sản phẩm thành công!");
+            } else {
+                success = productDAO.updateProduct(product);
+                if (success) {
+                    setSessionMessage(req, "✅ Cập nhật sản phẩm thành công!");
+                } else {
+                    setSessionError(req, "❌ Không thể cập nhật sản phẩm!");
+                }
+            }
+            
+            if (success) {
+                resp.sendRedirect(req.getContextPath() + "/admin/products");
+            } else {
+                redirectBackToForm(req, resp, productId);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            setSessionError(req, "Lỗi hệ thống: " + e.getMessage());
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+        }
+    }
+
+    // 5. DELETE PRODUCT
+    private void deleteProduct(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, Exception {
+        
+        String idParam = req.getParameter("id");
+        
+        if (idParam == null || idParam.isEmpty()) {
+            setSessionError(req, "Thiếu ID sản phẩm!");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+        
+        try {
+            int productId = Integer.parseInt(idParam);
+            
+            boolean success = productDAO.deleteProduct(productId);
+            
+            if (success) {
+                setSessionMessage(req, "✅ Đã xóa sản phẩm thành công!");
+            } else {
+                setSessionError(req, "❌ Không thể xóa sản phẩm!");
+            }
+            
+        } catch (NumberFormatException e) {
+            setSessionError(req, "ID sản phẩm không hợp lệ!");
+        }
+        
+        resp.sendRedirect(req.getContextPath() + "/admin/products");
+    }
+
+    // Helper methods
     private Integer parseInt(String s) {
         try {
             return (s == null || s.isBlank()) ? null : Integer.valueOf(s);
         } catch (Exception e) {
             return null;
+        }
+    }
+    
+    private void setSessionError(HttpServletRequest req, String message) {
+        req.getSession().setAttribute("error", message);
+    }
+    
+    private void setSessionMessage(HttpServletRequest req, String message) {
+        req.getSession().setAttribute("message", message);
+    }
+    
+    private void redirectBackToForm(HttpServletRequest req, HttpServletResponse resp, Integer productId) 
+            throws IOException {
+        if (productId == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/products?action=new");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/admin/products?action=edit&id=" + productId);
         }
     }
 }

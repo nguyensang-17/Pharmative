@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/admin/users")
+@WebServlet(urlPatterns = {"/admin/users", "/admin/users/"})
 public class UserManagementController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final UserDAO userDAO = new UserDAO();
@@ -23,7 +23,7 @@ public class UserManagementController extends HttpServlet {
         // ====== KIỂM TRA QUYỀN ADMIN ======
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect(request.getContextPath() + "/loginfff");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
@@ -296,11 +296,7 @@ public class UserManagementController extends HttpServlet {
     }
 }
         
-    } catch (NumberFormatException e) {
-        request.getSession().setAttribute("error", "Dữ liệu không hợp lệ!");
-        response.sendRedirect(request.getContextPath() + "/admin/users");
-    }
-    }
+    
     
     // ========== 5. KHÓA/MỞ KHÓA USER ==========
     private void toggleUserStatus(HttpServletRequest request, HttpServletResponse response)
