@@ -73,21 +73,31 @@
 
       <!-- Icons góc phải -->
       <div class="icons">
+<<<<<<< HEAD
         <!-- 🧑 Icon user dẫn đến login.jsp -->
         <a href="${cpath}/login.jsp" class="icons-btn d-inline-block">
           <span class="icon-user"></span>
         </a>
 
         <!-- 🛒 Giỏ hàng -->
+=======
+          
+        <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
+>>>>>>> quan-Admin/user
         <a href="${cpath}/cart" class="icons-btn d-inline-block bag">
           <span class="icon-shopping-bag"></span>
           <span class="number">2</span>
         </a>
+<<<<<<< HEAD
 
         <!-- Icon menu (mobile) -->
+=======
+        
+>>>>>>> quan-Admin/user
         <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none">
           <span class="icon-menu"></span>
         </a>
+        
       </div>
     </div>
   </div>

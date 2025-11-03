@@ -55,4 +55,65 @@ public class OrderDAO {
         o.setShippingAddressId(rs.getInt("shipping_address_id"));
         return o;
     }
+
+    public int countAllOrders() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+    
+    public double getTotalRevenue() throws SQLException {
+        String sql = "SELECT COALESCE(SUM(total_amount), 0) " +
+                    "FROM orders " +
+                    "WHERE status IN ('delivered', 'processing', 'shipped')";
+        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        }
+        return 0.0;
+    }
+    
+    public int countOrdersByStatus(String status) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM orders WHERE status = ?";
+        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
+    
+    /**
+     * Lấy doanh thu theo khoảng thời gian - FIXED
+     */
+    public double getRevenueByDateRange(java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
+        String sql = "SELECT COALESCE(SUM(total_amount), 0) " +
+                    "FROM orders " +
+                    "WHERE order_date BETWEEN ? AND ? " +
+                    "AND status IN ('delivered', 'processing', 'shipped')";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, startDate);
+            ps.setDate(2, endDate);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+        }
+        return 0.0;
+    }
 }

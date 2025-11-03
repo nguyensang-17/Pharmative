@@ -1,0 +1,342 @@
+/* =========================================================
+   PHARMATIVE – SCHEMA + SEED (>=30 products)
+   Tương thích code cũ: users/password_hash/verify/reset...
+   ========================================================= */
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP DATABASE IF EXISTS pharmative;
+CREATE DATABASE pharmative CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE pharmative;
+
+/* ---------- 1. Roles / Branches ---------- */
+CREATE TABLE roles (
+  role_id   TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  role_name VARCHAR(30) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+CREATE TABLE branches (
+  branch_id   SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  branch_code VARCHAR(20) NOT NULL UNIQUE,
+  branch_name VARCHAR(120) NOT NULL,
+  is_online_only BOOLEAN NOT NULL DEFAULT TRUE
+) ENGINE=InnoDB;
+INSERT INTO branches (branch_id, branch_code, branch_name, is_online_only) VALUES
+(1,'ONLINE','Pharmative Online',TRUE);
+
+/* ---------- 2. USERS (chuẩn cũ) ---------- */
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  fullname VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone_number VARCHAR(15) UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('customer','admin') NOT NULL DEFAULT 'customer',
+  is_verified BOOLEAN DEFAULT FALSE,
+  verification_code VARCHAR(64) NULL,
+  reset_token VARCHAR(64) NULL,
+  reset_token_expiry TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- bcrypt của "password123"
+INSERT INTO users (user_id, fullname,email,phone_number,password_hash,role,is_verified) VALUES
+(1,'Admin Pharmative','admin@pharmative.com','0987654321','$2a$10$Y.a4J4O./eJ4.W2mKBc.a.p./ZgajLh/gqX.UaK.Z2m8.I0.4z/G.','admin',TRUE),
+(2,'Nguyễn Văn An','nguyen.an@example.com','0123456789','$2a$10$Y.a4J4O./eJ4.W2mKBc.a.p./ZgajLh/gqX.UaK.Z2m8.I0.4z/G.','customer',TRUE),
+(3,'Trần Thị Bình','tran.binh@example.com','0912345678','$2a$10$Y.a4J4O./eJ4.W2mKBc.a.p./ZgajLh/gqX.UaK.Z2m8.I0.4z/G.','customer',TRUE);
+
+/* ---------- 3. CUSTOMERS (map 1-1 users) ---------- */
+CREATE TABLE customers (
+  customer_id INT PRIMARY KEY,
+  date_of_birth DATE NULL,
+  gender ENUM('male','female','other') NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_customers_users
+    FOREIGN KEY (customer_id) REFERENCES users(user_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+INSERT INTO customers (customer_id) VALUES (2),(3);
+
+/* ---------- 4. ADDRESSES ---------- */
+CREATE TABLE addresses (
+  address_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  recipient_name  VARCHAR(100) NOT NULL,
+  recipient_phone VARCHAR(15)  NOT NULL,
+  street_address  VARCHAR(255) NOT NULL,
+  ward    VARCHAR(100) NOT NULL,
+  district VARCHAR(100) NOT NULL,
+  city     VARCHAR(100) NOT NULL,
+  is_default BOOLEAN DEFAULT FALSE,
+  CONSTRAINT fk_addresses_users
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+INSERT INTO addresses
+(address_id,user_id,recipient_name,recipient_phone,street_address,ward,district,city,is_default) VALUES
+(1,2,'Nguyễn Văn An','0123456789','Số 123, Giải Phóng','Phương Mai','Đống Đa','Hà Nội',TRUE),
+(2,3,'Trần Thị Bình','0912345678','456 Võ Văn Tần','Phường 5','Quận 3','Hồ Chí Minh',TRUE);
+
+/* ---------- 5. CATEGORIES (ID cố định để tham chiếu) ---------- */
+CREATE TABLE categories (
+  category_id INT AUTO_INCREMENT PRIMARY KEY,
+  category_name VARCHAR(100) NOT NULL,
+  parent_category_id INT NULL,
+  CONSTRAINT fk_categories_parent
+    FOREIGN KEY (parent_category_id) REFERENCES categories(category_id)
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+INSERT INTO categories (category_id,category_name,parent_category_id) VALUES
+(1,'Vitamins & Khoáng chất',NULL),
+(2,'Thảo dược & Bổ sung',NULL),
+(3,'Dinh dưỡng thể thao',NULL),
+(4,'Kiểm soát cân nặng',NULL),
+(5,'Hỗ trợ sắc đẹp',NULL),
+(6,'Vitamin tổng hợp',1),
+(7,'Vitamin C',1),
+(8,'Canxi & Vitamin D',1),
+(9,'Bổ não & Trí nhớ',2),
+(10,'Hỗ trợ tiêu hóa',2),
+(11,'Whey Protein',3),
+(12,'BCAA & Amino',3);
+
+/* ---------- 6. BRANDS / SUPPLIERS ---------- */
+CREATE TABLE brands (
+  brand_id INT AUTO_INCREMENT PRIMARY KEY,
+  brand_name VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+CREATE TABLE suppliers (
+  supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+  supplier_name VARCHAR(150) NOT NULL,
+  contact_person VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  phone_number VARCHAR(15)
+) ENGINE=InnoDB;
+
+INSERT INTO brands (brand_id,brand_name) VALUES
+(1,'Blackmores'),(2,'Nature Made'),(3,'Now Foods'),(4,'Optimum Nutrition'),(5,'Herbalife'),
+(6,'DHC'),(7,'Kirkland Signature'),(8,'Centrum'),(9,'GNC'),(10,'Solgar');
+
+INSERT INTO suppliers (supplier_id,supplier_name,contact_person,email,phone_number) VALUES
+(1,'Công ty Dược An Khang','Lê Minh','contact@ankhang.com','0243111222'),
+(2,'Nhà phân phối Toàn Cầu','Phạm Hùng','info@toancau.vn','0283999888'),
+(3,'Nature Vietnam Imports','Jane Doe','support@nature-vn.com','0243555666');
+
+/* ---------- 7. PRODUCTS (cấu trúc cũ) ---------- */
+CREATE TABLE products (
+  product_id INT AUTO_INCREMENT PRIMARY KEY,
+  product_name VARCHAR(255) NOT NULL,
+  description  TEXT,
+  price DECIMAL(12,2) NOT NULL,
+  stock_quantity INT NOT NULL DEFAULT 0,
+  image_url VARCHAR(255),
+  category_id INT,
+  brand_id INT,
+  supplier_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_products_category
+    FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL,
+  CONSTRAINT fk_products_brand
+    FOREIGN KEY (brand_id) REFERENCES brands(brand_id) ON DELETE SET NULL,
+  CONSTRAINT fk_products_supplier
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+/* >= 30 sản phẩm (p01..p32) */
+INSERT INTO products
+(product_id,product_name,description,price,stock_quantity,image_url,category_id,brand_id,supplier_id) VALUES
+(1,'Blackmores Vitamin C 500mg','Bổ sung Vitamin C tăng đề kháng',350000,150,'images/p01.jpg',7,1,1),
+(2,'Nature Made Vitamin D3 2000IU','Hỗ trợ xương & miễn dịch',420000,200,'images/p02.jpg',8,2,2),
+(3,'Kirkland Signature Daily Multi','Vitamin tổng hợp',550000,120,'images/p03.jpg',6,7,3),
+(4,'Centrum Men Multivitamin','Vitamin tổng hợp cho nam',620000,90,'images/p04.jpg',6,8,2),
+(5,'Centrum Women Multivitamin','Vitamin tổng hợp cho nữ',620000,100,'images/p05.jpg',6,8,2),
+(6,'Now Foods Omega-3 1000mg','Dầu cá EPA/DHA',480000,160,'images/p06.jpg',2,3,3),
+(7,'Solgar Calcium Magnesium Zinc','Bổ sung xương khớp',590000,110,'images/p07.jpg',8,10,1),
+(8,'GNC Mega Men Sport','Đa vitamin thể thao',690000,75,'images/p08.jpg',6,9,2),
+(9,'DHC Vitamin C 1000mg','Viên uống đẹp da',220000,300,'images/p09.jpg',7,6,1),
+(10,'Herbalife Protein Drink Mix','Bổ sung đạm',720000,80,'images/p10.jpg',11,5,1),
+(11,'ON Gold Standard Whey 5lbs','Whey protein isolate/concentrate',1990000,45,'images/p11.jpg',11,4,2),
+(12,'ON Gold Standard BCAA','BCAA phục hồi cơ',890000,60,'images/p12.jpg',12,4,2),
+(13,'Now Foods Probiotic-10','Men vi sinh đường ruột',540000,130,'images/p13.jpg',10,3,3),
+(14,'Kirkland Vitamin E 400 IU','Chống oxy hóa',360000,140,'images/p14.jpg',1,7,3),
+(15,'Blackmores Fish Oil 1000','Dầu cá hỗ trợ tim mạch',520000,150,'images/p15.jpg',2,1,1),
+(16,'Nature Made Magnesium 250mg','Giảm căng cơ, ngủ ngon',410000,95,'images/p16.jpg',1,2,2),
+(17,'Solgar Biotin 5000mcg','Tóc–da–móng',650000,85,'images/p17.jpg',5,10,1),
+(18,'GNC L-Carnitine 500','Hỗ trợ chuyển hóa mỡ',730000,70,'images/p18.jpg',4,9,2),
+(19,'DHC Collagen 2050mg','Hỗ trợ đàn hồi da',390000,180,'images/p19.jpg',5,6,1),
+(20,'Now Foods CoQ10 100mg','Tăng năng lượng tế bào',780000,60,'images/p20.jpg',1,3,3),
+(21,'Centrum Silver 50+','Đa vitamin người lớn tuổi',670000,100,'images/p21.jpg',6,8,2),
+(22,'Kirkland Glucosamine 1500','Khớp – sụn',620000,90,'images/p22.jpg',1,7,3),
+(23,'Blackmores Evening Primrose Oil','Da & nội tiết nữ',610000,85,'images/p23.jpg',5,1,1),
+(24,'ON Creatine Monohydrate','Sức mạnh & hiệu suất',690000,110,'images/p24.jpg',3,4,2),
+(25,'Herbalife Formula 1 Shake','Bữa ăn lành mạnh',780000,95,'images/p25.jpg',4,5,1),
+(26,'Now Foods Vitamin K2 MK-7','Hỗ trợ xương mạch máu',620000,70,'images/p26.jpg',8,3,3),
+(27,'Solgar Vitamin B12 1000mcg','Hồng cầu–thần kinh',520000,90,'images/p27.jpg',1,10,1),
+(28,'GNC Zinc 50mg','Miễn dịch–da',350000,140,'images/p28.jpg',1,9,2),
+(29,'Centrum Kids Gummies','Đa vitamin cho trẻ',490000,120,'images/p29.jpg',6,8,2),
+(30,'DHC Vitamin B-Mix','Chuyển hóa năng lượng',210000,220,'images/p30.jpg',1,6,1),
+(31,'Blackmores Odourless Garlic','Tỏi không mùi – miễn dịch',330000,150,'images/p31.jpg',2,1,1),
+(32,'Now Foods GABA 750mg','Thư giãn–giấc ngủ',640000,80,'images/p32.jpg',2,3,3);
+
+/* ---------- 8. Bảng mở rộng: prices / images / inventory / promotions ---------- */
+CREATE TABLE product_prices (
+  product_id INT PRIMARY KEY,
+  price DECIMAL(12,2) NOT NULL,
+  compare_at DECIMAL(12,2) NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                 ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_prices_products FOREIGN KEY (product_id) REFERENCES products(product_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE product_images (
+  image_id  BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  product_id INT NOT NULL,
+  image_url  VARCHAR(500) NOT NULL,
+  is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_order INT NOT NULL DEFAULT 1,
+  CONSTRAINT fk_images_products FOREIGN KEY (product_id) REFERENCES products(product_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE inventory (
+  product_id INT PRIMARY KEY,
+  branch_id  SMALLINT UNSIGNED NOT NULL,
+  quantity   INT NOT NULL DEFAULT 0,
+  CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_inventory_branch FOREIGN KEY (branch_id) REFERENCES branches(branch_id)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE promotions (
+  promo_id   INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  product_id INT NOT NULL,
+  title       VARCHAR(160) NOT NULL,
+  percent_off TINYINT UNSIGNED NULL,
+  amount_off  DECIMAL(12,2) NULL,
+  starts_at   DATETIME NOT NULL,
+  ends_at     DATETIME NOT NULL,
+  CONSTRAINT fk_promotions_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Seed giá = price hiện tại
+INSERT INTO product_prices (product_id, price, compare_at, updated_at)
+SELECT product_id, price, NULL, NOW() FROM products;
+
+-- Ảnh primary dựa theo image_url của products
+INSERT INTO product_images (product_id,image_url,is_primary,sort_order)
+SELECT product_id, image_url, TRUE, 1 FROM products WHERE image_url IS NOT NULL;
+
+-- Tồn kho theo stock_quantity tại chi nhánh ONLINE
+INSERT INTO inventory (product_id, branch_id, quantity)
+SELECT product_id, 1, GREATEST(0, stock_quantity) FROM products;
+
+/* ---------- 9. Cart / Items (giữ nguyên, có thể trống) ---------- */
+CREATE TABLE carts (
+  cart_id     BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  customer_id INT NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  is_active   BOOLEAN NOT NULL DEFAULT TRUE,
+  CONSTRAINT fk_carts_customer FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE cart_items (
+  cart_item_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  cart_id     BIGINT UNSIGNED NOT NULL,
+  product_id  INT NOT NULL,
+  quantity    INT NOT NULL,
+  added_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_cart_product (cart_id, product_id),
+  CONSTRAINT fk_cartitems_cart FOREIGN KEY (cart_id) REFERENCES carts(cart_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_cartitems_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+/* ---------- 10. Orders / Order Details (chuẩn cũ) ---------- */
+CREATE TABLE orders (
+  order_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id  INT NOT NULL,
+  order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  total_amount DECIMAL(15,2) NOT NULL,
+  status ENUM('pending','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  shipping_address_id INT NOT NULL,
+  CONSTRAINT fk_orders_user     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE RESTRICT,
+  CONSTRAINT fk_orders_address  FOREIGN KEY (shipping_address_id) REFERENCES addresses(address_id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE order_details (
+  order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id  INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL,
+  price_per_unit DECIMAL(12,2) NOT NULL,
+  CONSTRAINT fk_od_order   FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+  CONSTRAINT fk_od_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE RESTRICT,
+  UNIQUE (order_id, product_id)
+) ENGINE=InnoDB;
+
+-- Seed 1 đơn ví dụ
+INSERT INTO orders (order_id,user_id,total_amount,status,shipping_address_id)
+VALUES (1,2,970000.00,'delivered',1);
+INSERT INTO order_details (order_detail_id,order_id,product_id,quantity,price_per_unit) VALUES
+(1,1,1,1,350000.00),(2,1,6,1,480000.00),(3,1,30,1,140000.00);
+
+/* ---------- 11. Payments / Shipments ---------- */
+CREATE TABLE payments (
+  payment_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  order_id   INT NOT NULL,
+  method ENUM('COD','VNPAY','MOMO','BANK') NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  status ENUM('INIT','SUCCESS','FAILED','REFUNDED') NOT NULL DEFAULT 'INIT',
+  txn_ref VARCHAR(120) NULL UNIQUE,
+  paid_at DATETIME NULL,
+  CONSTRAINT fk_payments_order FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE shipments (
+  shipment_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  order_id   INT NOT NULL,
+  carrier    VARCHAR(60) NOT NULL,
+  tracking_no VARCHAR(100) NULL UNIQUE,
+  status ENUM('CREATED','PICKED','IN_TRANSIT','DELIVERED','FAILED','RETURNED') NOT NULL DEFAULT 'CREATED',
+  shipped_at   DATETIME NULL,
+  delivered_at DATETIME NULL,
+  CONSTRAINT fk_shipments_order FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+/* ---------- 12. Contact / Reviews ---------- */
+CREATE TABLE contact_messages (
+  contact_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  full_name  VARCHAR(120) NOT NULL,
+  email      VARCHAR(120) NOT NULL,
+  phone      VARCHAR(20)  NULL,
+  subject    VARCHAR(160) NOT NULL,
+  message    TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  is_processed BOOLEAN NOT NULL DEFAULT FALSE
+) ENGINE=InnoDB;
+
+CREATE TABLE reviews (
+  review_id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  user_id INT NOT NULL,
+  rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+  CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  UNIQUE (product_id, user_id)
+) ENGINE=InnoDB;
+INSERT INTO reviews (product_id,user_id,rating,comment) VALUES
+(1,2,5,'Rất ưng, giao nhanh'),(11,2,4,'Whey ngon, dễ tan');
+
+SET FOREIGN_KEY_CHECKS = 1;
