@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <title>Pharmative - Sản phẩm</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
 </head>
 <body class="container py-4">
 

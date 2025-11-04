@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-
+<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
   <style>
     /* ----------- CĂN CHỈNH KHU VỰC NÚT ---------- */
     .quantity-wrapper {

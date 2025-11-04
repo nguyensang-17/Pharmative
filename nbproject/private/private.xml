@@ -3,110 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <file>file:/D:/Pharmative/src/java/filter/AdminAuthFilter.java</file>
-            <file>file:/D:/Pharmative/web/shop.jsp</file>
-            <file>file:/D:/Pharmative/src/java/controller/CartController.java</file>
-            <file>file:/D:/Pharmative/web/cart.jsp</file>
-            <file>file:/D:/Pharmative/web/home.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/Pharmative/web/scss/bootstrap/_root.scss</file>
-            <file>file:/D:/Pharmative/src/java/DAO/DBContext.java</file>
-            <file>file:/D:/Pharmative/web/about.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/CategoryDAO.java</file>
-=======
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/CategoryManagementController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_sidebar.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_head.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_flash.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/DAO/UserDAO.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/view.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/index.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/home.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/checkout.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/main.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/dashboard.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/css/admin.css</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/UserManagementController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/index.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/LoginController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/form.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/User.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/list.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/register.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/forgot-password.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/products.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/login.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/layout.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/edits.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_topbar.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_pagination.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CheckoutController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/DashboardController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/filter/AdminAuthFilter.java</file>
->>>>>>> quan-Admin/user
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            <file>file:/D:/Pharmative/src/java/controller/ForgotPasswordController.java</file>
-            <file>file:/D:/Pharmative/web/register.jsp</file>
-            <file>file:/D:/Pharmative/src/java/controller/RegisterController.java</file>
-            <file>file:/D:/Pharmative/web/verify.jsp</file>
-            <file>file:/D:/Pharmative/src/java/controller/VerifyController.java</file>
-            <file>file:/D:/Pharmative/web/forgot-password.jsp</file>
-            <file>file:/D:/Pharmative/src/java/controller/HomeController.java</file>
-            <file>file:/D:/Pharmative/src/java/DAO/UserDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/controller/LoginController.java</file>
-            <file>file:/D:/Pharmative/src/java/util/PasswordUtil.java</file>
-            <file>file:/D:/Pharmative/web/login.jsp</file>
-            <file>file:/D:/Pharmative/src/java/util/EmailUtil.java</file>
-            <file>file:/D:/Pharmative/web/reset-password.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/DBContext.java</file>
-            <file>file:/D:/Pharmative/src/java/controller/ResetPasswordController.java</file>
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-            <file>file:/D:/Pharmative/src/java/controller/admin/ProductManagementController.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Category.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Branch.java</file>
-            <file>file:/D:/Pharmative/web/register.jsp</file>
-            <file>file:/D:/Pharmative/web/shop.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/util/PasswordUtil.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Order.java</file>
-            <file>file:/D:/Pharmative/src/java/models/CartItem.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Role.java</file>
-            <file>file:/D:/Pharmative/src/java/models/User.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Cart.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Brand.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Payment.java</file>
-            <file>file:/D:/Pharmative/src/java/models/OrderDetail.java</file>
-            <file>file:/D:/Pharmative/web/common/footer.jsp</file>
-            <file>file:/D:/Pharmative/web/common/header.jsp</file>
-            <file>file:/D:/Pharmative/web/home.jsp</file>
-            <file>file:/D:/Pharmative/src/java/models/Promotion.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Shipment.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Review.java</file>
-            <file>file:/D:/Pharmative/src/java/controller/HomeController.java</file>
-            <file>file:/D:/Pharmative/src/java/controller/ProductController.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Address.java</file>
-            <file>file:/D:/Pharmative/src/java/controller/AccountController.java</file>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            <file>file:/D:/Pharmative/web/products.jsp</file>
-            <file>file:/D:/Pharmative/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Customer.java</file>
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-            <file>file:/D:/Pharmative/web/index.jsp</file>
-            <file>file:/D:/Pharmative/src/java/controller/LoginController.java</file>
-            <file>file:/D:/Pharmative/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/Pharmative/src/java/models/Customer.java</file>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> sang
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/about.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/shop-single.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/HomeController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/shop.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/thankyou.jsp</file>
         </group>
     </open-files>
 </project-private>
