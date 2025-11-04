@@ -331,6 +331,7 @@
       }
     }
   </style>
+  <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
 </head>
 
 <body>
