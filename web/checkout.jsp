@@ -1,454 +1,524 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.util.*, java.math.BigDecimal" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    response.setCharacterEncoding("UTF-8");
+%>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
+
+<%
+    Map<Integer, controller.CartController.CartItem> cart
+              = (Map<Integer, controller.CartController.CartItem>) session.getAttribute("cart");
+    BigDecimal total = BigDecimal.ZERO;
+    int itemCount = 0;
+    
+    if (cart != null) {
+        itemCount = cart.size();
+        for (controller.CartController.CartItem it : cart.values()) {
+            BigDecimal price = it.getProduct().getPrice();
+            if (price == null) {
+                price = BigDecimal.ZERO;
+            }
+            total = total.add(price.multiply(BigDecimal.valueOf(it.getQuantity())));
+        }
+    }
+    
+    request.setAttribute("cartTotal", total);
+    request.setAttribute("itemCount", itemCount);
+%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <base href="${cpath}/">
 
-<head>
-  <title>Pharmative &mdash; Colorlib Template</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Thanh toán - Pharmative</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="fonts/icomoon/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
 
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-  <link rel="stylesheet" href="css/magnific-popup.css">
-  <link rel="stylesheet" href="css/jquery-ui.css">
-  <link rel="stylesheet" href="css/owl.carousel.min.css">
-  <link rel="stylesheet" href="css/owl.theme.default.min.css">
+        <style>
+            :root {
+                --primary-color: #2e7d32;
+                --primary-light: #4caf50;
+                --primary-dark: #1b5e20;
+                --accent-color: #8bc34a;
+                --text-dark: #1a1a1a;
+                --text-light: #666;
+                --bg-light: #f8f9fa;
+                --white: #ffffff;
+                --border-radius: 8px;
+                --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                --transition: all 0.3s ease;
+            }
 
+            body {
+                font-family: 'Nunito', sans-serif;
+                color: var(--text-dark);
+                line-height: 1.6;
+                background-color: var(--bg-light);
+            }
 
-  <link rel="stylesheet" href="css/aos.css">
+            .text-primary {
+                color: var(--primary-color) !important;
+            }
 
-  <link rel="stylesheet" href="css/style.css">
+            .btn-primary {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                border-radius: 30px;
+                padding: 12px 30px;
+                font-weight: 600;
+                transition: var(--transition);
+            }
 
-</head>
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(46, 125, 50, 0.3);
+            }
 
-<body>
+            .btn-primary:disabled {
+                background-color: #ccc;
+                border-color: #ccc;
+                transform: none;
+                cursor: not-allowed;
+            }
 
-  <div class="site-wrap">
+            .checkout-container {
+                max-width: 1200px;
+                margin: 40px auto;
+                padding: 0 15px;
+            }
 
+            .checkout-card {
+                background: var(--white);
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                overflow: hidden;
+                margin-bottom: 30px;
+            }
 
-    <div class="site-navbar py-2">
+            .checkout-header {
+                padding: 25px 30px;
+                border-bottom: 1px solid #eee;
+                background-color: #f8f9fa;
+            }
 
-      <div class="search-wrap">
-        <div class="container">
-          <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-          <form action="#" method="post">
-            <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
-          </form>
-        </div>
-      </div>
+            .checkout-body {
+                padding: 30px;
+            }
 
-      <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="logo">
-            <div class="site-logo">
-              <a href="home.jsp" class="js-logo-clone"><strong class="text-primary">Pharma</strong>tive</a>
+            .order-summary {
+                background-color: #f8f9fa;
+                border-radius: var(--border-radius);
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+
+            .order-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .order-item:last-child {
+                border-bottom: none;
+            }
+
+            .order-item-info {
+                display: flex;
+                align-items: center;
+            }
+
+            .order-item-image {
+                width: 60px;
+                height: 60px;
+                border-radius: 8px;
+                overflow: hidden;
+                margin-right: 15px;
+                flex-shrink: 0;
+            }
+
+            .order-item-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .order-item-details h5 {
+                margin-bottom: 5px;
+                font-weight: 600;
+                font-size: 1rem;
+            }
+
+            .order-item-details p {
+                margin-bottom: 0;
+                font-size: 0.9rem;
+            }
+
+            .order-item-price {
+                font-weight: 600;
+                color: var(--primary-color);
+                font-size: 1.05rem;
+            }
+
+            .order-total {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 20px;
+                margin-top: 20px;
+                border-top: 2px solid #ddd;
+                font-size: 1.2rem;
+                font-weight: 700;
+            }
+
+            .payment-methods {
+                margin-top: 30px;
+            }
+
+            .payment-option {
+                border: 2px solid #eee;
+                border-radius: var(--border-radius);
+                padding: 20px;
+                margin-bottom: 15px;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .payment-option:hover {
+                border-color: var(--primary-light);
+                background-color: rgba(46, 125, 50, 0.02);
+            }
+
+            .payment-option.selected {
+                border-color: var(--primary-color);
+                background-color: rgba(46, 125, 50, 0.05);
+            }
+
+            .payment-icon {
+                font-size: 28px;
+                margin-right: 15px;
+            }
+
+            .secure-payment {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 20px;
+                color: var(--text-light);
+                font-size: 14px;
+            }
+
+            .secure-payment i {
+                margin-right: 8px;
+                color: var(--primary-color);
+            }
+
+            .empty-cart {
+                text-align: center;
+                padding: 60px 20px;
+            }
+
+            .empty-cart-icon {
+                font-size: 80px;
+                margin-bottom: 20px;
+            }
+
+            .back-link {
+                display: inline-flex;
+                align-items: center;
+                color: var(--text-dark);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+            .back-link:hover {
+                color: var(--primary-color);
+            }
+
+            .spinner {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(255,255,255,.3);
+                border-radius: 50%;
+                border-top-color: #fff;
+                animation: spin 0.8s linear infinite;
+                margin-right: 8px;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            @media (max-width: 768px) {
+                .checkout-body {
+                    padding: 20px;
+                }
+
+                .order-item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .order-item-info {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+
+                .order-item-price {
+                    align-self: flex-end;
+                }
+
+                .checkout-header h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <jsp:include page="/common/headerChinh.jsp" />
+
+        <div class="site-wrap">
+            <div class="checkout-container">
+                <div class="checkout-card">
+                    <div class="checkout-header">
+                        <h2 class="mb-0">Thanh toán đơn hàng</h2>
+                        <p class="mb-0 text-muted">Hoàn tất đơn hàng của bạn</p>
+                    </div>
+
+                    <div class="checkout-body">
+                        <% if (cart != null && !cart.isEmpty()) { %>
+                        <div class="row">
+                            <!-- Chi tiết đơn hàng -->
+                            <div class="col-lg-8">
+                                <h4 class="mb-4">Thông tin đơn hàng</h4>
+
+                                <div class="order-summary">
+                                    <h5 class="mb-4">Chi tiết sản phẩm</h5>
+
+                                    <%
+                                        for (controller.CartController.CartItem item : cart.values()) {
+                                            String productName = item.getProduct().getProductName();
+                                            String imageUrl = item.getProduct().getImageUrl();
+                                            if (imageUrl == null || imageUrl.isEmpty()) {
+                                                imageUrl = "images/product-placeholder.jpg";
+                                            }
+                                            BigDecimal price = item.getProduct().getPrice();
+                                            if (price == null) {
+                                                price = BigDecimal.ZERO;
+                                            }
+                                            int quantity = item.getQuantity();
+                                            BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(quantity));
+                                    %>
+                                    <div class="order-item">
+                                        <div class="order-item-info">
+                                            <div class="order-item-image">
+                                                <img src="${cpath}/<%= imageUrl %>" 
+                                                     alt="<%= productName %>"
+                                                     onerror="this.src='${cpath}/images/product-placeholder.jpg'">
+                                            </div>
+                                            <div class="order-item-details">
+                                                <h5><%= productName %></h5>
+                                                <p class="text-muted">Số lượng: <%= quantity %></p>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-price">
+                                            <fmt:formatNumber value="<%= itemTotal %>" pattern="#,###₫"/>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                    <div class="order-total">
+                                        <span>Tổng thanh toán:</span>
+                                        <span class="text-primary">
+                                            <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Phương thức thanh toán -->
+                                <div class="payment-methods">
+                                    <h4 class="mb-4">Phương thức thanh toán</h4>
+
+                                    <div class="payment-option selected" data-method="vnpay">
+                                        <div class="d-flex align-items-center">
+                                            <div class="payment-icon">💳</div>
+                                            <div>
+                                                <h5 class="mb-1">Thanh toán qua VNPAY</h5>
+                                                <p class="mb-0 text-muted">Thanh toán an toàn qua cổng VNPAY</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="payment-option" data-method="cod">
+                                        <div class="d-flex align-items-center">
+                                            <div class="payment-icon">💵</div>
+                                            <div>
+                                                <h5 class="mb-1">Thanh toán khi nhận hàng (COD)</h5>
+                                                <p class="mb-0 text-muted">Thanh toán tiền mặt khi nhận hàng</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tóm tắt đơn hàng -->
+                            <div class="col-lg-4">
+                                <div class="order-summary sticky-top" style="top: 20px;">
+                                    <h5 class="mb-4">Tóm tắt đơn hàng</h5>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Số sản phẩm:</span>
+                                        <span class="fw-bold">${itemCount}</span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Tạm tính:</span>
+                                        <span><fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Phí vận chuyển:</span>
+                                        <span class="text-success fw-bold">MIỄN PHÍ</span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span>Giảm giá:</span>
+                                        <span>0₫</span>
+                                    </div>
+
+                                    <div class="order-total">
+                                        <span>Tổng cộng:</span>
+                                        <span class="text-primary">
+                                            <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
+                                        </span>
+                                    </div>
+
+                                    <button id="btnPay" class="btn btn-primary w-100 mt-4 py-3">
+                                        🔒 Thanh toán an toàn
+                                    </button>
+
+                                    <div class="secure-payment">
+                                        🛡️ Giao dịch được bảo mật & mã hóa
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <a href="${cpath}/cart.jsp" class="back-link">
+                                        ← Quay lại giỏ hàng
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <% } else { %>
+                        <!-- Giỏ hàng trống -->
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <h4 class="text-muted mb-2">Giỏ hàng trống</h4>
+                            <p class="text-muted mb-4">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+                            <a href="${cpath}/shop" class="btn btn-primary">
+                                🛍️ Tiếp tục mua sắm
+                            </a>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="main-nav d-none d-lg-block">
-            <nav class="site-navigation text-right text-md-center" role="navigation">
-              <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li><a href="home.jsp">Home</a></li>
-                <li class="active"><a href="shop.jsp">Store</a></li>
-                <li class="has-children">
-                  <a href="#">Products</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li class="has-children">
-                      <a href="#">Vitamins</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-                    
-                  </ul>
-                </li>
-                <li><a href="about.jsp">About</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
-              </ul>
-            </nav>
-          </div>
-          <div class="icons">
-            <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
-            <a href="cart.jsp" class="icons-btn d-inline-block bag">
-              <span class="icon-shopping-bag"></span>
-              <span class="number">2</span>
-            </a>
-            <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
-                class="icon-menu"></span></a>
-          </div>
         </div>
-      </div>
-    </div>
-  
 
-    <div class="bg-light py-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 mb-0">
-            <a href="home.jsp">Home</a> <span class="mx-2 mb-0">/</span>
-            <strong class="text-black">Checkout</strong>
-          </div>
-        </div>
-      </div>
-    </div>
+        <jsp:include page="/common/footerChinh.jsp" />
 
-    <div class="site-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-12">
-            <div class="bg-light rounded p-3">
-              <p class="mb-0">Returning customer? <a href="#" class="d-inline-block">Click here</a> to login</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 mb-5 mb-md-0">
-            <h2 class="h3 mb-3 text-black">Billing Details</h2>
-            <div class="p-3 p-lg-5 border">
-              <div class="form-group">
-                <label for="c_country" class="text-black">Country <span class="text-danger">*</span></label>
-                <select id="c_country" class="form-control">
-                  <option value="1">Select a country</option>
-                  <option value="2">bangladesh</option>
-                  <option value="3">Algeria</option>
-                  <option value="4">Afghanistan</option>
-                  <option value="5">Ghana</option>
-                  <option value="6">Albania</option>
-                  <option value="7">Bahrain</option>
-                  <option value="8">Colombia</option>
-                  <option value="9">Dominican Republic</option>
-                </select>
-              </div>
-              <div class="form-group row">
-                <div class="col-md-6">
-                  <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_fname" name="c_fname">
-                </div>
-                <div class="col-md-6">
-                  <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_lname" name="c_lname">
-                </div>
-              </div>
-    
-              <div class="form-group row">
-                <div class="col-md-12">
-                  <label for="c_companyname" class="text-black">Company Name </label>
-                  <input type="text" class="form-control" id="c_companyname" name="c_companyname">
-                </div>
-              </div>
-    
-              <div class="form-group row">
-                <div class="col-md-12">
-                  <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_address" name="c_address" placeholder="Street address">
-                </div>
-              </div>
-    
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
-              </div>
-    
-              <div class="form-group row">
-                <div class="col-md-6">
-                  <label for="c_state_country" class="text-black">State / Country <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_state_country" name="c_state_country">
-                </div>
-                <div class="col-md-6">
-                  <label for="c_postal_zip" class="text-black">Posta / Zip <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_postal_zip" name="c_postal_zip">
-                </div>
-              </div>
-    
-              <div class="form-group row mb-5">
-                <div class="col-md-6">
-                  <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_email_address" name="c_email_address">
-                </div>
-                <div class="col-md-6">
-                  <label for="c_phone" class="text-black">Phone <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_phone" name="c_phone" placeholder="Phone Number">
-                </div>
-              </div>
-    
-              <div class="form-group">
-                <label for="c_create_account" class="text-black" data-toggle="collapse" href="#create_an_account"
-                  role="button" aria-expanded="false" aria-controls="create_an_account"><input type="checkbox" value="1"
-                    id="c_create_account"> Create an account?</label>
-                <div class="collapse" id="create_an_account">
-                  <div class="py-2">
-                    <p class="mb-3">Create an account by entering the information below. If you are a returning customer
-                      please login at the top of the page.</p>
-                    <div class="form-group">
-                      <label for="c_account_password" class="text-black">Account Password</label>
-                      <input type="email" class="form-control" id="c_account_password" name="c_account_password"
-                        placeholder="">
-                    </div>
-                  </div>
-                </div>
-              </div>
-    
-    
-              <div class="form-group">
-                <label for="c_ship_different_address" class="text-black" data-toggle="collapse"
-                  href="#ship_different_address" role="button" aria-expanded="false"
-                  aria-controls="ship_different_address"><input type="checkbox" value="1" id="c_ship_different_address">
-                  Ship To A Different Address?</label>
-                <div class="collapse" id="ship_different_address">
-                  <div class="py-2">
-    
-                    <div class="form-group">
-                      <label for="c_diff_country" class="text-black">Country <span class="text-danger">*</span></label>
-                      <select id="c_diff_country" class="form-control">
-                        <option value="1">Select a country</option>
-                        <option value="2">bangladesh</option>
-                        <option value="3">Algeria</option>
-                        <option value="4">Afghanistan</option>
-                        <option value="5">Ghana</option>
-                        <option value="6">Albania</option>
-                        <option value="7">Bahrain</option>
-                        <option value="8">Colombia</option>
-                        <option value="9">Dominican Republic</option>
-                      </select>
-                    </div>
-    
-    
-                    <div class="form-group row">
-                      <div class="col-md-6">
-                        <label for="c_diff_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_fname" name="c_diff_fname">
-                      </div>
-                      <div class="col-md-6">
-                        <label for="c_diff_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_lname" name="c_diff_lname">
-                      </div>
-                    </div>
-    
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                        <label for="c_diff_companyname" class="text-black">Company Name </label>
-                        <input type="text" class="form-control" id="c_diff_companyname" name="c_diff_companyname">
-                      </div>
-                    </div>
-    
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                        <label for="c_diff_address" class="text-black">Address <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_address" name="c_diff_address"
-                          placeholder="Street address">
-                      </div>
-                    </div>
-    
-                    <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
-                    </div>
-    
-                    <div class="form-group row">
-                      <div class="col-md-6">
-                        <label for="c_diff_state_country" class="text-black">State / Country <span
-                            class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_state_country" name="c_diff_state_country">
-                      </div>
-                      <div class="col-md-6">
-                        <label for="c_diff_postal_zip" class="text-black">Posta / Zip <span
-                            class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_postal_zip" name="c_diff_postal_zip">
-                      </div>
-                    </div>
-    
-                    <div class="form-group row mb-5">
-                      <div class="col-md-6">
-                        <label for="c_diff_email_address" class="text-black">Email Address <span
-                            class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_email_address" name="c_diff_email_address">
-                      </div>
-                      <div class="col-md-6">
-                        <label for="c_diff_phone" class="text-black">Phone <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="c_diff_phone" name="c_diff_phone"
-                          placeholder="Phone Number">
-                      </div>
-                    </div>
-    
-                  </div>
-    
-                </div>
-              </div>
-    
-              <div class="form-group">
-                <label for="c_order_notes" class="text-black">Order Notes</label>
-                <textarea name="c_order_notes" id="c_order_notes" cols="30" rows="5" class="form-control"
-                  placeholder="Write your notes here..."></textarea>
-              </div>
-    
-            </div>
-          </div>
-          <div class="col-md-6">
-    
-            <div class="row mb-5">
-              <div class="col-md-12">
-                <h2 class="h3 mb-3 text-black">Coupon Code</h2>
-                <div class="p-3 p-lg-5 border">
-    
-                  <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
-                  <div class="input-group w-75">
-                    <input type="text" class="form-control" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code"
-                      aria-describedby="button-addon2">
-                    <div class="input-group-append">
-                      <button class="btn btn-primary btn-sm px-4" type="button" id="button-addon2">Apply</button>
-                    </div>
-                  </div>
-    
-                </div>
-              </div>
-            </div>
-    
-            <div class="row mb-5">
-              <div class="col-md-12">
-                <h2 class="h3 mb-3 text-black">Your Order</h2>
-                <div class="p-3 p-lg-5 border">
-                  <table class="table site-block-order-table mb-5">
-                    <thead>
-                      <th>Product</th>
-                      <th>Total</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Bioderma <strong class="mx-2">x</strong> 1</td>
-                        <td>$55.00</td>
-                      </tr>
-                      <tr>
-                        <td>Ibuprofeen <strong class="mx-2">x</strong> 1</td>
-                        <td>$45.00</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-                        <td class="text-black">$350.00</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                        <td class="text-black font-weight-bold"><strong>$350.00</strong></td>
-                      </tr>
-                    </tbody>
-                  </table>
-    
-                  <div class="border mb-3">
-                    <h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsebank" role="button"
-                        aria-expanded="false" aria-controls="collapsebank">Direct Bank Transfer</a></h3>
-    
-                    <div class="collapse" id="collapsebank">
-                      <div class="py-2 px-4">
-                        <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the
-                          payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
-                      </div>
-                    </div>
-                  </div>
-    
-                  <div class="border mb-3">
-                    <h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsecheque" role="button"
-                        aria-expanded="false" aria-controls="collapsecheque">Cheque Payment</a></h3>
-    
-                    <div class="collapse" id="collapsecheque">
-                      <div class="py-2 px-4">
-                        <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the
-                          payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
-                      </div>
-                    </div>
-                  </div>
-    
-                  <div class="border mb-5">
-                    <h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsepaypal" role="button"
-                        aria-expanded="false" aria-controls="collapsepaypal">Paypal</a></h3>
-    
-                    <div class="collapse" id="collapsepaypal">
-                      <div class="py-2 px-4">
-                        <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the
-                          payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
-                      </div>
-                    </div>
-                  </div>
-    
-                  <div class="form-group">
-                    <button class="btn btn-primary btn-lg btn-block" onclick="window.location='thankyou.jsp'">Place
-                      Order</button>
-                  </div>
-    
-                </div>
-              </div>
-            </div>
-    
-          </div>
-        </div>
-        <!-- </form> -->
-      </div>
-    </div>
-    <footer class="site-footer bg-light">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+        <script src="${cpath}/js/jquery-3.3.1.min.js"></script>
+        <script src="${cpath}/js/bootstrap.min.js"></script>
 
-            <div class="block-7">
-              <h3 class="footer-heading mb-4">About <strong class="text-primary">Pharmative</strong></h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quae reiciendis distinctio voluptates
-                sed dolorum excepturi iure eaque, aut unde.</p>
-            </div>
+        <script>
+            $(document).ready(function () {
+                let selectedMethod = 'vnpay'; // Mặc định chọn VNPAY
 
-          </div>
-          <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-            <h3 class="footer-heading mb-4">Navigation</h3>
-            <ul class="list-unstyled">
-              <li><a href="#">Supplements</a></li>
-              <li><a href="#">Vitamins</a></li>
-              <li><a href="#">Diet &amp; Nutrition</a></li>
-              <li><a href="#">Tea &amp; Coffee</a></li>
-            </ul>
-          </div>
+                // Xử lý chọn phương thức thanh toán
+                $('.payment-option').click(function () {
+                    $('.payment-option').removeClass('selected');
+                    $(this).addClass('selected');
+                    selectedMethod = $(this).data('method');
+                    console.log('Selected payment method:', selectedMethod);
+                });
 
-          <div class="col-md-6 col-lg-3">
-            <div class="block-5 mb-5">
-              <h3 class="footer-heading mb-4">Contact Info</h3>
-              <ul class="list-unstyled">
-                <li class="address">203 Fake St. Mountain View, San Francisco, California, USA</li>
-                <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
-                <li class="email">emailaddress@domain.com</li>
-              </ul>
-            </div>
+                // Xử lý thanh toán
+                $('#btnPay').click(async function (e) {
+                    e.preventDefault();
 
+                    const $btn = $(this);
+                    const originalText = $btn.html();
 
-          </div>
-        </div>
-        <div class="row pt-5 mt-5 text-center">
-          <div class="col-md-12">
-            <p>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;
-              <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
-              with <i class="icon-heart text-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"
-                class="text-primary">Colorlib</a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            </p>
-          </div>
+                    // Kiểm tra phương thức thanh toán
+                    if (selectedMethod === 'cod') {
+                        alert('Chức năng COD đang được phát triển. Vui lòng chọn thanh toán VNPAY.');
+                        return;
+                    }
 
-        </div>
-      </div>
-    </footer>
-  </div>
+                    // Hiển thị loading
+                    $btn.html('<span class="spinner"></span> Đang xử lý...');
+                    $btn.prop('disabled', true);
 
-  <script src="js/jquery-3.3.1.min.js"></script>
-  <script src="js/jquery-ui.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/owl.carousel.min.js"></script>
-  <script src="js/jquery.magnific-popup.min.js"></script>
-  <script src="js/aos.js"></script>
+                    try {
+                        // Gửi request đến VNPay servlet
+                        const formData = new URLSearchParams();
+                        formData.append('language', 'vn'); // hoặc 'en'
+                        // Có thể thêm bankCode nếu muốn: formData.append('bankCode', 'NCB');
 
-  <script src="js/main.js"></script>
+                        const response = await fetch('${cpath}/vnpay', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                            body: formData.toString()
+                        });
 
-</body>
+                        if (!response.ok) {
+                            throw new Error('HTTP error! status: ' + response.status);
+                        }
 
+                        const result = await response.json();
+                        console.log('VNPay response:', result);
+
+                        if (result && result.code === '00' && result.data) {
+                            // Chuyển hướng đến trang thanh toán VNPay
+                            window.location.href = result.data;
+                        } else {
+                            throw new Error(result.message || 'Không tạo được URL thanh toán');
+                        }
+
+                    } catch (error) {
+                        console.error('Payment error:', error);
+                        alert('Đã xảy ra lỗi khi xử lý thanh toán:\n' + error.message + '\n\nVui lòng thử lại sau.');
+                        
+                        // Khôi phục nút
+                        $btn.html(originalText);
+                        $btn.prop('disabled', false);
+                    }
+                });
+
+                // Kiểm tra nếu có thông báo từ URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const paymentStatus = urlParams.get('vnp_ResponseCode');
+                
+                if (paymentStatus === '00') {
+                    alert('✓ Thanh toán thành công!');
+                } else if (paymentStatus) {
+                    alert('✗ Thanh toán thất bại. Mã lỗi: ' + paymentStatus);
+                }
+            });
+        </script>
+    </body>
 </html>

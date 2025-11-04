@@ -12,6 +12,8 @@ import models.Product;
 
 @WebServlet("/cart")
 public class CartController extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
     private ProductDAO productDAO;
 
     @Override
@@ -19,6 +21,14 @@ public class CartController extends HttpServlet {
         productDAO = new ProductDAO();
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher r = req.getRequestDispatcher(req.getContextPath() + "/cart.jsp");
+        r.forward(req, resp);
+    }
+
+    
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -53,10 +63,29 @@ public class CartController extends HttpServlet {
                 }
 
                 case "remove": {
+                    // Trả JSON thay vì redirect
+                    response.setContentType("application/json;charset=UTF-8");
+                    
                     int productId = Integer.parseInt(request.getParameter("productId"));
                     cart.remove(productId);
                     session.setAttribute("cart", cart);
-                    response.sendRedirect(request.getContextPath() + "/cart.jsp?success=removed");
+                    
+                    // Tính tổng giỏ hàng sau khi xóa
+                    BigDecimal cartTotal = BigDecimal.ZERO;
+                    for (CartItem i : cart.values()) {
+                        BigDecimal price = (i.getProduct().getPrice() == null)
+                                ? BigDecimal.ZERO
+                                : i.getProduct().getPrice();
+                        cartTotal = cartTotal.add(price.multiply(BigDecimal.valueOf(i.getQuantity())));
+                    }
+                    
+                    String cartTotalFormatted = String.format("%,.0f₫", cartTotal);
+                    String json = String.format(
+                        "{\"success\":true,\"cartTotalFormatted\":\"%s\",\"itemCount\":%d}",
+                        cartTotalFormatted, cart.size()
+                    );
+                    
+                    response.getWriter().write(json);
                     return;
                 }
 
@@ -95,7 +124,7 @@ public class CartController extends HttpServlet {
                     String cartTotalFormatted = String.format("%,.0f₫", cartTotal);
 
                     String json = String.format(
-                            "{\"lineTotalFormatted\":\"%s\",\"cartTotalFormatted\":\"%s\"}",
+                            "{\"success\":true,\"lineTotalFormatted\":\"%s\",\"cartTotalFormatted\":\"%s\"}",
                             lineTotalFormatted, cartTotalFormatted
                     );
 
@@ -109,7 +138,11 @@ public class CartController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/cart.jsp?error=true");
+            
+            // Trả JSON lỗi thay vì redirect
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"success\":false,\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 
