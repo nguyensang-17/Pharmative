@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import models.Order;
 
-@WebServlet("/admin/orders")
+@WebServlet(urlPatterns = {"/admin/orders", "/admin/orders/"})
 public class OrderManagementController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -50,14 +50,14 @@ public class OrderManagementController extends HttpServlet {
 
     private void listOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         request.setAttribute("orderList", orderDAO.getAllOrders());
-        request.getRequestDispatcher("/admin/manage_orders.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/orders/manage_orders.jsp").forward(request, response);
     }
 
     private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Order order = orderDAO.getOrderById(id); // DAO này đã lấy cả chi tiết đơn hàng
         request.setAttribute("order", order);
-        request.getRequestDispatcher("/admin/order_detail.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/orders/order_detail.jsp").forward(request, response);
     }
 
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
