@@ -119,7 +119,7 @@
                 <li class="has-children">
                   <a href="${cpath}/shop?cat=2">Thảo dược &amp; Bổ sung</a>
                   <ul class="dropdown">
-                    <li><a href="${cpath}/shop?cat=9">Bổ não &amp; Trí nhớ</a></li>
+                    
                     <li><a href="${cpath}/shop?cat=10">Hỗ trợ tiêu hóa</a></li>
                   </ul>
                 </li>
