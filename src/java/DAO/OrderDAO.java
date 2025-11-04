@@ -10,21 +10,23 @@ public class OrderDAO {
 
     // PHƯƠNG THỨC LẤY TẤT CẢ ĐƠN HÀNG CHO ADMIN - ĐÃ SỬA
     public List<Order> getAllOrders() throws SQLException {
-        String sql = "SELECT o.*, u.fullname, u.email, u.phone_number, a.recipient_name, a.street_address " +
-                    "FROM orders o " +
-                    "LEFT JOIN users u ON o.user_id = u.user_id " +
-                    "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
-                    "ORDER BY o.order_date DESC";
-        List<Order> list = new ArrayList<>();
-        try (Connection c = DBContext.getConnection(); 
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(map(rs));
-            }
+    // THÊM CÁC CỘT ward, district, city VÀO SELECT
+    String sql = "SELECT o.*, u.fullname, u.email, u.phone_number, " +
+                "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city " +
+                "FROM orders o " +
+                "LEFT JOIN users u ON o.user_id = u.user_id " +
+                "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
+                "ORDER BY o.order_date DESC";
+    List<Order> list = new ArrayList<>();
+    try (Connection c = DBContext.getConnection(); 
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            list.add(map(rs));
         }
-        return list;
     }
+    return list;
+}
 
     // PHƯƠNG THỨC LẤY ĐƠN HÀNG THEO ID - ĐÃ SỬA
     public Order getOrderById(int id) throws SQLException {
@@ -191,40 +193,41 @@ public class OrderDAO {
         }
     }
 
-    // CÁC PHƯƠNG THỨC KHÁC GIỮ NGUYÊN HOẶC SỬA TƯƠNG TỰ
     public List<Order> getByUser(int userId, int limit) throws SQLException {
-        String sql = "SELECT o.*, a.recipient_name, a.street_address, a.ward, a.district, a.city " +
-                    "FROM orders o " +
-                    "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
-                    "WHERE o.user_id=? ORDER BY o.order_date DESC LIMIT ?";
-        List<Order> list = new ArrayList<>();
-        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, userId); 
-            ps.setInt(2, limit);
-            try (ResultSet rs = ps.executeQuery()) { 
-                while (rs.next()) list.add(map(rs)); 
-            }
+    // SỬA: THÊM ĐẦY ĐỦ CÁC CỘT
+    String sql = "SELECT o.*, a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city " +
+                "FROM orders o " +
+                "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
+                "WHERE o.user_id=? ORDER BY o.order_date DESC LIMIT ?";
+    List<Order> list = new ArrayList<>();
+    try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setInt(1, userId); 
+        ps.setInt(2, limit);
+        try (ResultSet rs = ps.executeQuery()) { 
+            while (rs.next()) list.add(map(rs)); 
         }
-        return list;
     }
+    return list;
+}
 
-    public List<Order> getOrdersByUserId(int userId) {
-        String sql = "SELECT o.*, a.recipient_name, a.street_address, a.ward, a.district, a.city " +
-                    "FROM orders o " +
-                    "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
-                    "WHERE o.user_id=? ORDER BY o.order_date DESC";
-        List<Order> list = new ArrayList<>();
-        try (Connection c = DBContext.getConnection(); 
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) { 
-                while (rs.next()) list.add(map(rs)); 
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+public List<Order> getOrdersByUserId(int userId) {
+    // SỬA: THÊM ĐẦY ĐỦ CÁC CỘT
+    String sql = "SELECT o.*, a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city " +
+                "FROM orders o " +
+                "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
+                "WHERE o.user_id=? ORDER BY o.order_date DESC";
+    List<Order> list = new ArrayList<>();
+    try (Connection c = DBContext.getConnection(); 
+         PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        try (ResultSet rs = ps.executeQuery()) { 
+            while (rs.next()) list.add(map(rs)); 
         }
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
     // CÁC PHƯƠNG THỨC THỐNG KÊ GIỮ NGUYÊN
     public int countAllOrders() throws SQLException {

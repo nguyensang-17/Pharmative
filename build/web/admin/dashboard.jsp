@@ -484,67 +484,10 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3><i class="fas fa-capsules"></i> Pharmative</h3>
-        </div>
-        
-        <div class="user-info">
-            <div class="user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="user-details">
-                <div class="user-name">${sessionScope.currentUser != null ? sessionScope.currentUser.fullname : "Admin"}</div>
-                <div class="user-role">Administrator</div>
-            </div>
-        </div>
-        
-        <div class="nav-menu">
-            <div class="nav-item">
-                <a href="#" class="nav-link active">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </div>
-           <div class="action-buttons">
-    <a href="${pageContext.request.contextPath}/admin/users" class="nav-link">
-        <i class="fas fa-users-cog"></i>
-        <span>Quản lý Users</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/admin/orders" class="nav-link">
-        <i class="fas fa-file-invoice"></i>
-        <span>Quản lý Orders</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/admin/products" class="nav-link">
-        <i class="fas fa-box-open"></i>
-        <span>Quản lý Products</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/admin/categories" class="nav-link">
-        <i class="fas fa-tags"></i>
-        <span>Quản lý Danh mục</span>
-    </a>
-</div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Báo cáo & Thống kê</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Cài đặt hệ thống</span>
-                </a>
-            </div>
-        </div>
-        
-        <div class="sidebar-footer">
-            <button class="logout-btn" onclick="location.href='${pageContext.request.contextPath}/logout'">
-                <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </button>
-        </div>
-    </div>
+    <!-- Include Sidebar từ đúng đường dẫn -->
+    <jsp:include page="fragments/_sidebar.jsp">
+        <jsp:param name="activePage" value="dashboard"/>
+    </jsp:include>
 
     <!-- Main Content -->
     <div class="main-content">
