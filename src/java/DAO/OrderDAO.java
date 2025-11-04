@@ -24,6 +24,24 @@ public class OrderDAO {
         return list;
     }
 
+    // PHƯƠNG THỨC ĐÃ SỬA - KHÔNG THROW EXCEPTION
+    public List<Order> getOrdersByUserId(int userId) {
+        String sql = "SELECT * FROM orders WHERE user_id=? ORDER BY order_date DESC";
+        List<Order> list = new ArrayList<>();
+        try (Connection c = DBContext.getConnection(); 
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) { 
+                while (rs.next()) list.add(map(rs)); 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Có thể log lỗi ở đây
+            System.err.println("Lỗi khi lấy orders cho user: " + userId + " - " + e.getMessage());
+        }
+        return list;
+    }
+
     public int create(Order o) throws SQLException {
         String sql = "INSERT INTO orders(user_id, total_amount, status, shipping_address_id) VALUES(?,?,?,?)";
         try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -58,7 +76,7 @@ public class OrderDAO {
 
     public int countAllOrders() throws SQLException {
         String sql = "SELECT COUNT(*) FROM orders";
-        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
@@ -72,7 +90,7 @@ public class OrderDAO {
         String sql = "SELECT COALESCE(SUM(total_amount), 0) " +
                     "FROM orders " +
                     "WHERE status IN ('delivered', 'processing', 'shipped')";
-        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
@@ -84,7 +102,7 @@ public class OrderDAO {
     
     public int countOrdersByStatus(String status) throws SQLException {
         String sql = "SELECT COUNT(*) FROM orders WHERE status = ?";
-        try (Connection conn = DBContext.getConnection(); // ✅ Sửa thành DBContext
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, status);
             try (ResultSet rs = ps.executeQuery()) {
@@ -96,9 +114,6 @@ public class OrderDAO {
         return 0;
     }
     
-    /**
-     * Lấy doanh thu theo khoảng thời gian - FIXED
-     */
     public double getRevenueByDateRange(java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
         String sql = "SELECT COALESCE(SUM(total_amount), 0) " +
                     "FROM orders " +

@@ -39,6 +39,7 @@ public class AccountController extends HttpServlet {
         request.setAttribute("orderHistory", orderHistory);
         request.getRequestDispatcher("/customer/account.jsp").forward(request, response);
     }
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
