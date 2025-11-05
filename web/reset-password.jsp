@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -497,7 +499,7 @@
             </c:if>
 
             <!-- Reset Password Form -->
-            <form action="${pageContext.request.contextPath}/reset-password" method="post" id="resetPasswordForm">
+            <form action="${cpath}/reset-password" method="post" id="resetPasswordForm">
                 <input type="hidden" name="token" value="${param.token}">
 
                 <div class="form-group">
@@ -574,7 +576,7 @@
 
             <!-- Links -->
             <div class="reset-password-links">
-                <a href="${pageContext.request.contextPath}/login.jsp">
+                <a href="${cpath}/login.jsp">
                     <i class="fas fa-arrow-left me-1"></i>Quay lại đăng nhập
                 </a>
             </div>

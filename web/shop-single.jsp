@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -9,9 +10,9 @@
   <title>${product.productName} | Pharmative</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
+  <link rel="stylesheet" href="${cpath}/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${cpath}/css/style.css">
+<link rel="icon" type="image/x-icon" href="${cpath}/images/favicon.ico">
   <style>
     /* ----------- CĂN CHỈNH KHU VỰC NÚT ---------- */
     .quantity-wrapper {
@@ -89,7 +90,7 @@
 
   <div class="bg-light py-3">
     <div class="container">
-      <a href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
+      <a href="${cpath}/index.jsp">Trang chủ</a>
       <span class="mx-2 mb-0">/</span>
       <strong class="text-black">${product.productName}</strong>
     </div>
@@ -99,7 +100,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <img src="${pageContext.request.contextPath}/${product.imageUrl}" 
+          <img src="${cpath}/${product.imageUrl}" 
                alt="${product.productName}" class="img-fluid rounded">
         </div>
 
@@ -123,7 +124,7 @@
             </tr>
           </table>
 
-          <form action="${pageContext.request.contextPath}/cart" method="post">
+          <form action="${cpath}/cart" method="post">
             <input type="hidden" name="action" value="add">
             <input type="hidden" name="productId" value="${product.productId}">
 
@@ -138,7 +139,7 @@
             </div>
           </form>
 
-          <a href="${pageContext.request.contextPath}/shop" class="btn-back mt-3">← Quay lại cửa hàng</a>
+          <a href="${cpath}/shop" class="btn-back mt-3">← Quay lại cửa hàng</a>
         </div>
       </div>
     </div>
@@ -147,8 +148,8 @@
   <jsp:include page="/common/footerChinh.jsp" />
 </div>
 
-<script src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<script src="${cpath}/js/jquery-3.3.1.min.js"></script>
+<script src="${cpath}/js/bootstrap.min.js"></script>
 <script>
   document.querySelectorAll(".js-btn-plus").forEach(btn => {
     btn.addEventListener("click", () => {

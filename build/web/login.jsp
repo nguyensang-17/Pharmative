@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,7 +12,7 @@
     <!-- Bootstrap + FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="${cpath}/images/favicon.ico">
     <style>
         /* Theme màu xanh lá chính - giống với Dashboard */
         :root{
@@ -368,7 +370,7 @@
             </c:if>
 
             <!-- Login Form -->
-            <form action="${pageContext.request.contextPath}/login" method="post">
+            <form action="${cpath}/login" method="post">
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email của bạn" required>
@@ -392,9 +394,9 @@
             <!-- Links -->
             <div class="login-links">
                 <p class="mb-2">Chưa có tài khoản? 
-                    <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký ngay</a>
+                    <a href="${cpath}/register.jsp">Đăng ký ngay</a>
                 </p>
-                <a href="${pageContext.request.contextPath}/forgot-password.jsp">Quên mật khẩu?</a>
+                <a href="${cpath}/forgot-password.jsp">Quên mật khẩu?</a>
             </div>
         </div>
 

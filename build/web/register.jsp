@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,7 +12,7 @@
     <!-- Bootstrap + FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
+<link rel="icon" type="image/x-icon" href="${cpath}/images/favicon.ico">
     <style>
         /* Theme màu xanh lá chính - giống với Dashboard */
         :root{
@@ -409,7 +411,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mb-0">
-                        <a href="${pageContext.request.contextPath}/home">Home</a>
+                        <a href="${cpath}/home">Home</a>
                         <span class="mx-2 mb-0">/</span>
                         <strong class="text-black">Đăng ký</strong>
                     </div>
@@ -437,7 +439,7 @@
             </c:if>
 
             <!-- Register Form -->
-            <form action="${pageContext.request.contextPath}/register" method="post">
+            <form action="${cpath}/register" method="post">
                 <div class="form-group row">
                     <div class="col-md-12">
                         <label for="fullname" class="form-label">
@@ -506,7 +508,7 @@
             <!-- Links -->
             <div class="register-links">
                 <p class="mb-0">Đã có tài khoản? 
-                    <a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập ngay</a>
+                    <a href="${cpath}/login.jsp">Đăng nhập ngay</a>
                 </p>
             </div>
         </div>

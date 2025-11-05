@@ -15,6 +15,59 @@ public class EmailUtil {
     private static final boolean USE_TLS = true;
     private static final boolean USE_SSL = false;
 
+    public void sendNewsletterWelcome(String toEmail) {
+        String subject = "[Pharmative] Đăng ký nhận khuyến mãi thành công";
+        String html = """
+        <div style="font-family:Arial, sans-serif; line-height:1.6">
+          <h2 style="margin:0 0 12px">Chào mừng bạn đến với Pharmative!</h2>
+          <p>Cảm ơn bạn đã đăng ký nhận thông tin khuyến mãi từ <strong>Pharmative</strong>.</p>
+          <ul>
+            <li>🎁 Mã <strong>WELCOME10</strong>: Giảm 10%% cho đơn đầu tiên.</li>
+            <li>🚚 Miễn phí vận chuyển cho đơn từ <strong>499.000đ</strong>.</li>
+            <li>🕒 Áp dụng đến hết <strong>tháng này</strong>.</li>
+          </ul>
+          <p>Hãy theo dõi email để không bỏ lỡ các ưu đãi mới!</p>
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0"/>
+          <p style="margin:0 0 8px"><strong>Hỗ trợ khách hàng</strong></p>
+          <p style="margin:0">Hotline: 1900 1234 (8:00–22:00, T2–CN)<br/>Email: support@pharmative.com</p>
+          <p style="margin-top:16px">Trân trọng,<br/>Đội ngũ Pharmative</p>
+        </div>
+        """;
+        sendHtml(toEmail, subject, html);
+    }
+
+    public void sendPromotionalEmail(String toEmail, String fullName, String subject, String userMessage) {
+        String safeName = (fullName == null || fullName.isBlank()) ? "bạn" : fullName.trim();
+
+        String html = """
+        <div style="font-family:Arial, sans-serif; line-height:1.6">
+          <h2 style="margin:0 0 12px">Pharmative – Ưu đãi & Chăm sóc khách hàng</h2>
+          <p>Xin chào %s,</p>
+          <p>Cảm ơn bạn đã liên hệ với <strong>Pharmative</strong>. Dưới đây là thông tin ưu đãi hiện có:</p>
+          <ul>
+            <li>🎁 Mã <strong>WELCOME10</strong>: Giảm 10%% cho đơn hàng đầu tiên.</li>
+            <li>🚚 Miễn phí vận chuyển cho đơn từ <strong>499.000đ</strong>.</li>
+            <li>🕒 Chương trình áp dụng đến hết <strong>tháng này</strong>.</li>
+          </ul>
+
+          %s
+
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0"/>
+          <p style="margin:0 0 8px"><strong>Hỗ trợ khách hàng</strong></p>
+          <p style="margin:0">Hotline: 1900 1234 (8:00–21:00, T2–CN)<br/>
+             Email: support@pharmative.example</p>
+          <p style="margin-top:16px">Trân trọng,<br/>Đội ngũ Pharmative</p>
+        </div>
+        """.formatted(
+                  safeName,
+                  (userMessage != null && !userMessage.isBlank())
+                  ? "<p><strong>Nội dung bạn gửi:</strong><br/>" + userMessage.replaceAll("\n", "<br/>") + "</p>"
+                  : ""
+        );
+
+        sendHtml(toEmail, (subject == null || subject.isBlank()) ? "[Pharmative] Ưu đãi & CSKH" : subject.trim(), html);
+    }
+
     public static void sendNewPasswordEmail(String toEmail, String newPassword) {
         String subject = "Pharmative - Mật khẩu mới của bạn";
         String body = "<h2>Mật khẩu mới đã được tạo</h2>"

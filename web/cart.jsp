@@ -15,6 +15,7 @@
 
         <!-- Fonts + CSS -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
         <link rel="stylesheet" href="${cpath}/css/bootstrap.min.css">
         <link rel="stylesheet" href="${cpath}/css/style.css">
 

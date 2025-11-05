@@ -153,7 +153,7 @@
         </a>
 
         <!-- 🛒 Giỏ hàng -->
-        <a href="${cpath}/cart" class="icons-btn bag" title="Giỏ hàng">
+        <a href="${cpath}/cart.jsp" class="icons-btn bag" title="Giỏ hàng">
           <span class="icon-shopping-bag"></span>
           <span class="number">2</span>
         </a>
