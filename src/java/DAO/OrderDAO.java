@@ -123,6 +123,64 @@ public class OrderDAO {
     
     return o;
 }
+   
+   // PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG
+// PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG - CHỈ TÌM GẦN ĐÚNG
+public List<Order> searchOrders(String keyword, String status, String dateFrom) throws SQLException {
+    StringBuilder sql = new StringBuilder(
+        "SELECT o.*, u.fullname, u.email, u.phone_number, " +
+        "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city " +
+        "FROM orders o " +
+        "LEFT JOIN users u ON o.user_id = u.user_id " +
+        "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id " +
+        "WHERE 1=1"
+    );
+    
+    List<Object> params = new ArrayList<>();
+    
+    // Tìm kiếm theo keyword - CHỈ TÌM GẦN ĐÚNG
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql.append(" AND (o.order_id LIKE ? OR u.fullname LIKE ? OR u.email LIKE ? OR u.phone_number LIKE ?)");
+        String likeKeyword = "%" + keyword.trim() + "%";
+        params.add(likeKeyword);
+        params.add(likeKeyword);
+        params.add(likeKeyword);
+        params.add(likeKeyword);
+    }
+    
+    // Tìm kiếm theo trạng thái - CHỈ TÌM GẦN ĐÚNG (để hỗ trợ cả chữ hoa/thường)
+    if (status != null && !status.trim().isEmpty()) {
+        sql.append(" AND LOWER(o.status) LIKE LOWER(?)");
+        params.add("%" + status.trim() + "%");
+    }
+    
+    // Tìm kiếm theo ngày từ - VẪN TÌM CHÍNH XÁC (vì ngày thường cần chính xác)
+    if (dateFrom != null && !dateFrom.trim().isEmpty()) {
+        sql.append(" AND DATE(o.order_date) >= ?");
+        params.add(dateFrom.trim());
+    }
+    
+    sql.append(" ORDER BY o.order_date DESC");
+    
+    System.out.println("SQL Search: " + sql.toString());
+    System.out.println("Params: " + params);
+    
+    List<Order> list = new ArrayList<>();
+    try (Connection c = DBContext.getConnection(); 
+         PreparedStatement ps = c.prepareStatement(sql.toString())) {
+        
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+        }
+    }
+    return list;
+}
 
     // PHƯƠNG THỨC CREATE ORDER MỚI - PHÙ HỢP VỚI DATABASE
     public boolean createOrder(Order order) {
