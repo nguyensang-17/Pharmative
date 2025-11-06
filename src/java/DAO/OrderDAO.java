@@ -96,25 +96,33 @@ public class OrderDAO {
     }
 
     // PHƯƠNG THỨC MAP - ĐÃ SỬA THEO DATABASE THỰC TẾ
-    private Order map(ResultSet rs) throws SQLException {
-        Order o = new Order();
-        o.setOrderId(rs.getInt("order_id"));
-        o.setUserId(rs.getInt("user_id"));
-        o.setOrderDate(rs.getTimestamp("order_date"));
-        o.setTotalAmount(rs.getBigDecimal("total_amount"));
-        o.setStatus(rs.getString("status"));
-        o.setShippingAddressId(rs.getInt("shipping_address_id"));
-        
-        // Tạo địa chỉ giao hàng từ thông tin address
-        String address = rs.getString("recipient_name") + " - " + 
-                        rs.getString("street_address") + ", " +
-                        rs.getString("ward") + ", " +
-                        rs.getString("district") + ", " +
-                        rs.getString("city");
-        o.setShippingAddress(address);
-        
-        return o;
+   private Order map(ResultSet rs) throws SQLException {
+    Order o = new Order();
+    o.setOrderId(rs.getInt("order_id"));
+    o.setUserId(rs.getInt("user_id"));
+    o.setOrderDate(rs.getTimestamp("order_date"));
+    o.setTotalAmount(rs.getBigDecimal("total_amount"));
+    o.setStatus(rs.getString("status"));
+    o.setShippingAddressId(rs.getInt("shipping_address_id"));
+    
+    // Lấy tên khách hàng
+    String customerName = rs.getString("fullname");
+    if (customerName != null && !customerName.trim().isEmpty()) {
+        o.setCustomerName(customerName);
+    } else {
+        o.setCustomerName("Khách hàng #" + rs.getInt("user_id"));
     }
+    
+    // Tạo địa chỉ giao hàng
+    String address = rs.getString("recipient_name") + " - " + 
+                    rs.getString("street_address") + ", " +
+                    rs.getString("ward") + ", " +
+                    rs.getString("district") + ", " +
+                    rs.getString("city");
+    o.setShippingAddress(address);
+    
+    return o;
+}
 
     // PHƯƠNG THỨC CREATE ORDER MỚI - PHÙ HỢP VỚI DATABASE
     public boolean createOrder(Order order) {

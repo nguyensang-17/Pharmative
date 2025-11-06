@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import models.Order;
 
 @WebServlet(urlPatterns = {"/admin/orders", "/admin/orders/"})
@@ -49,9 +50,32 @@ public class OrderManagementController extends HttpServlet {
     }
 
     private void listOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        request.setAttribute("orderList", orderDAO.getAllOrders());
-        request.getRequestDispatcher("/admin/orders/manage_orders.jsp").forward(request, response);
+    List<Order> orderList = orderDAO.getAllOrders();
+    
+    // DEBUG: Kiểm tra dữ liệu
+    System.out.println("=== DEBUG ORDER DATA ===");
+    System.out.println("Total orders: " + orderList.size());
+    for (Order order : orderList) {
+        System.out.println("Order ID: " + order.getOrderId() + 
+                          ", User ID: " + order.getUserId() + 
+                          ", Status: " + order.getStatus() +
+                          ", Total: " + order.getTotalAmount());
     }
+    
+    // Thống kê
+    long pendingCount = orderList.stream().filter(o -> "PENDING".equals(o.getStatus())).count();
+    long processingCount = orderList.stream().filter(o -> "PROCESSING".equals(o.getStatus())).count();
+    long cancelledCount = orderList.stream().filter(o -> "CANCELLED".equals(o.getStatus())).count();
+    
+    // Set attributes với đúng tên
+    request.setAttribute("orderList", orderList); // Đổi thành orderList
+    request.setAttribute("totalOrders", orderList.size());
+    request.setAttribute("pendingOrders", pendingCount);
+    request.setAttribute("processingOrders", processingCount);
+    request.setAttribute("cancelledOrders", cancelledCount);
+    
+    request.getRequestDispatcher("/admin/orders/manage_orders.jsp").forward(request, response);
+}
 
     private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
