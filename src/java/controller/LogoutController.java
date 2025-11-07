@@ -1,6 +1,5 @@
 package controller;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,15 +12,9 @@ import java.io.IOException;
 public class LogoutController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession(false); // Lấy session hiện tại, không tạo mới
-        if (session != null) {
-            session.invalidate(); // Hủy session
-        }
-        // Chuyển hướng về trang chủ
-        response.sendRedirect(request.getContextPath() + "/home");
+    @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession ss = req.getSession(false);
+        if (ss != null) ss.invalidate();
+        resp.sendRedirect(req.getContextPath() + "/home");
     }
 }

@@ -7,19 +7,32 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.User;
 import util.EmailUtil;
 
 @WebServlet("/forgot-password")
 public class ForgotPasswordController extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
     private final UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
 
         String email = request.getParameter("email");
+
+        //Tạo token để đổi mật khẩu khi quên
+        if (email != null && !email.isBlank()) {
+            try {
+                String token = util.CodeGenerator.randomToken();          // ➊ sinh token ngẫu nhiên
+                userDAO.createPasswordResetToken(email, token);           // ➋ lưu token + hạn dùng (1h) vào DB
+            } catch (SQLException ex) {
+                Logger.getLogger(ForgotPasswordController.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
 
         try {
             User user = userDAO.findUserByEmail(email);
@@ -71,7 +84,9 @@ public class ForgotPasswordController extends HttpServlet {
         char[] arr = sb.toString().toCharArray();
         for (int i = 0; i < arr.length; i++) {
             int j = rnd.nextInt(arr.length);
-            char t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+            char t = arr[i];
+            arr[i] = arr[j];
+            arr[j] = t;
         }
         return new String(arr);
     }
