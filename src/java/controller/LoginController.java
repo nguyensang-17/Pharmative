@@ -54,8 +54,8 @@ public class LoginController extends HttpServlet {
                     System.out.println("Redirecting admin to: /admin/dashboard");
                     response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                 } else {
-                    System.out.println("Redirecting customer to: /home.jsp");
-                    response.sendRedirect(request.getContextPath() + "/home.jsp");
+                    System.out.println("Redirecting customer to: /home");
+                    response.sendRedirect(request.getContextPath() + "/home");
                 }
 
             } else {

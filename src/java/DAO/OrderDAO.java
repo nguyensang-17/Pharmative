@@ -203,6 +203,7 @@ public List<Order> searchOrders(String keyword, String status, String dateFrom) 
                 try (ResultSet rs = orderStmt.getGeneratedKeys()) {
                     if (rs.next()) {
                         orderId = rs.getInt(1);
+                        order.setOrderId(orderId);
                     } else {
                         throw new SQLException("Không thể lấy order_id");
                     }

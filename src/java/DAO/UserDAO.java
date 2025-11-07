@@ -122,12 +122,13 @@ public class UserDAO {
     }
 
     public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET fullname = ?, phone_number = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET fullname = ?, phone_number = ?, address = ? WHERE user_id = ?";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getFullname());
             ps.setString(2, user.getPhoneNumber());
-            ps.setInt(3, user.getId());
+            ps.setString(3, user.getAddress());
+            ps.setInt(4, user.getId());
             return ps.executeUpdate() > 0;
         }
     }
@@ -168,6 +169,7 @@ public class UserDAO {
     
     // ✅ THÊM DÒNG NÀY
     user.setPhoneNumber(rs.getString("phone_number"));
+    user.setAddress(rs.getString("address"));
     
     // ✅ THÊM created_at nếu có trong model
     try {

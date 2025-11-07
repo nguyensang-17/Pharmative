@@ -37,7 +37,8 @@ public class AccountController extends HttpServlet {
         // Lấy lịch sử đơn hàng của người dùng
         List<Order> orderHistory = orderDAO.getOrdersByUserId(user.getId());
         request.setAttribute("orderHistory", orderHistory);
-        request.getRequestDispatcher("/customer/account.jsp").forward(request, response);
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("/account.jsp").forward(request, response);
     }
     
 
@@ -50,18 +51,41 @@ public class AccountController extends HttpServlet {
             return;
         }
 
+        String action = request.getParameter("action");
+        if (action == null || action.isBlank()) {
+            action = "updateProfile";
+        }
+
+        switch (action) {
+            case "changePassword" -> handleChangePassword(request, response, session);
+            case "updateProfile" -> handleUpdateProfile(request, response, session);
+            default -> {
+                request.setAttribute("errorMessage", "Hành động không hợp lệ.");
+                doGet(request, response);
+            }
+        }
+    }
+
+    private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws ServletException, IOException {
         User currentUser = (User) session.getAttribute("currentUser");
-        
-        // Cập nhật thông tin người dùng
-        currentUser.setFullname(request.getParameter("fullname"));
-        currentUser.setPhoneNumber(request.getParameter("phone_number"));
-        currentUser.setAddress(request.getParameter("address"));
-        
+
+        String fullname = request.getParameter("fullname");
+        String phone = request.getParameter("phone_number");
+        String address = request.getParameter("address");
+
+        currentUser.setFullname(fullname != null ? fullname.trim() : null);
+        currentUser.setPhoneNumber(phone != null ? phone.trim() : null);
+        currentUser.setAddress(address != null ? address.trim() : null);
+
         try {
             boolean success = userDAO.updateUser(currentUser);
-            if(success) {
-                // Cập nhật lại thông tin trong session
-                session.setAttribute("currentUser", currentUser);
+            if (success) {
+                // Refresh thông tin user từ DB để đảm bảo dữ liệu nhất quán
+                User freshUser = userDAO.getUserById(currentUser.getId());
+                if (freshUser != null) {
+                    session.setAttribute("currentUser", freshUser);
+                }
                 request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
             } else {
                 request.setAttribute("errorMessage", "Cập nhật thông tin thất bại.");
@@ -71,7 +95,54 @@ public class AccountController extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Tải lại lịch sử đơn hàng và chuyển tiếp lại trang account
+        doGet(request, response);
+    }
+
+    private void handleChangePassword(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws ServletException, IOException {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        String currentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        if (currentPassword == null || newPassword == null || confirmPassword == null
+                || currentPassword.isBlank() || newPassword.isBlank() || confirmPassword.isBlank()) {
+            request.setAttribute("errorMessage", "Vui lòng nhập đầy đủ thông tin mật khẩu.");
+            doGet(request, response);
+            return;
+        }
+
+        if (!util.PasswordUtil.checkPassword(currentPassword, currentUser.getPassword())) {
+            request.setAttribute("errorMessage", "Mật khẩu hiện tại không đúng.");
+            doGet(request, response);
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("errorMessage", "Mật khẩu mới và xác nhận không khớp.");
+            doGet(request, response);
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            request.setAttribute("errorMessage", "Mật khẩu mới phải có ít nhất 6 ký tự.");
+            doGet(request, response);
+            return;
+        }
+
+        try {
+            userDAO.updateUserPassword(currentUser.getId(), newPassword);
+            User freshUser = userDAO.getUserById(currentUser.getId());
+            if (freshUser != null) {
+                session.setAttribute("currentUser", freshUser);
+            }
+            request.setAttribute("successMessage", "Đổi mật khẩu thành công!");
+        } catch (SQLException e) {
+            request.setAttribute("errorMessage", "Lỗi cơ sở dữ liệu khi đổi mật khẩu.");
+            e.printStackTrace();
+        }
+
         doGet(request, response);
     }
 }
