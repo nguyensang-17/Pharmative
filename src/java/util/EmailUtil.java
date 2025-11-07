@@ -4,6 +4,10 @@ import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 public class EmailUtil {
@@ -94,6 +98,96 @@ public class EmailUtil {
                   + "<p><a href=\"" + resetUrl + "\">" + resetUrl + "</a></p>"
                   + "<p>Nếu bạn không yêu cầu thao tác này, hãy bỏ qua email.</p>";
         sendHtml(toEmail, subject, body);
+    }
+
+    public static void sendOrderConfirmationEmail(String toEmail,
+                                                  String customerName,
+                                                  int orderId,
+                                                  List<OrderLine> items,
+                                                  BigDecimal totalAmount,
+                                                  String shippingAddress) {
+        if (toEmail == null || toEmail.isBlank()) {
+            throw new IllegalArgumentException("Email người nhận không được để trống");
+        }
+
+        String safeName = (customerName == null || customerName.isBlank()) ? "bạn" : customerName.trim();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        StringBuilder itemsTable = new StringBuilder();
+        itemsTable.append("<table style=\"width:100%;border-collapse:collapse;margin-top:16px\">");
+        itemsTable.append("<thead><tr>")
+                  .append("<th align=\"left\" style=\"padding:8px;border-bottom:1px solid #e5e5e5\">Sản phẩm</th>")
+                  .append("<th align=\"center\" style=\"padding:8px;border-bottom:1px solid #e5e5e5\">SL</th>")
+                  .append("<th align=\"right\" style=\"padding:8px;border-bottom:1px solid #e5e5e5\">Đơn giá</th>")
+                  .append("<th align=\"right\" style=\"padding:8px;border-bottom:1px solid #e5e5e5\">Thành tiền</th>")
+                  .append("</tr></thead><tbody>");
+
+        for (OrderLine item : items) {
+            String unitPrice = currencyFormat.format(item.unitPrice());
+            String lineTotal = currencyFormat.format(item.lineTotal());
+            itemsTable.append("<tr>")
+                      .append("<td style=\"padding:8px;border-bottom:1px solid #f5f5f5\">")
+                      .append(item.productName()).append("</td>")
+                      .append("<td align=\"center\" style=\"padding:8px;border-bottom:1px solid #f5f5f5\">")
+                      .append(item.quantity()).append("</td>")
+                      .append("<td align=\"right\" style=\"padding:8px;border-bottom:1px solid #f5f5f5\">")
+                      .append(unitPrice).append("</td>")
+                      .append("<td align=\"right\" style=\"padding:8px;border-bottom:1px solid #f5f5f5\">")
+                      .append(lineTotal).append("</td>")
+                      .append("</tr>");
+        }
+
+        itemsTable.append("</tbody></table>");
+
+        String subjectPrefix = (orderId > 0) ? "#" + orderId + " " : "";
+        String subject = "[Pharmative] Xác nhận đơn hàng " + subjectPrefix + "thành công";
+
+        StringBuilder body = new StringBuilder();
+        body.append("<div style=\"font-family:Arial,sans-serif;line-height:1.6;color:#333\">")
+            .append("<h2 style=\"margin:0 0 12px\">Xin chào ").append(safeName).append(",</h2>")
+            .append("<p>Cảm ơn bạn đã mua sắm tại <strong>Pharmative</strong>. Đơn hàng của bạn đã được ghi nhận thành công.</p>");
+
+        if (orderId > 0) {
+            body.append("<p><strong>Mã đơn hàng:</strong> #").append(orderId).append("</p>");
+        }
+
+        if (shippingAddress != null && !shippingAddress.isBlank()) {
+            body.append("<p><strong>Địa chỉ giao hàng:</strong><br/>")
+                .append(shippingAddress.replaceAll("\n", "<br/>")).append("</p>");
+        }
+
+        body.append(itemsTable);
+
+        body.append("<p style=\"text-align:right;font-size:16px;margin-top:12px\"><strong>Tổng thanh toán: ")
+            .append(currencyFormat.format(totalAmount != null ? totalAmount : BigDecimal.ZERO))
+            .append("</strong></p>");
+
+        body.append("<p>Chúng tôi sẽ liên hệ và giao hàng trong thời gian sớm nhất. Bạn có thể xem lại đơn hàng trong mục <em>Tài khoản &gt; Lịch sử đơn hàng</em>.</p>")
+            .append("<p>Nếu cần hỗ trợ, hãy liên hệ với chúng tôi qua hotline 1900 1234 hoặc email support@pharmative.com.</p>")
+            .append("<p style=\"margin-top:16px\">Trân trọng,<br/>Đội ngũ Pharmative</p>")
+            .append("</div>");
+
+        sendHtml(toEmail, subject, body.toString());
+    }
+
+    public static class OrderLine {
+        private final String productName;
+        private final int quantity;
+        private final BigDecimal unitPrice;
+        private final BigDecimal lineTotal;
+
+        public OrderLine(String productName, int quantity, BigDecimal unitPrice, BigDecimal lineTotal) {
+            this.productName = (productName == null) ? "Sản phẩm" : productName;
+            this.quantity = quantity;
+            BigDecimal safeUnitPrice = (unitPrice == null) ? BigDecimal.ZERO : unitPrice;
+            this.unitPrice = safeUnitPrice;
+            this.lineTotal = (lineTotal == null) ? safeUnitPrice.multiply(BigDecimal.valueOf(quantity)) : lineTotal;
+        }
+
+        public String productName() { return productName; }
+        public int quantity() { return quantity; }
+        public BigDecimal unitPrice() { return unitPrice; }
+        public BigDecimal lineTotal() { return lineTotal; }
     }
 
     private static void sendHtml(String toEmail, String subject, String html) {

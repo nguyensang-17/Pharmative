@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.OrderDAO;
+import controller.CartController.CartItem;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,10 +14,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import models.CartItem;
 import models.Order;
 import models.OrderDetail;
 import models.User;
+import models.Product;
+import util.EmailUtil;
 
 @WebServlet("/checkout")
 public class CheckoutController extends HttpServlet {
@@ -49,20 +51,34 @@ public class CheckoutController extends HttpServlet {
         }
 
         // Tạo đối tượng Order
+        String shippingAddress = request.getParameter("shippingAddress");
+
         Order order = new Order();
         order.setUserId(user.getId());
-        order.setShippingAddress(request.getParameter("shippingAddress"));
+        order.setShippingAddress(shippingAddress);
         
         List<OrderDetail> details = new ArrayList<>();
+        List<EmailUtil.OrderLine> emailLines = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (CartItem item : cart.values()) {
+            Product product = item.getProduct();
+            BigDecimal unitPrice = (product.getPrice() == null) ? BigDecimal.ZERO : product.getPrice();
+            BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+
             OrderDetail detail = new OrderDetail();
-            detail.setProductId(item.getProduct().getId());
+            detail.setProductId(product.getProductId());
             detail.setQuantity(item.getQuantity());
-            detail.setPricePerUnit(item.getProduct().getPrice());
+            detail.setPricePerUnit(unitPrice);
             details.add(detail);
-            totalAmount = totalAmount.add(item.getSubtotal());
+            totalAmount = totalAmount.add(lineTotal);
+
+            emailLines.add(new EmailUtil.OrderLine(
+                    product.getProductName(),
+                    item.getQuantity(),
+                    unitPrice,
+                    lineTotal
+            ));
         }
 
         order.setOrderDetails(details);
@@ -72,6 +88,18 @@ public class CheckoutController extends HttpServlet {
         boolean success = orderDAO.createOrder(order);
 
         if (success) {
+            try {
+                EmailUtil.sendOrderConfirmationEmail(
+                        user.getEmail(),
+                        user.getFullname(),
+                        order.getOrderId(),
+                        emailLines,
+                        totalAmount,
+                        shippingAddress
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             session.removeAttribute("cart"); // Xóa giỏ hàng
             response.sendRedirect(request.getContextPath() + "/order-success.jsp");
         } else {

@@ -47,6 +47,23 @@
         width: 40px;
         height: 40px;
     }
+
+    .icons-btn.account-btn {
+        min-width: 120px;
+        width: auto;
+        padding: 8px 14px;
+        justify-content: flex-start;
+        gap: 6px;
+    }
+
+    .account-name {
+        font-size: 14px;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+    }
     
     .icons-btn:hover {
         background: #f8f9fa;
@@ -155,13 +172,28 @@
         <!-- 🛒 Giỏ hàng -->
         <a href="${cpath}/cart.jsp" class="icons-btn bag" title="Giỏ hàng">
           <span class="icon-shopping-bag"></span>
-          <span class="number">2</span>
+          <c:if test="${not empty sessionScope.cart}">
+            <span class="number">${sessionScope.cart.size()}</span>
+          </c:if>
         </a>
 
-        <!-- 👤 Đăng nhập -->
-        <a href="${cpath}/login.jsp" class="icons-btn" title="Đăng nhập">
-          <span class="icon-user"></span>
-        </a>
+        <!-- 👤 Người dùng -->
+        <c:choose>
+          <c:when test="${not empty sessionScope.currentUser}">
+            <a href="${cpath}/account" class="icons-btn account-btn" title="Tài khoản">
+              <span class="icon-user"></span>
+              <span class="account-name">Xin chào, ${sessionScope.currentUser.fullname}</span>
+            </a>
+            <a href="${cpath}/logout" class="icons-btn" title="Đăng xuất">
+              <span class="icon-sign-out"></span>
+            </a>
+          </c:when>
+          <c:otherwise>
+            <a href="${cpath}/login.jsp" class="icons-btn" title="Đăng nhập">
+              <span class="icon-user"></span>
+            </a>
+          </c:otherwise>
+        </c:choose>
 
         <!-- Menu mobile -->
         <a href="#" class="icons-btn d-lg-none js-menu-toggle" title="Menu">
