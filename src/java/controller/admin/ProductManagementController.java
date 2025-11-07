@@ -3,6 +3,7 @@ package controller.admin;
 import DAO.BrandDAO;
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
+import DAO.SupplierDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import models.Product;
 
-@WebServlet(name = "ProductManagementController", urlPatterns = {"/admin/products"})
+@WebServlet(name = "ProductManagementController", urlPatterns = {"/admin/products", "/admin/products/"})
 public class ProductManagementController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -18,38 +19,52 @@ public class ProductManagementController extends HttpServlet {
     private final ProductDAO productDAO = new ProductDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
     private final BrandDAO brandDAO = new BrandDAO();
+    private final SupplierDAO supplierDAO = new SupplierDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
+        System.out.println("=== PRODUCT MANAGEMENT CONTROLLER CALLED ===");
+        System.out.println("Request URL: " + req.getRequestURL());
+        System.out.println("Context Path: " + req.getContextPath());
+        System.out.println("Servlet Path: " + req.getServletPath());
+        System.out.println("Query String: " + req.getQueryString());
+        
         // Check admin authentication
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
+            System.out.println("User not authenticated, redirecting to login");
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
         
         String action = req.getParameter("action");
+        System.out.println("Action parameter: " + action);
         
         try {
             if (action == null || action.isEmpty()) {
-                // Default: show product list
+                System.out.println("Listing products...");
                 listProducts(req, resp);
             } 
             else if ("edit".equals(action)) {
+                System.out.println("Showing edit form for ID: " + req.getParameter("id"));
                 showEditForm(req, resp);
             } 
             else if ("new".equals(action)) {
+                System.out.println("Showing new product form");
                 showNewForm(req, resp);
             } 
             else if ("delete".equals(action)) {
+                System.out.println("Deleting product ID: " + req.getParameter("id"));
                 deleteProduct(req, resp);
             } 
             else {
+                System.out.println("Unknown action, listing products");
                 listProducts(req, resp);
             }
         } catch (Exception e) {
+            System.err.println("ERROR in ProductManagementController:");
             e.printStackTrace();
             throw new ServletException("Lỗi: " + e.getMessage(), e);
         }
@@ -59,10 +74,12 @@ public class ProductManagementController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
+        System.out.println("=== PRODUCT MANAGEMENT POST CALLED ===");
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         
         String action = req.getParameter("action");
+        System.out.println("POST Action: " + action);
         
         try {
             if ("save".equals(action)) {
@@ -80,12 +97,26 @@ public class ProductManagementController extends HttpServlet {
     private void listProducts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, Exception {
         
-        // Get all products for admin
-        var products = productDAO.getAllProducts();
-        req.setAttribute("products", products);
+        System.out.println("=== LISTING PRODUCTS IN CONTROLLER ===");
         
-        // Forward to product list page
-        req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
+        try {
+            // Get all products for admin
+            var products = productDAO.getAllProductsForAdmin();
+            System.out.println("Products retrieved: " + products.size());
+            
+            req.setAttribute("products", products);
+            
+            String jspPath = "/admin/products/product-list.jsp";
+            System.out.println("Forwarding to: " + jspPath);
+            
+            // Forward to product list page
+            req.getRequestDispatcher(jspPath).forward(req, resp);
+            
+        } catch (Exception e) {
+            System.err.println("ERROR in listProducts:");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     // 2. SHOW EDIT FORM
@@ -93,6 +124,7 @@ public class ProductManagementController extends HttpServlet {
             throws ServletException, IOException, Exception {
         
         String idParam = req.getParameter("id");
+        System.out.println("Edit form for ID: " + idParam);
         
         if (idParam == null || idParam.isEmpty()) {
             setSessionError(req, "Thiếu ID sản phẩm!");
@@ -110,15 +142,20 @@ public class ProductManagementController extends HttpServlet {
                 return;
             }
             
-            // Get categories and brands for dropdowns
+            // Get categories, brands và suppliers for dropdowns
             var categories = categoryDAO.getAll();
             var brands = brandDAO.getAll();
+            var suppliers = supplierDAO.getAll();
             
             req.setAttribute("product", product);
             req.setAttribute("categories", categories);
             req.setAttribute("brands", brands);
+            req.setAttribute("suppliers", suppliers);
             
-            req.getRequestDispatcher("/WEB-INF/views/admin/product-edit.jsp").forward(req, resp);
+            String jspPath = "/admin/products/product-edits.jsp";
+            System.out.println("Forwarding to edit form: " + jspPath);
+            
+            req.getRequestDispatcher(jspPath).forward(req, resp);
             
         } catch (NumberFormatException e) {
             setSessionError(req, "ID sản phẩm không hợp lệ!");
@@ -130,19 +167,28 @@ public class ProductManagementController extends HttpServlet {
     private void showNewForm(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, Exception {
         
-        // Get categories and brands for dropdowns
+        System.out.println("Showing new product form");
+        
+        // Get categories, brands và suppliers for dropdowns
         var categories = categoryDAO.getAll();
         var brands = brandDAO.getAll();
+        var suppliers = supplierDAO.getAll();
         
         req.setAttribute("categories", categories);
         req.setAttribute("brands", brands);
+        req.setAttribute("suppliers", suppliers);
         
-        req.getRequestDispatcher("/WEB-INF/views/admin/product-edit.jsp").forward(req, resp);
+        String jspPath = "/admin/products/product-edits.jsp";
+        System.out.println("Forwarding to new form: " + jspPath);
+        
+        req.getRequestDispatcher(jspPath).forward(req, resp);
     }
 
     // 4. SAVE PRODUCT (Create or Update)
     private void saveProduct(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, Exception {
+        
+        System.out.println("=== SAVING PRODUCT ===");
         
         try {
             String idParam = req.getParameter("product_id");
@@ -153,8 +199,10 @@ public class ProductManagementController extends HttpServlet {
             
             if (isNew) {
                 product = new Product();
+                System.out.println("Creating new product");
             } else {
                 product = productDAO.getProductById(productId);
+                System.out.println("Updating product ID: " + productId);
                 if (product == null) {
                     setSessionError(req, "Không tìm thấy sản phẩm để cập nhật!");
                     resp.sendRedirect(req.getContextPath() + "/admin/products");
@@ -201,12 +249,15 @@ public class ProductManagementController extends HttpServlet {
                 productDAO.addProduct(product);
                 success = true;
                 setSessionMessage(req, "✅ Thêm sản phẩm thành công!");
+                System.out.println("Product added successfully");
             } else {
                 success = productDAO.updateProduct(product);
                 if (success) {
                     setSessionMessage(req, "✅ Cập nhật sản phẩm thành công!");
+                    System.out.println("Product updated successfully");
                 } else {
                     setSessionError(req, "❌ Không thể cập nhật sản phẩm!");
+                    System.out.println("Product update failed");
                 }
             }
             
@@ -217,6 +268,7 @@ public class ProductManagementController extends HttpServlet {
             }
             
         } catch (Exception e) {
+            System.err.println("ERROR in saveProduct:");
             e.printStackTrace();
             setSessionError(req, "Lỗi hệ thống: " + e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/admin/products");
@@ -228,6 +280,7 @@ public class ProductManagementController extends HttpServlet {
             throws ServletException, IOException, Exception {
         
         String idParam = req.getParameter("id");
+        System.out.println("Deleting product ID: " + idParam);
         
         if (idParam == null || idParam.isEmpty()) {
             setSessionError(req, "Thiếu ID sản phẩm!");
@@ -242,8 +295,10 @@ public class ProductManagementController extends HttpServlet {
             
             if (success) {
                 setSessionMessage(req, "✅ Đã xóa sản phẩm thành công!");
+                System.out.println("Product deleted successfully");
             } else {
                 setSessionError(req, "❌ Không thể xóa sản phẩm!");
+                System.out.println("Product deletion failed");
             }
             
         } catch (NumberFormatException e) {

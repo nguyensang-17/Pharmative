@@ -265,14 +265,23 @@ public int countProducts() throws SQLException {
     /**
  * Lấy tất cả sản phẩm (không phân trang) - cho admin
  */
-public List<Product> getAllProducts() throws SQLException {
+/**
+ * Lấy tất cả sản phẩm (không phân trang) - cho admin
+ */
+public List<Product> getAllProductsForAdmin() throws SQLException {
+    System.out.println("=== GETTING ALL PRODUCTS FOR ADMIN ===");
     String sql = "SELECT * FROM products ORDER BY created_at DESC";
     List<Product> list = new ArrayList<>();
     try (Connection c = DBContext.getConnection();
          PreparedStatement ps = c.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) list.add(map(rs));
+        while (rs.next()) {
+            Product product = map(rs);
+            System.out.println("Product: " + product.getProductName() + " - ID: " + product.getProductId());
+            list.add(product);
+        }
     }
+    System.out.println("Total products found: " + list.size());
     return list;
 }
 }
