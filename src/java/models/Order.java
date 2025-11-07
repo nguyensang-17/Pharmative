@@ -23,4 +23,16 @@ public class Order {
     public void setStatus(String status) { this.status = status; }
     public int getShippingAddressId() { return shippingAddressId; }
     public void setShippingAddressId(int shippingAddressId) { this.shippingAddressId = shippingAddressId; }
+<<<<<<< HEAD
 }
+=======
+    
+    // THÊM GETTER/SETTER CHO shippingAddress
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+    
+    // THÊM GETTER/SETTER CHO orderDetails
+    public List<OrderDetail> getOrderDetails() { return orderDetails; }
+    public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+}
+>>>>>>> parent of 92e24ee (Merge branch 'main' of https://github.com/nguyensang-17/Pharmative)

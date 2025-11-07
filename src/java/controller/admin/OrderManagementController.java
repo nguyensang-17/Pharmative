@@ -50,7 +50,11 @@ public class OrderManagementController extends HttpServlet {
 
     private void listOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         request.setAttribute("orderList", orderDAO.getAllOrders());
+<<<<<<< HEAD
         request.getRequestDispatcher("/admin/manage_orders.jsp").forward(request, response);
+=======
+        request.getRequestDispatcher("/admin/orders/manage_orders.jsp").forward(request, response);
+>>>>>>> parent of 92e24ee (Merge branch 'main' of https://github.com/nguyensang-17/Pharmative)
     }
 
     private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
