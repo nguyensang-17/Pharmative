@@ -12,7 +12,7 @@ public class Config {
 
     // === CẤU HÌNH SANDBOX (đổi theo merchant của bạn) ===
     public static String vnp_PayUrl   = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl= "http://localhost:24400/Pharmative/vnpay_return.jsp"; 
+    public static String vnp_ReturnUrl= "http://localhost:8080/Pharmative/vnpay_return.jsp"; 
     public static String vnp_TmnCode  = "8S14KTHI";   
     public static String secretKey    = "P157NR8XKX5ZVIJNJVCX8ITJ98LCTZNT".trim();
 
