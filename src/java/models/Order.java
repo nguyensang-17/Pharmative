@@ -45,4 +45,14 @@ public class Order {
     // THÊM GETTER/SETTER CHO orderDetails
     public List<OrderDetail> getOrderDetails() { return orderDetails; }
     public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+     private String customerName;
+    
+    // Getter và Setter
+    public String getCustomerName() {
+        return customerName;
+    }
+    
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }
