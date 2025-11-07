@@ -5,13 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa Sản phẩm - Admin</title>
+    <title>Thêm Sản phẩm Mới - Admin</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* CSS giống hệt product-add.jsp */
         :root{
             --brand-green: #75b239;
             --brand-green-dark: #5fa127;
@@ -132,16 +131,11 @@
             max-height: 200px;
             border-radius: 8px;
             margin: 15px auto;
+            display: none;
         }
 
         .btn-remove-image {
-            margin-top: 10px;
-        }
-
-        .current-image-info {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
+            display: none;
             margin-top: 10px;
         }
 
@@ -185,8 +179,8 @@
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h2><i class="fas fa-edit" style="margin-right:10px"></i> Chỉnh sửa Sản phẩm</h2>
-                <p class="mb-0" style="opacity:0.9">Cập nhật thông tin sản phẩm</p>
+                <h2><i class="fas fa-plus" style="margin-right:10px"></i> Thêm Sản phẩm Mới</h2>
+                <p class="mb-0" style="opacity:0.9">Thêm sản phẩm mới vào hệ thống</p>
             </div>
         </div>
 
@@ -212,7 +206,6 @@
             <div class="card-body">
                 <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data" id="productForm">
                     <input type="hidden" name="action" value="save">
-                    <input type="hidden" name="product_id" value="${product.productId}">
                     
                     <div class="row">
                         <!-- Left Column - Basic Info -->
@@ -221,14 +214,13 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label required">Tên sản phẩm</label>
                                     <input type="text" class="form-control" name="product_name" 
-                                           value="${product.productName}" placeholder="Nhập tên sản phẩm" required>
+                                           placeholder="Nhập tên sản phẩm" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label required">Giá (₫)</label>
                                     <input type="number" class="form-control" name="price" 
-                                           value="${product.price}" placeholder="Nhập giá sản phẩm" 
-                                           min="0" step="1000" required>
+                                           placeholder="Nhập giá sản phẩm" min="0" step="1000" required>
                                 </div>
                             </div>
 
@@ -236,8 +228,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label required">Số lượng tồn kho</label>
                                     <input type="number" class="form-control" name="stock_quantity" 
-                                           value="${product.stockQuantity}" placeholder="Nhập số lượng" 
-                                           min="0" required>
+                                           placeholder="Nhập số lượng" min="0" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
@@ -245,10 +236,30 @@
                                     <select class="form-select" name="category_id" required>
                                         <option value="">-- Chọn danh mục --</option>
                                         <c:forEach var="category" items="${categories}">
-                                            <option value="${category.categoryId}" 
-                                                ${product.categoryId == category.categoryId ? 'selected' : ''}>
-                                                ${category.categoryName}
-                                            </option>
+                                            <option value="${category.categoryId}">${category.categoryName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- THÊM BRAND VÀ SUPPLIER -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Thương hiệu</label>
+                                    <select class="form-select" name="brand_id">
+                                        <option value="">-- Chọn thương hiệu --</option>
+                                        <c:forEach var="brand" items="${brands}">
+                                            <option value="${brand.brandId}">${brand.brandName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Nhà cung cấp</label>
+                                    <select class="form-select" name="supplier_id">
+                                        <option value="">-- Chọn nhà cung cấp --</option>
+                                        <c:forEach var="supplier" items="${suppliers}">
+                                            <option value="${supplier.supplierId}">${supplier.supplierName}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -257,7 +268,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Mô tả sản phẩm</label>
                                 <textarea class="form-control" name="description" rows="5" 
-                                          placeholder="Nhập mô tả chi tiết về sản phẩm">${product.description}</textarea>
+                                          placeholder="Nhập mô tả chi tiết về sản phẩm"></textarea>
                             </div>
                         </div>
 
@@ -265,47 +276,26 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Hình ảnh sản phẩm</label>
-                                
-                                <!-- Hiển thị ảnh hiện tại -->
-                                <c:if test="${not empty product.imageUrl}">
-                                    <div class="text-center mb-3">
-                                        <img src="${pageContext.request.contextPath}/${product.imageUrl}" 
-                                             alt="${product.productName}" class="image-preview">
-                                        <div class="current-image-info">
-                                            <small class="text-muted">Ảnh hiện tại</small>
-                                            <br>
-                                            <small>${product.imageUrl}</small>
-                                        </div>
-                                        <input type="hidden" name="current_image" value="${product.imageUrl}">
-                                    </div>
-                                </c:if>
-                                
                                 <div class="image-upload-container" id="uploadContainer">
                                     <div class="upload-icon">
                                         <i class="fas fa-cloud-upload-alt"></i>
                                     </div>
-                                    <h5>Thay đổi ảnh</h5>
-                                    <p class="text-muted">Kéo thả ảnh vào đây hoặc</p>
+                                    <h5>Kéo thả ảnh vào đây</h5>
+                                    <p class="text-muted">hoặc</p>
                                     <input type="file" class="form-control" id="imageInput" name="image" 
                                            accept="image/*" style="display: none;">
                                     <button type="button" class="btn btn-success" onclick="document.getElementById('imageInput').click()">
-                                        <i class="fas fa-folder-open"></i> Chọn ảnh mới
+                                        <i class="fas fa-folder-open"></i> Chọn ảnh
                                     </button>
                                     <p class="text-muted mt-2 small">Hỗ trợ: JPG, PNG, GIF (Tối đa 5MB)</p>
                                 </div>
                                 
-                                <!-- Preview ảnh mới -->
-                                <img id="imagePreview" class="image-preview" style="display: none;" alt="Preview">
+                                <!-- Image Preview -->
+                                <img id="imagePreview" class="image-preview" alt="Preview">
                                 
-                                <button type="button" class="btn btn-outline-danger btn-remove-image w-100" id="removeImageBtn" style="display: none;">
-                                    <i class="fas fa-trash"></i> Hủy ảnh mới
+                                <button type="button" class="btn btn-outline-danger btn-remove-image w-100" id="removeImageBtn">
+                                    <i class="fas fa-trash"></i> Xóa ảnh
                                 </button>
-
-                                <c:if test="${not empty product.imageUrl}">
-                                    <button type="button" class="btn btn-outline-danger w-100 mt-2" onclick="removeCurrentImage()">
-                                        <i class="fas fa-times"></i> Xóa ảnh hiện tại
-                                    </button>
-                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -318,7 +308,7 @@
                                     <i class="fas fa-arrow-left"></i> Quay lại danh sách
                                 </a>
                                 <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Cập nhật Sản phẩm
+                                    <i class="fas fa-save"></i> Thêm Sản phẩm
                                 </button>
                             </div>
                         </div>
@@ -389,20 +379,12 @@
                 }
             }
 
-            // Remove new image
+            // Remove image
             removeImageBtn.addEventListener('click', function() {
                 imageInput.value = '';
                 imagePreview.style.display = 'none';
                 this.style.display = 'none';
             });
-
-            // Remove current image
-            window.removeCurrentImage = function() {
-                if (confirm('Bạn có chắc muốn xóa ảnh hiện tại?')) {
-                    document.querySelector('input[name="current_image"]').value = '';
-                    alert('Ảnh sẽ bị xóa khi bạn cập nhật sản phẩm');
-                }
-            }
 
             // Form validation
             document.getElementById('productForm').addEventListener('submit', function(e) {

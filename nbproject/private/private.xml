@@ -6,48 +6,52 @@
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/CategoryManagementController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/fragments/_sidebar.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/DAO/OrderDAO.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/index.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/home.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/checkout.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Product.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/filter/EncodingFilter.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/DAO/UserDAO.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CartController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/dashboard.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/AccountController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/forgot-password.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/vnpay/vnpayRefund.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/User.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/util/CodeGenerator.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/vnpay/Config.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/shop-single.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Review.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/orders/manage_orders.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CheckoutController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/DashboardController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/VerifyController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/OrderManagementController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/RegisterController.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/thankyou.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/vnpay/vnpayQuery.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/util/EmailUtil.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Supplier.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/main.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/util/CartUtils.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/products/product-edits.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/categories/index.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/register.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/products.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/login.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/layout.jsp</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/list.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/about.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Shipment.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/HomeController.java</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/OrderDetail.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/verify.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Order.java</file>
-            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/orders/order_detail.jsp</file>
             <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/shop.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/ForgotPasswordController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/index.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/filter/EncodingFilter.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/CartController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/ProductManagementController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/dashboard.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/ProductController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/vnpay/vnpayRefund.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/util/CodeGenerator.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/models/Review.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/admin/DashboardController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/VerifyController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/controller/RegisterController.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/thankyou.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/src/java/vnpay/vnpayQuery.java</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/main.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/register.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/products/product-list.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/products.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/login.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/layout.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/admin/users/list.jsp</file>
+            <file>file:/C:/Users/giangQuan/Documents/GitHub/Pharmative/web/verify.jsp</file>
         </group>
     </open-files>
 </project-private>

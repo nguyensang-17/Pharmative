@@ -97,37 +97,83 @@ public class ProductDAO {
     }
 
     public Product getProductById(int id) throws SQLException {
-        String sql = "SELECT * FROM products WHERE product_id = ?";
-        try (Connection c = DBContext.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? map(rs) : null;
+    String sql = "SELECT * FROM products WHERE product_id = ?";
+    System.out.println("Getting product by ID: " + id);
+    
+    try (Connection c = DBContext.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                Product product = map(rs);
+                System.out.println("✅ Product found: " + product.getProductName());
+                System.out.println("Image URL: " + product.getImageUrl());
+                return product;
+            } else {
+                System.out.println("❌ Product not found with ID: " + id);
+                return null;
             }
         }
+    } catch (SQLException e) {
+        System.err.println("❌ SQL Error getting product by ID: " + e.getMessage());
+        throw e;
     }
+}
 
     /* =========================
        CRUD admin
        ========================= */
 
     public void addProduct(Product p) throws SQLException {
-        String sql = "INSERT INTO products(product_name, description, price, stock_quantity, image_url, " +
-                "category_id, brand_id, supplier_id, created_at) " +
-                "VALUES(?,?,?,?,?,?,?,?,NOW())";
-        try (Connection c = DBContext.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, p.getProductName());
-            ps.setString(2, p.getDescription());
-            ps.setBigDecimal(3, p.getPrice() == null ? BigDecimal.ZERO : p.getPrice());
-            ps.setInt(4, p.getStockQuantity());
-            ps.setString(5, p.getImageUrl());
-            ps.setInt(6, p.getCategoryId());
+    String sql = "INSERT INTO products(product_name, description, price, stock_quantity, image_url, " +
+            "category_id, brand_id, supplier_id, created_at) " +
+            "VALUES(?,?,?,?,?,?,?,?,NOW())";
+    
+    System.out.println("=== ADDING PRODUCT TO DATABASE ===");
+    System.out.println("Name: " + p.getProductName());
+    System.out.println("Price: " + p.getPrice());
+    System.out.println("Stock: " + p.getStockQuantity());
+    System.out.println("Category: " + p.getCategoryId());
+    System.out.println("Brand: " + p.getBrandId());
+    System.out.println("Supplier: " + p.getSupplierId());
+    System.out.println("Image: " + p.getImageUrl());
+    
+    try (Connection c = DBContext.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setString(1, p.getProductName());
+        ps.setString(2, p.getDescription());
+        ps.setBigDecimal(3, p.getPrice() == null ? BigDecimal.ZERO : p.getPrice());
+        ps.setInt(4, p.getStockQuantity());
+        ps.setString(5, p.getImageUrl());
+        ps.setInt(6, p.getCategoryId());
+        
+        // Xử lý brand_id có thể null
+        if (p.getBrandId() != null) {
             ps.setInt(7, p.getBrandId());
-            ps.setInt(8, p.getSupplierId());
-            ps.executeUpdate();
+        } else {
+            ps.setNull(7, Types.INTEGER);
         }
+        
+        // Xử lý supplier_id có thể null
+        if (p.getSupplierId() != null) {
+            ps.setInt(8, p.getSupplierId());
+        } else {
+            ps.setNull(8, Types.INTEGER);
+        }
+        
+        int rowsAffected = ps.executeUpdate();
+        System.out.println("Rows affected: " + rowsAffected);
+        
+        if (rowsAffected > 0) {
+            System.out.println("✅ Product added to database successfully");
+        } else {
+            System.out.println("❌ Failed to add product to database");
+        }
+    } catch (SQLException e) {
+        System.err.println("❌ SQL Error adding product: " + e.getMessage());
+        throw e;
     }
+}
     /**
  * Đếm tổng số sản phẩm
  */
@@ -147,22 +193,49 @@ public int countProducts() throws SQLException {
 }
 
     public boolean updateProduct(Product p) throws SQLException {
-        String sql = "UPDATE products SET product_name=?, description=?, price=?, stock_quantity=?, " +
-                "image_url=?, category_id=?, brand_id=?, supplier_id=? WHERE product_id=?";
-        try (Connection c = DBContext.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, p.getProductName());
-            ps.setString(2, p.getDescription());
-            ps.setBigDecimal(3, p.getPrice());
-            ps.setInt(4, p.getStockQuantity());
-            ps.setString(5, p.getImageUrl());
-            ps.setInt(6, p.getCategoryId());
+    String sql = "UPDATE products SET product_name=?, description=?, price=?, stock_quantity=?, " +
+            "image_url=?, category_id=?, brand_id=?, supplier_id=? WHERE product_id=?";
+    
+    System.out.println("=== UPDATING PRODUCT IN DATABASE ===");
+    System.out.println("ID: " + p.getProductId());
+    System.out.println("Name: " + p.getProductName());
+    System.out.println("Brand: " + p.getBrandId());
+    System.out.println("Supplier: " + p.getSupplierId());
+    
+    try (Connection c = DBContext.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setString(1, p.getProductName());
+        ps.setString(2, p.getDescription());
+        ps.setBigDecimal(3, p.getPrice());
+        ps.setInt(4, p.getStockQuantity());
+        ps.setString(5, p.getImageUrl());
+        ps.setInt(6, p.getCategoryId());
+        
+        // Xử lý brand_id có thể null
+        if (p.getBrandId() != null) {
             ps.setInt(7, p.getBrandId());
-            ps.setInt(8, p.getSupplierId());
-            ps.setInt(9, p.getProductId());
-            return ps.executeUpdate() > 0;
+        } else {
+            ps.setNull(7, Types.INTEGER);
         }
+        
+        // Xử lý supplier_id có thể null
+        if (p.getSupplierId() != null) {
+            ps.setInt(8, p.getSupplierId());
+        } else {
+            ps.setNull(8, Types.INTEGER);
+        }
+        
+        ps.setInt(9, p.getProductId());
+        
+        int rowsAffected = ps.executeUpdate();
+        System.out.println("Rows affected: " + rowsAffected);
+        
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        System.err.println("❌ SQL Error updating product: " + e.getMessage());
+        throw e;
     }
+}
 
     public boolean deleteProduct(int id) throws SQLException {
         String sql = "DELETE FROM products WHERE product_id=?";
