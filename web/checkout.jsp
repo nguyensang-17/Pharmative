@@ -1,9 +1,32 @@
+<%@page import="java.math.BigDecimal"%>
+<%@page import="java.util.Map"%>
+<%@page import="DAO.UserDAO"%>
+<%@page import="models.User"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, java.math.BigDecimal" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     response.setCharacterEncoding("UTF-8");
+    
+    // Lấy thông tin user từ session
+    User currentUser = (User) session.getAttribute("user");
+    String userEmail = "";
+    String userAddress = "";
+    String userPhone = "";
+    String userName = "";
+    
+    if (currentUser != null) {
+        userEmail = currentUser.getEmail() != null ? currentUser.getEmail() : "";
+        userPhone = currentUser.getPhoneNumber()!= null ? currentUser.getPhoneNumber(): "";
+        userName = currentUser.getFullname() != null ? currentUser.getFullname() : "";
+        
+        // Lấy địa chỉ từ database nếu có
+        UserDAO userDAO = new UserDAO();
+        User userDetails = userDAO.getUserById(currentUser.getId());
+        if (userDetails != null && userDetails.getAddress() != null) {
+            userAddress = userDetails.getAddress();
+        }
+    }
 %>
 <c:set var="cpath" value="${pageContext.request.contextPath}" />
 
@@ -285,6 +308,44 @@
                     font-size: 1.5rem;
                 }
             }
+            
+            .shipping-address {
+                margin-bottom: 30px;
+            }
+            
+            .address-form {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 8px;
+                margin-top: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-control {
+                border-radius: 6px;
+                padding: 10px 15px;
+                border: 1px solid #ddd;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+            }
+            
+            .required-field::after {
+                content: " *";
+                color: red;
+            }
+            
+            .payment-method-desc {
+                font-size: 0.9rem;
+                color: #666;
+                margin-top: 5px;
+            }
         </style>
     </head>
 
@@ -301,128 +362,179 @@
 
                     <div class="checkout-body">
                         <% if (cart != null && !cart.isEmpty()) { %>
-                        <div class="row">
-                            <!-- Chi tiết đơn hàng -->
-                            <div class="col-lg-8">
-                                <h4 class="mb-4">Thông tin đơn hàng</h4>
-
-                                <div class="order-summary">
-                                    <h5 class="mb-4">Chi tiết sản phẩm</h5>
-
-                                    <%
-                                        for (controller.CartController.CartItem item : cart.values()) {
-                                            String productName = item.getProduct().getProductName();
-                                            String imageUrl = item.getProduct().getImageUrl();
-                                            if (imageUrl == null || imageUrl.isEmpty()) {
-                                                imageUrl = "images/product-placeholder.jpg";
-                                            }
-                                            BigDecimal price = item.getProduct().getPrice();
-                                            if (price == null) {
-                                                price = BigDecimal.ZERO;
-                                            }
-                                            int quantity = item.getQuantity();
-                                            BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(quantity));
-                                    %>
-                                    <div class="order-item">
-                                        <div class="order-item-info">
-                                            <div class="order-item-image">
-                                                <img src="${cpath}/<%= imageUrl%>" 
-                                                     alt="<%= productName%>"
-                                                     onerror="this.src='${cpath}/images/product-placeholder.jpg'">
+                        <form id="checkoutForm" method="post" action="${cpath}/checkout">
+                            <div class="row">
+                                <!-- Thông tin giao hàng & Thanh toán -->
+                                <div class="col-lg-8">
+                                    <!-- Địa chỉ giao hàng -->
+                                    <div class="shipping-address">
+                                        <h4 class="mb-4">Địa chỉ giao hàng</h4>
+                                        
+                                        <div class="address-form">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="required-field">Họ và tên</label>
+                                                        <input type="text" class="form-control" name="fullName" 
+                                                               value="<%= userName %>" required 
+                                                               placeholder="Nhập họ và tên người nhận">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="required-field">Số điện thoại</label>
+                                                        <input type="tel" class="form-control" name="phone" 
+                                                               value="<%= userPhone %>" required 
+                                                               placeholder="Nhập số điện thoại">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="order-item-details">
-                                                <h5><%= productName%></h5>
-                                                <p class="text-muted">Số lượng: <%= quantity%></p>
+                                            
+                                            <div class="form-group">
+                                                <label class="required-field">Email</label>
+                                                <input type="email" class="form-control" name="email" 
+                                                       value="<%= userEmail %>" required 
+                                                       placeholder="Nhập email để nhận thông báo đơn hàng">
                                             </div>
-                                        </div>
-                                        <div class="order-item-price">
-                                            <fmt:formatNumber value="<%= itemTotal%>" pattern="#,###₫"/>
+                                            
+                                            <div class="form-group">
+                                                <label class="required-field">Địa chỉ giao hàng</label>
+                                                <textarea class="form-control" name="address" rows="3" required 
+                                                          placeholder="Nhập đầy đủ địa chỉ giao hàng (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"><%= userAddress %></textarea>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Ghi chú đơn hàng (tùy chọn)</label>
+                                                <textarea class="form-control" name="note" rows="2" 
+                                                          placeholder="Ghi chú về đơn hàng, hướng dẫn giao hàng..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
-                                    <% } %>
 
-                                    <div class="order-total">
-                                        <span>Tổng thanh toán:</span>
-                                        <span class="text-primary">
-                                            <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
-                                        </span>
+                                    <!-- Chi tiết đơn hàng -->
+                                    <div class="order-summary">
+                                        <h5 class="mb-4">Chi tiết sản phẩm</h5>
+
+                                        <%
+                                            for (controller.CartController.CartItem item : cart.values()) {
+                                                String productName = item.getProduct().getProductName();
+                                                String imageUrl = item.getProduct().getImageUrl();
+                                                if (imageUrl == null || imageUrl.isEmpty()) {
+                                                    imageUrl = "images/product-placeholder.jpg";
+                                                }
+                                                BigDecimal price = item.getProduct().getPrice();
+                                                if (price == null) {
+                                                    price = BigDecimal.ZERO;
+                                                }
+                                                int quantity = item.getQuantity();
+                                                BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(quantity));
+                                        %>
+                                        <div class="order-item">
+                                            <div class="order-item-info">
+                                                <div class="order-item-image">
+                                                    <img src="${cpath}/<%= imageUrl%>" 
+                                                         alt="<%= productName%>"
+                                                         onerror="this.src='${cpath}/images/product-placeholder.jpg'">
+                                                </div>
+                                                <div class="order-item-details">
+                                                    <h5><%= productName%></h5>
+                                                    <p class="text-muted">Số lượng: <%= quantity%></p>
+                                                </div>
+                                            </div>
+                                            <div class="order-item-price">
+                                                <fmt:formatNumber value="<%= itemTotal%>" pattern="#,###₫"/>
+                                            </div>
+                                        </div>
+                                        <% } %>
+
+                                        <div class="order-total">
+                                            <span>Tổng thanh toán:</span>
+                                            <span class="text-primary">
+                                                <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phương thức thanh toán -->
+                                    <div class="payment-methods">
+                                        <h4 class="mb-4">Phương thức thanh toán</h4>
+
+                                        <div class="payment-option selected" data-method="vnpay">
+                                            <div class="d-flex align-items-center">
+                                                <div class="payment-icon">💳</div>
+                                                <div>
+                                                    <h5 class="mb-1">Thanh toán qua VNPAY</h5>
+                                                    <p class="mb-0 text-muted">Thanh toán an toàn qua cổng VNPAY</p>
+                                                    <p class="payment-method-desc">Thanh toán ngay qua thẻ ngân hàng, ví điện tử</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="payment-option" data-method="cod">
+                                            <div class="d-flex align-items-center">
+                                                <div class="payment-icon">💵</div>
+                                                <div>
+                                                    <h5 class="mb-1">Thanh toán khi nhận hàng (COD)</h5>
+                                                    <p class="mb-0 text-muted">Thanh toán tiền mặt khi nhận hàng</p>
+                                                    <p class="payment-method-desc">Nhận hàng và thanh toán trực tiếp cho người giao</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Phương thức thanh toán -->
-                                <div class="payment-methods">
-                                    <h4 class="mb-4">Phương thức thanh toán</h4>
+                                <!-- Tóm tắt đơn hàng -->
+                                <div class="col-lg-4">
+                                    <div class="order-summary sticky-top" style="top: 20px;">
+                                        <h5 class="mb-4">Tóm tắt đơn hàng</h5>
 
-                                    <div class="payment-option selected" data-method="vnpay">
-                                        <div class="d-flex align-items-center">
-                                            <div class="payment-icon">💳</div>
-                                            <div>
-                                                <h5 class="mb-1">Thanh toán qua VNPAY</h5>
-                                                <p class="mb-0 text-muted">Thanh toán an toàn qua cổng VNPAY</p>
-                                            </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Số sản phẩm:</span>
+                                            <span class="fw-bold">${itemCount}</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Tạm tính:</span>
+                                            <span><fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/></span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Phí vận chuyển:</span>
+                                            <span class="text-success fw-bold">MIỄN PHÍ</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Giảm giá:</span>
+                                            <span>0₫</span>
+                                        </div>
+
+                                        <div class="order-total">
+                                            <span>Tổng cộng:</span>
+                                            <span class="text-primary">
+                                                <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
+                                            </span>
+                                        </div>
+
+                                        <input type="hidden" name="paymentMethod" id="paymentMethod" value="vnpay">
+                                        <input type="hidden" name="totalAmount" value="${cartTotal}">
+                                        
+                                        <button type="submit" id="btnPay" class="btn btn-primary w-100 mt-4 py-3">
+                                            🔒 Thanh toán an toàn
+                                        </button>
+
+                                        <div class="secure-payment">
+                                            🛡️ Giao dịch được bảo mật & mã hóa
                                         </div>
                                     </div>
 
-                                    <div class="payment-option" data-method="cod">
-                                        <div class="d-flex align-items-center">
-                                            <div class="payment-icon">💵</div>
-                                            <div>
-                                                <h5 class="mb-1">Thanh toán khi nhận hàng (COD)</h5>
-                                                <p class="mb-0 text-muted">Thanh toán tiền mặt khi nhận hàng</p>
-                                            </div>
-                                        </div>
+                                    <div class="mt-4 text-center">
+                                        <a href="${cpath}/cart.jsp" class="back-link">
+                                            ← Quay lại giỏ hàng
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Tóm tắt đơn hàng -->
-                            <div class="col-lg-4">
-                                <div class="order-summary sticky-top" style="top: 20px;">
-                                    <h5 class="mb-4">Tóm tắt đơn hàng</h5>
-
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Số sản phẩm:</span>
-                                        <span class="fw-bold">${itemCount}</span>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Tạm tính:</span>
-                                        <span><fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/></span>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Phí vận chuyển:</span>
-                                        <span class="text-success fw-bold">MIỄN PHÍ</span>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <span>Giảm giá:</span>
-                                        <span>0₫</span>
-                                    </div>
-
-                                    <div class="order-total">
-                                        <span>Tổng cộng:</span>
-                                        <span class="text-primary">
-                                            <fmt:formatNumber value="${cartTotal}" pattern="#,###₫"/>
-                                        </span>
-                                    </div>
-
-                                    <button id="btnPay" class="btn btn-primary w-100 mt-4 py-3">
-                                        🔒 Thanh toán an toàn
-                                    </button>
-
-                                    <div class="secure-payment">
-                                        🛡️ Giao dịch được bảo mật & mã hóa
-                                    </div>
-                                </div>
-
-                                <div class="mt-4 text-center">
-                                    <a href="${cpath}/cart.jsp" class="back-link">
-                                        ← Quay lại giỏ hàng
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                         <% } else { %>
                         <!-- Giỏ hàng trống -->
                         <div class="empty-cart">
@@ -447,58 +559,93 @@
         <script>
             $(document).ready(function () {
                 let selectedMethod = 'vnpay'; // Mặc định chọn VNPAY
+                $('#paymentMethod').val(selectedMethod);
 
                 // Xử lý chọn phương thức thanh toán
                 $('.payment-option').click(function () {
                     $('.payment-option').removeClass('selected');
                     $(this).addClass('selected');
                     selectedMethod = $(this).data('method');
+                    $('#paymentMethod').val(selectedMethod);
                     console.log('Selected payment method:', selectedMethod);
+                    
+                    // Cập nhật text nút thanh toán
+                    updatePaymentButtonText();
                 });
 
-                // Xử lý thanh toán
-                $('#btnPay').click(async function (e) {
+                // Cập nhật text nút thanh toán theo phương thức
+                function updatePaymentButtonText() {
+                    const $btn = $('#btnPay');
+                    if (selectedMethod === 'cod') {
+                        $btn.html('🛒 Đặt hàng COD');
+                    } else {
+                        $btn.html('🔒 Thanh toán an toàn');
+                    }
+                }
+
+                // Xử lý submit form
+                $('#checkoutForm').submit(async function (e) {
                     e.preventDefault();
 
-                    const $btn = $(this);
-                    const originalText = $btn.html();
+                    // Validate form
+                    const requiredFields = $(this).find('[required]');
+                    let isValid = true;
+                    
+                    requiredFields.each(function() {
+                        if (!$(this).val().trim()) {
+                            isValid = false;
+                            $(this).addClass('is-invalid');
+                        } else {
+                            $(this).removeClass('is-invalid');
+                        }
+                    });
 
-                    // Kiểm tra phương thức thanh toán
-                    if (selectedMethod === 'cod') {
-                        alert('Chức năng COD đang được phát triển. Vui lòng chọn thanh toán VNPAY.');
+                    if (!isValid) {
+                        alert('Vui lòng điền đầy đủ thông tin bắt buộc (*)');
                         return;
                     }
+
+                    const $btn = $('#btnPay');
+                    const originalText = $btn.html();
 
                     // Hiển thị loading
                     $btn.html('<span class="spinner"></span> Đang xử lý...');
                     $btn.prop('disabled', true);
 
                     try {
-                        // Gửi request đến VNPay servlet
-                        const formData = new URLSearchParams();
-                        formData.append('language', 'vn'); // hoặc 'en'
-                        // Có thể thêm bankCode nếu muốn: formData.append('bankCode', 'NCB');
+                        if (selectedMethod === 'vnpay') {
+                            // Xử lý VNPay
+                            const formData = new URLSearchParams();
+                            formData.append('language', 'vn');
+                            formData.append('totalAmount', '${cartTotal}');
 
-                        const response = await fetch('${cpath}/vnpay', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                            },
-                            body: formData.toString()
-                        });
+                            const response = await fetch('${cpath}/vnpay', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                                },
+                                body: formData.toString()
+                            });
 
-                        if (!response.ok) {
-                            throw new Error('HTTP error! status: ' + response.status);
-                        }
+                            if (!response.ok) {
+                                throw new Error('HTTP error! status: ' + response.status);
+                            }
 
-                        const result = await response.json();
-                        console.log('VNPay response:', result);
+                            const result = await response.json();
+                            console.log('VNPay response:', result);
 
-                        if (result && result.code === '00' && result.data) {
-                            // Chuyển hướng đến trang thanh toán VNPay
-                            window.location.href = result.data;
-                        } else {
-                            throw new Error(result.message || 'Không tạo được URL thanh toán');
+                            if (result && result.code === '00' && result.data) {
+                                // Lưu thông tin đơn hàng tạm thời trước khi chuyển hướng
+                                await saveOrderInfo();
+                                // Chuyển hướng đến trang thanh toán VNPay
+                                window.location.href = result.data;
+                            } else {
+                                throw new Error(result.message || 'Không tạo được URL thanh toán');
+                            }
+                        } else if (selectedMethod === 'cod') {
+                            // Xử lý COD - gửi form trực tiếp
+                            await saveOrderInfo();
+                            this.submit();
                         }
 
                     } catch (error) {
@@ -511,14 +658,37 @@
                     }
                 });
 
+                // Hàm lưu thông tin đơn hàng tạm thời
+                async function saveOrderInfo() {
+                    const formData = new FormData($('#checkoutForm')[0]);
+                    
+                    try {
+                        const response = await fetch('${cpath}/saveOrderInfo', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        if (!response.ok) {
+                            console.warn('Không thể lưu thông tin đơn hàng tạm thời');
+                        }
+                    } catch (error) {
+                        console.warn('Lỗi khi lưu thông tin đơn hàng:', error);
+                    }
+                }
+
                 // Kiểm tra nếu có thông báo từ URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const paymentStatus = urlParams.get('vnp_ResponseCode');
+                const orderStatus = urlParams.get('orderStatus');
 
                 if (paymentStatus === '00') {
-                    alert('✓ Thanh toán thành công!');
+                    alert('✓ Thanh toán thành công! Đơn hàng của bạn đã được xác nhận.');
                 } else if (paymentStatus) {
                     alert('✗ Thanh toán thất bại. Mã lỗi: ' + paymentStatus);
+                }
+                
+                if (orderStatus === 'success') {
+                    alert('✓ Đặt hàng COD thành công! Chúng tôi sẽ liên hệ với bạn sớm.');
                 }
             });
         </script>
