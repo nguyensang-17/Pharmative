@@ -235,10 +235,19 @@
             display: inline-block;
         }
 
+        /* FIXED: Nav menu không hiện scrollbar */
         .nav-menu {
             flex: 1;
             padding: 20px 0;
             overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            max-height: calc(100vh - 200px); /* Giới hạn chiều cao */
+        }
+
+        /* Ẩn scrollbar trên Chrome, Safari và Opera */
+        .nav-menu::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-item {
@@ -439,6 +448,14 @@
                 display: flex;
                 overflow-x: auto;
                 padding: 10px 0;
+                max-height: none; /* Bỏ giới hạn chiều cao trên mobile */
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE and Edge */
+            }
+
+            /* Ẩn scrollbar ngang trên mobile */
+            .nav-menu::-webkit-scrollbar {
+                display: none;
             }
             
             .nav-item {
