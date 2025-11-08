@@ -191,15 +191,24 @@
             box-shadow: var(--shadow);
             margin-bottom: 24px;
             border: 1px solid rgba(117,178,57,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(24,39,75,0.12);
         }
         
         .btn-success {
             background: var(--brand-green);
             border: none;
+            transition: all 0.3s ease;
         }
         
         .btn-success:hover {
             background: var(--brand-green-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(117,178,57,0.3);
         }
         
         .status-instock {
@@ -226,11 +235,94 @@
             height: auto;
             border-radius: 8px;
             border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .img-thumbnail:hover {
+            transform: scale(1.05);
         }
 
         .action-buttons {
             display: flex;
             gap: 8px;
+        }
+
+        /* Search and Filter Styles */
+        .search-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        }
+
+        .search-input {
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--brand-green);
+            box-shadow: 0 0 0 0.2rem rgba(117, 178, 57, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .filter-select {
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: var(--brand-green);
+            box-shadow: 0 0 0 0.2rem rgba(117, 178, 57, 0.25);
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .page-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 4px;
+            color: var(--brand-green);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            background-color: var(--brand-green-light);
+            color: var(--brand-green-dark);
+            transform: translateY(-1px);
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark));
+            border: none;
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: transparent;
+        }
+
+        /* Animation for table rows */
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--brand-green-soft);
+            transform: translateX(4px);
+        }
+
+        /* Stats and Info */
+        .page-info {
+            background: var(--brand-green-soft);
+            border-radius: 10px;
+            padding: 12px 16px;
+            border-left: 4px solid var(--brand-green);
         }
 
         /* Responsive */
@@ -277,10 +369,12 @@
             .page-header { padding: 18px; border-radius: 12px; }
             .page-header::before { width: 80px; height: 80px; }
             .action-buttons { flex-direction: column; }
+            .search-card .row > div { margin-bottom: 12px; }
         }
 
         @media (max-width: 576px) {
             .main-content { padding: 15px; }
+            .table-responsive { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -380,13 +474,61 @@
             <c:remove var="error" scope="session"/>
         </c:if>
 
+        <!-- Search and Filter Card -->
+        <div class="card search-card">
+            <div class="card-body">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-search text-muted me-2"></i>Tìm kiếm & Lọc sản phẩm
+                </h5>
+                <form action="${pageContext.request.contextPath}/admin/products" method="get" id="searchForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control search-input" name="keyword" 
+                                   placeholder="🔍 Tìm theo tên sản phẩm, mô tả..." 
+                                   value="${param.keyword}">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select filter-select" name="status">
+                                <option value="">📊 Tất cả trạng thái</option>
+                                <option value="instock" ${param.status == 'instock' ? 'selected' : ''}>🟢 Còn hàng</option>
+                                <option value="outstock" ${param.status == 'outstock' ? 'selected' : ''}>🔴 Hết hàng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button type="submit" class="btn btn-success flex-fill">
+                                    <i class="fas fa-search me-2"></i>Tìm kiếm
+                                </button>
+                                <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-outline-secondary">
+                                    <i class="fas fa-refresh"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Action Card -->
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Danh sách sản phẩm</h5>
+                    <div>
+                        <h5 class="card-title mb-0">Danh sách sản phẩm</h5>
+                        <c:if test="${not empty products}">
+                            <div class="page-info mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Hiển thị <strong>${products.size()}</strong> sản phẩm 
+                                    <c:if test="${not empty param.keyword}">
+                                        cho từ khóa "<strong>${param.keyword}</strong>"
+                                    </c:if>
+                                </small>
+                            </div>
+                        </c:if>
+                    </div>
                     <a href="${pageContext.request.contextPath}/admin/products?action=new" class="btn btn-success">
-                        <i class="fas fa-plus"></i> Thêm sản phẩm mới
+                        <i class="fas fa-plus me-2"></i>Thêm sản phẩm mới
                     </a>
                 </div>
             </div>
@@ -472,19 +614,62 @@
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <div class="mt-3 text-muted">
-                            Tổng cộng: <strong>${products.size()}</strong> sản phẩm
-                        </div>
+
+                        <!-- Pagination -->
+                        <c:if test="${totalPages > 1}">
+                            <nav aria-label="Page navigation" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Previous Page -->
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="${pageContext.request.contextPath}/admin/products?page=${currentPage - 1}${not empty param.keyword ? '&keyword=' += param.keyword : ''}${not empty param.status ? '&status=' += param.status : ''}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Page Numbers -->
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageContext.request.contextPath}/admin/products?page=${i}${not empty param.keyword ? '&keyword=' += param.keyword : ''}${not empty param.status ? '&status=' += param.status : ''}">
+                                                ${i}
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                    
+                                    <!-- Next Page -->
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" href="${pageContext.request.contextPath}/admin/products?page=${currentPage + 1}${not empty param.keyword ? '&keyword=' += param.keyword : ''}${not empty param.status ? '&status=' += param.status : ''}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <!-- Page Info -->
+                            <div class="text-center text-muted mt-3">
+                                Trang <strong>${currentPage}</strong> / <strong>${totalPages}</strong>
+                                - Tổng cộng <strong>${totalItems}</strong> sản phẩm
+                            </div>
+                        </c:if>
+
+                        <c:if test="${totalPages <= 1}">
+                            <div class="mt-3 text-muted text-center">
+                                Tổng cộng: <strong>${products.size()}</strong> sản phẩm
+                            </div>
+                        </c:if>
                     </c:when>
                     <c:otherwise>
-                        <div class="text-center text-muted py-4">
-                            <i class="fas fa-box-open fa-2x mb-3"></i>
-                            <h4>Chưa có sản phẩm nào</h4>
-                            <p>Hãy thêm sản phẩm đầu tiên của bạn!</p>
-                            <a href="${pageContext.request.contextPath}/admin/products?action=new" class="btn btn-success">
-                                <i class="fas fa-plus"></i> Thêm sản phẩm đầu tiên
-                            </a>
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-box-open fa-3x mb-3" style="color: #dee2e6;"></i>
+                            <h4>Không tìm thấy sản phẩm nào</h4>
+                            <p class="mb-4">Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc thêm sản phẩm mới!</p>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-outline-secondary">
+                                    <i class="fas fa-refresh me-2"></i>Hiển thị tất cả
+                                </a>
+                                <a href="${pageContext.request.contextPath}/admin/products?action=new" class="btn btn-success">
+                                    <i class="fas fa-plus me-2"></i>Thêm sản phẩm đầu tiên
+                                </a>
+                            </div>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -493,5 +678,50 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add smooth animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation to table rows
+            const tableRows = document.querySelectorAll('.table tbody tr');
+            tableRows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    row.style.transition = 'all 0.5s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Auto-focus search input
+            const searchInput = document.querySelector('input[name="keyword"]');
+            if (searchInput && !searchInput.value) {
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 500);
+            }
+        });
+
+        // Handle form submission with loading state
+        document.getElementById('searchForm')?.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang tìm...';
+                submitBtn.disabled = true;
+            }
+        });
+    </script>
 </body>
 </html>
