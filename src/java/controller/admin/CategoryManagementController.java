@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,43 +53,101 @@ public class CategoryManagementController extends HttpServlet {
     }
 
     private void listCategories(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        request.setAttribute("categoryList", categoryDAO.getAllCategories());
-        request.getRequestDispatcher("/admin/manage_categories.jsp").forward(request, response);
+        // Lấy danh sách categories với đầy đủ thông tin
+        request.setAttribute("categories", categoryDAO.getAllWithDetails());
+        
+        // Lấy thống kê
+        request.setAttribute("totalCategories", categoryDAO.getTotalCategories());
+        request.setAttribute("totalParentCategories", categoryDAO.getTotalParentCategories());
+        request.setAttribute("totalChildCategories", categoryDAO.getTotalChildCategories());
+        request.setAttribute("newCategoriesThisMonth", categoryDAO.getNewCategoriesThisMonth());
+        
+        // SỬA: Đường dẫn đúng với vị trí thực tế
+        request.getRequestDispatcher("/admin/categories/cat-list.jsp").forward(request, response);
     }
 
     private void showCategoryForm(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         String idStr = request.getParameter("id");
-        if (idStr != null) {
+        
+        // Lấy danh sách danh mục cha để hiển thị trong dropdown
+        request.setAttribute("parentCategories", categoryDAO.getParents());
+        
+        if (idStr != null && !idStr.isEmpty()) {
             // Chế độ sửa
             int id = Integer.parseInt(idStr);
             Category category = categoryDAO.getCategoryById(id);
             request.setAttribute("category", category);
         }
-        // Nếu không có id, đây là chế độ thêm mới (không cần làm gì thêm)
-        request.getRequestDispatcher("/admin/category_form.jsp").forward(request, response);
+        // Nếu không có id, đây là chế độ thêm mới
+        // SỬA: Đường dẫn đúng với vị trí thực tế
+        request.getRequestDispatcher("/admin/categories/category-form.jsp").forward(request, response);
     }
 
-    private void saveCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void saveCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession();
+        
         String name = request.getParameter("name");
+        String parentIdStr = request.getParameter("parentCategoryId");
         String idStr = request.getParameter("id");
         
-        Category category = new Category();
-        category.setName(name);
-
-        if (idStr == null || idStr.isEmpty()) {
-            // Thêm mới
-            categoryDAO.addCategory(category);
-        } else {
-            // Cập nhật
-            category.setId(Integer.parseInt(idStr));
-            categoryDAO.updateCategory(category);
+        if (name == null || name.trim().isEmpty()) {
+            session.setAttribute("error", "Tên danh mục không được để trống");
+            response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
+            return;
         }
-        response.sendRedirect(request.getContextPath() + "/admin/categories");
+        
+        Category category = new Category();
+        category.setCategoryName(name.trim());
+        
+        // Xử lý danh mục cha
+        if (parentIdStr != null && !parentIdStr.isEmpty() && !parentIdStr.equals("0")) {
+            category.setParentCategoryId(Integer.parseInt(parentIdStr));
+        } else {
+            category.setParentCategoryId(null);
+        }
+
+        try {
+            if (idStr == null || idStr.isEmpty()) {
+                // Thêm mới
+                categoryDAO.addCategory(category);
+                session.setAttribute("message", "Thêm danh mục thành công!");
+            } else {
+                // Cập nhật
+                category.setCategoryId(Integer.parseInt(idStr));
+                categoryDAO.updateCategory(category);
+                session.setAttribute("message", "Cập nhật danh mục thành công!");
+            }
+            
+            response.sendRedirect(request.getContextPath() + "/admin/categories");
+            
+        } catch (SQLException e) {
+            session.setAttribute("error", "Lỗi khi lưu danh mục: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
+        }
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        categoryDAO.deleteCategory(id);
-        response.sendRedirect(request.getContextPath() + "/admin/categories?action=list&deleteSuccess=true");
+        HttpSession session = request.getSession();
+        
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Category category = categoryDAO.getCategoryById(id);
+            
+            // Kiểm tra nếu danh mục có sản phẩm
+            int productCount = categoryDAO.countProducts(id);
+            if (productCount > 0) {
+                session.setAttribute("error", "Không thể xóa danh mục '" + category.getCategoryName() + "' vì có " + productCount + " sản phẩm đang sử dụng.");
+            } else {
+                categoryDAO.deleteCategory(id);
+                session.setAttribute("message", "Xóa danh mục thành công!");
+            }
+            
+        } catch (NumberFormatException e) {
+            session.setAttribute("error", "ID danh mục không hợp lệ");
+        } catch (SQLException e) {
+            session.setAttribute("error", "Lỗi khi xóa danh mục: " + e.getMessage());
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/admin/categories");
     }
 }
