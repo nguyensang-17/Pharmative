@@ -46,7 +46,7 @@ public class vnpayQuery extends HttpServlet {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         
-        String vnp_IpAddr = Config.getIpAddress(req);
+        String vnp_IpAddr = Config.getIpAddress((jakarta.servlet.http.HttpServletRequest) req);
         
         JsonObject  vnp_Params = new JsonObject ();
         
@@ -66,7 +66,7 @@ public class vnpayQuery extends HttpServlet {
         
         vnp_Params.addProperty("vnp_SecureHash", vnp_SecureHash);
         
-        URL url = new URL (Config.vnp_ApiUrl);
+        URL url = new URL (Config.vnp_PayUrl);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");

@@ -183,82 +183,88 @@ public List<Order> searchOrders(String keyword, String status, String dateFrom) 
 }
 
     // PHƯƠNG THỨC CREATE ORDER MỚI - PHÙ HỢP VỚI DATABASE
-    public boolean createOrder(Order order) {
-        Connection conn = null;
-        try {
-            conn = DBContext.getConnection();
-            conn.setAutoCommit(false);
+    // CẬP NHẬT PHƯƠNG THỨC CREATE ORDER
+public boolean createOrder(Order order) {
+    Connection conn = null;
+    try {
+        conn = DBContext.getConnection();
+        conn.setAutoCommit(false);
 
-            // 1. Insert vào bảng orders - SỬA THEO DATABASE THỰC TẾ
-            String orderSql = "INSERT INTO orders (user_id, total_amount, status, shipping_address_id) VALUES (?, ?, ?, ?)";
-            int orderId;
+        // 1. Insert vào bảng orders - CẬP NHẬT VỚI CÁC TRƯỜNG MỚI
+        String orderSql = "INSERT INTO orders (user_id, total_amount, status, shipping_address, customer_name, customer_email, customer_phone, payment_method, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int orderId;
+        
+        try (PreparedStatement orderStmt = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
+            orderStmt.setInt(1, order.getUserId());
+            orderStmt.setBigDecimal(2, order.getTotalAmount());
+            orderStmt.setString(3, order.getStatus());
+            orderStmt.setString(4, order.getShippingAddress());
+            orderStmt.setString(5, order.getCustomerName());
+            orderStmt.setString(6, order.getCustomerEmail());
+            orderStmt.setString(7, order.getCustomerPhone());
+            orderStmt.setString(8, order.getPaymentMethod());
+            orderStmt.setString(9, order.getNote());
+            orderStmt.executeUpdate();
             
-            try (PreparedStatement orderStmt = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
-                orderStmt.setInt(1, order.getUserId());
-                orderStmt.setBigDecimal(2, order.getTotalAmount());
-                orderStmt.setString(3, order.getStatus());
-                orderStmt.setInt(4, order.getShippingAddressId()); // Sử dụng shipping_address_id
-                orderStmt.executeUpdate();
-                
-                try (ResultSet rs = orderStmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        orderId = rs.getInt(1);
-                        order.setOrderId(orderId);
-                    } else {
-                        throw new SQLException("Không thể lấy order_id");
-                    }
+            try (ResultSet rs = orderStmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    orderId = rs.getInt(1);
+                    order.setOrderId(orderId);
+                } else {
+                    throw new SQLException("Không thể lấy order_id");
                 }
-            }
-
-            // 2. Insert vào bảng order_details
-            String detailSql = "INSERT INTO order_details (order_id, product_id, quantity, price_per_unit) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement detailStmt = conn.prepareStatement(detailSql)) {
-                for (OrderDetail detail : order.getOrderDetails()) {
-                    detailStmt.setInt(1, orderId);
-                    detailStmt.setInt(2, detail.getProductId());
-                    detailStmt.setInt(3, detail.getQuantity());
-                    detailStmt.setBigDecimal(4, detail.getPricePerUnit());
-                    detailStmt.addBatch();
-                }
-                detailStmt.executeBatch();
-            }
-
-            // 3. Cập nhật tồn kho
-            String updateStockSql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
-            try (PreparedStatement stockStmt = conn.prepareStatement(updateStockSql)) {
-                for (OrderDetail detail : order.getOrderDetails()) {
-                    stockStmt.setInt(1, detail.getQuantity());
-                    stockStmt.setInt(2, detail.getProductId());
-                    stockStmt.setInt(3, detail.getQuantity());
-                    int affected = stockStmt.executeUpdate();
-                    if (affected == 0) {
-                        throw new SQLException("Số lượng tồn kho không đủ cho sản phẩm ID: " + detail.getProductId());
-                    }
-                }
-            }
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException e) {
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
+
+        // 2. Insert vào bảng order_details
+        String detailSql = "INSERT INTO order_details (order_id, product_id, quantity, price_per_unit) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement detailStmt = conn.prepareStatement(detailSql)) {
+            for (OrderDetail detail : order.getOrderDetails()) {
+                detailStmt.setInt(1, orderId);
+                detailStmt.setInt(2, detail.getProductId());
+                detailStmt.setInt(3, detail.getQuantity());
+                detailStmt.setBigDecimal(4, detail.getPricePerUnit());
+                detailStmt.addBatch();
+            }
+            detailStmt.executeBatch();
+        }
+
+        // 3. Cập nhật tồn kho
+        String updateStockSql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
+        try (PreparedStatement stockStmt = conn.prepareStatement(updateStockSql)) {
+            for (OrderDetail detail : order.getOrderDetails()) {
+                stockStmt.setInt(1, detail.getQuantity());
+                stockStmt.setInt(2, detail.getProductId());
+                stockStmt.setInt(3, detail.getQuantity());
+                int affected = stockStmt.executeUpdate();
+                if (affected == 0) {
+                    throw new SQLException("Số lượng tồn kho không đủ cho sản phẩm ID: " + detail.getProductId());
+                }
+            }
+        }
+
+        conn.commit();
+        return true;
+
+    } catch (SQLException e) {
+        try {
+            if (conn != null) conn.rollback();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+}
 
     public List<Order> getByUser(int userId, int limit) throws SQLException {
     // SỬA: THÊM ĐẦY ĐỦ CÁC CỘT
