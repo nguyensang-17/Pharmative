@@ -79,17 +79,28 @@ public class OrderManagementController extends HttpServlet {
                               ", Status: " + order.getStatus());
         }
         
-        // Thống kê
-        long pendingCount = orderList.stream().filter(o -> "PENDING".equals(o.getStatus())).count();
-        long processingCount = orderList.stream().filter(o -> "PROCESSING".equals(o.getStatus())).count();
-        long cancelledCount = orderList.stream().filter(o -> "CANCELLED".equals(o.getStatus())).count();
+        // THỐNG KÊ: Sử dụng method countAllOrders() thay vì getTotalOrders()
+        int totalOrders = orderDAO.countAllOrders();
+        int pendingOrders = orderDAO.countOrdersByStatus("pending");
+        int processingOrders = orderDAO.countOrdersByStatus("processing");
+        int deliveredOrders = orderDAO.countOrdersByStatus("delivered");
+        int cancelledOrders = orderDAO.countOrdersByStatus("cancelled");
+        
+        // DEBUG: Kiểm tra thống kê
+        System.out.println("=== THỐNG KÊ ===");
+        System.out.println("Tổng: " + totalOrders);
+        System.out.println("Chờ xử lý: " + pendingOrders);
+        System.out.println("Đang xử lý: " + processingOrders);
+        System.out.println("Đã giao: " + deliveredOrders);
+        System.out.println("Đã hủy: " + cancelledOrders);
         
         // Set attributes
         request.setAttribute("orderList", orderList);
-        request.setAttribute("totalOrders", orderList.size());
-        request.setAttribute("pendingOrders", pendingCount);
-        request.setAttribute("processingOrders", processingCount);
-        request.setAttribute("cancelledOrders", cancelledCount);
+        request.setAttribute("totalOrders", totalOrders);
+        request.setAttribute("pendingOrders", pendingOrders);
+        request.setAttribute("processingOrders", processingOrders);
+        request.setAttribute("deliveredOrders", deliveredOrders);
+        request.setAttribute("cancelledOrders", cancelledOrders);
         
         request.getRequestDispatcher("/admin/orders/manage_orders.jsp").forward(request, response);
     }

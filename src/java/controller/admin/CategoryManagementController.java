@@ -67,21 +67,20 @@ public class CategoryManagementController extends HttpServlet {
     }
 
     private void showCategoryForm(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        String idStr = request.getParameter("id");
-        
-        // Lấy danh sách danh mục cha để hiển thị trong dropdown
-        request.setAttribute("parentCategories", categoryDAO.getParents());
-        
-        if (idStr != null && !idStr.isEmpty()) {
-            // Chế độ sửa
-            int id = Integer.parseInt(idStr);
-            Category category = categoryDAO.getCategoryById(id);
-            request.setAttribute("category", category);
-        }
-        // Nếu không có id, đây là chế độ thêm mới
-        // SỬA: Đường dẫn đúng với vị trí thực tế
-        request.getRequestDispatcher("/admin/categories/category-form.jsp").forward(request, response);
+    String idStr = request.getParameter("id");
+    
+    // Lấy danh sách danh mục cha để hiển thị trong dropdown
+    request.setAttribute("parentCategories", categoryDAO.getParents());
+    
+    if (idStr != null && !idStr.isEmpty()) {
+        // Chế độ sửa
+        int id = Integer.parseInt(idStr);
+        Category category = categoryDAO.getCategoryById(id);
+        request.setAttribute("category", category);
     }
+    // Nếu không có id, đây là chế độ thêm mới
+    request.getRequestDispatcher("/admin/categories/category-form.jsp").forward(request, response);
+}
 
     private void saveCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession();

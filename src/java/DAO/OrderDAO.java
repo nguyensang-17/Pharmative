@@ -1,5 +1,6 @@
 package DAO;
 
+import static DAO.DBContext.getConnection;
 import java.sql.*;
 import java.util.*;
 import models.Order;
@@ -342,6 +343,16 @@ public List<Order> getOrdersByUserId(int userId) {
         }
         return 0;
     }
+    public int getTotalOrders() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+    
+
     
     public double getRevenueByDateRange(java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
         String sql = "SELECT COALESCE(SUM(total_amount), 0) " +

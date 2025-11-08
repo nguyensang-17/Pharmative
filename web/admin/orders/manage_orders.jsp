@@ -32,7 +32,152 @@
                 margin: 0;
             }
 
-            /* Sidebar Styles */
+            /* Entrance Animations */
+            .main-content {
+                animation: fadeIn 0.6s ease-out;
+            }
+
+            .page-header {
+                animation: slideInDown 0.5s ease-out 0.2s both;
+            }
+
+            .stat-card {
+                animation: fadeInUp 0.5s ease-out both;
+            }
+
+            .stat-card:nth-child(1) { animation-delay: 0.3s; }
+            .stat-card:nth-child(2) { animation-delay: 0.4s; }
+            .stat-card:nth-child(3) { animation-delay: 0.5s; }
+            .stat-card:nth-child(4) { animation-delay: 0.6s; }
+
+            .card {
+                animation: fadeIn 0.6s ease-out both;
+            }
+
+            .card:nth-child(1) { animation-delay: 0.4s; }
+            .card:nth-child(2) { animation-delay: 0.5s; }
+
+            .table tbody tr {
+                animation: fadeInLeft 0.4s ease-out both;
+            }
+
+            .table tbody tr:nth-child(1) { animation-delay: 0.5s; }
+            .table tbody tr:nth-child(2) { animation-delay: 0.6s; }
+            .table tbody tr:nth-child(3) { animation-delay: 0.7s; }
+            .table tbody tr:nth-child(4) { animation-delay: 0.8s; }
+
+            /* Animation Keyframes */
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes fadeInUp {
+                from { 
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeInLeft {
+                from { 
+                    opacity: 0;
+                    transform: translateX(-20px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInDown {
+                from { 
+                    opacity: 0;
+                    transform: translateY(-30px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Hover Effects */
+            .stat-card {
+                transition: all 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(117,178,57,0.15);
+            }
+
+            .card {
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(24,39,75,0.12);
+            }
+
+            .btn {
+                transition: all 0.3s ease;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+            }
+
+            .btn-success:hover {
+                box-shadow: 0 4px 12px rgba(117,178,57,0.3);
+            }
+
+            .nav-link {
+                transition: all 0.3s ease;
+            }
+
+            .nav-link:hover {
+                transform: translateX(5px);
+            }
+
+            .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+            .table tbody tr:hover {
+                background-color: var(--brand-green-soft);
+                transform: translateX(5px);
+            }
+
+            .btn-group .btn {
+                transition: all 0.3s ease;
+            }
+
+            .btn-group .btn:hover {
+                transform: scale(1.1);
+            }
+
+            .badge {
+                transition: all 0.3s ease;
+            }
+
+            .badge:hover {
+                transform: scale(1.05);
+            }
+
+            .status-badge {
+                transition: all 0.3s ease;
+            }
+
+            .status-badge:hover {
+                transform: scale(1.05);
+            }
+
+            /* Sidebar Styles (giữ nguyên) */
             .sidebar {
                 width: 260px;
                 background: linear-gradient(180deg, var(--brand-green), var(--brand-green-dark));
@@ -224,18 +369,11 @@
                 border-radius: 16px;
                 padding: 20px;
                 box-shadow: var(--shadow);
-                transition: transform .18s ease, box-shadow .18s ease;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 min-height: 110px;
                 border: 1px solid rgba(117,178,57,0.1);
-            }
-
-            .stat-card:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 10px 30px rgba(117,178,57,0.12);
-                border-color: rgba(117,178,57,0.3);
             }
 
             .stat-title {
@@ -264,6 +402,11 @@
                 color: #fff;
                 box-shadow: 0 6px 14px rgba(117,178,57,0.18);
                 flex-shrink: 0;
+                transition: transform 0.3s ease;
+            }
+
+            .stat-card:hover .stat-icon {
+                transform: scale(1.1);
             }
 
             .stat-icon.primary {
@@ -290,6 +433,42 @@
                 font-weight: 600;
                 text-transform: capitalize;
             }
+            /* Thêm vào phần CSS hiện có */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.stat-icon.success { 
+    background: linear-gradient(135deg, #8bc34a, #7cb342); 
+}
+
+/* Responsive cho 5 cards */
+@media (max-width: 1200px) {
+    .stats-cards {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .stats-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-cards { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-cards { 
+        grid-template-columns: 1fr; 
+    }
+}
 
             .status-pending {
                 background: #fff3cd;
@@ -343,6 +522,20 @@
                 text-decoration: none;
             }
 
+            /* Style cho kết quả tìm kiếm */
+            .search-results-info {
+                background-color: #f8f9fa;
+                border-left: 4px solid var(--brand-green);
+                padding: 10px 15px;
+                margin-bottom: 15px;
+                border-radius: 4px;
+            }
+
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
             /* Responsive */
             @media (max-width: 992px) {
                 body {
@@ -376,6 +569,7 @@
                 .nav-link:hover, .nav-link.active {
                     border-left-color: transparent;
                     border-bottom-color: white;
+                    transform: translateY(-2px);
                 }
 
                 .user-info, .sidebar-footer {
@@ -393,19 +587,6 @@
                 .stats-cards { grid-template-columns: 1fr; }
                 .main-content { padding: 15px; }
             }
-            /* Style cho kết quả tìm kiếm */
-.search-results-info {
-    background-color: #f8f9fa;
-    border-left: 4px solid var(--brand-green);
-    padding: 10px 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-}
-
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-}
         </style>
     </head>
     <body>
@@ -505,108 +686,120 @@
             </c:if>
 
             <!-- Stats Cards -->
-            <div class="stats-cards">
-                <div class="stat-card">
-                    <div>
-                        <div class="stat-title">Tổng Orders</div>
-                        <div class="stat-value">
-                            <fmt:formatNumber value="${totalOrders}" pattern="#,###"/>
-                        </div>
-                    </div>
-                    <div class="stat-icon primary">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                </div>
+            <!-- Stats Cards -->
+<div class="stats-cards">
+    <div class="stat-card">
+        <div>
+            <div class="stat-title">Tổng Orders</div>
+            <div class="stat-value">
+                <fmt:formatNumber value="${totalOrders}" pattern="#,###"/>
+            </div>
+        </div>
+        <div class="stat-icon primary">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div>
-                        <div class="stat-title">Chờ xử lý</div>
-                        <div class="stat-value">
-                            <fmt:formatNumber value="${pendingOrders}" pattern="#,###"/>
-                        </div>
-                    </div>
-                    <div class="stat-icon warning">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-title">Chờ xử lý</div>
+            <div class="stat-value">
+                <fmt:formatNumber value="${pendingOrders}" pattern="#,###"/>
+            </div>
+        </div>
+        <div class="stat-icon warning">
+            <i class="fas fa-clock"></i>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div>
-                        <div class="stat-title">Đang xử lý</div>
-                        <div class="stat-value">
-                            <fmt:formatNumber value="${processingOrders}" pattern="#,###"/>
-                        </div>
-                    </div>
-                    <div class="stat-icon info">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-title">Đang xử lý</div>
+            <div class="stat-value">
+                <fmt:formatNumber value="${processingOrders}" pattern="#,###"/>
+            </div>
+        </div>
+        <div class="stat-icon info">
+            <i class="fas fa-truck"></i>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div>
-                        <div class="stat-title">Đã hủy</div>
-                        <div class="stat-value">
-                            <fmt:formatNumber value="${cancelledOrders}" pattern="#,###"/>
-                        </div>
-                    </div>
-                    <div class="stat-icon danger">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-title">Đã giao</div>
+            <div class="stat-value">
+                <fmt:formatNumber value="${deliveredOrders}" pattern="#,###"/>
             </div>
+        </div>
+        <div class="stat-icon success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+    </div>
 
-            <!-- Search and Filter Card -->
-            <!-- Search and Filter Card -->
-<div class="card">
-    <div class="card-body">
-        <form action="${pageContext.request.contextPath}/admin/orders" method="get" class="row g-3">
-            <div class="col-md-4">
-                <input type="text" class="form-control" name="keyword" 
-                       placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng..." 
-                       value="${param.keyword}">
+    <div class="stat-card">
+        <div>
+            <div class="stat-title">Đã hủy</div>
+            <div class="stat-value">
+                <fmt:formatNumber value="${cancelledOrders}" pattern="#,###"/>
             </div>
-            <div class="col-md-3">
-                <select class="form-select" name="status">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
-                    <option value="processing" ${param.status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
-                    <option value="delivered" ${param.status == 'delivered' ? 'selected' : ''}>Đã giao</option>
-                    <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <input type="date" class="form-control" name="dateFrom" 
-                       value="${param.dateFrom}">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-success w-100">
-                    <i class="fas fa-search"></i> Tìm kiếm
-                </button>
-            </div>
-            <c:if test="${not empty param.keyword or not empty param.status or not empty param.dateFrom}">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <c:if test="${not empty param.keyword}">Từ khóa: "${param.keyword}" </c:if>
-                            <c:if test="${not empty param.status}">
-                                <c:choose>
-                                    <c:when test="${param.status == 'pending'}">Trạng thái: Chờ xử lý</c:when>
-                                    <c:when test="${param.status == 'processing'}">Trạng thái: Đang xử lý</c:when>
-                                    <c:when test="${param.status == 'delivered'}">Trạng thái: Đã giao</c:when>
-                                    <c:when test="${param.status == 'cancelled'}">Trạng thái: Đã hủy</c:when>
-                                </c:choose>
-                            </c:if>
-                            <c:if test="${not empty param.dateFrom}">Từ ngày: ${param.dateFrom}</c:if>
-                        </small>
-                        <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-times"></i> Xóa bộ lọc
-                        </a>
-                    </div>
-                </div>
-            </c:if>
-        </form>
+        </div>
+        <div class="stat-icon danger">
+            <i class="fas fa-times-circle"></i>
+        </div>
     </div>
 </div>
+
+            <!-- Search and Filter Card -->
+            <div class="card">
+                <div class="card-body">
+                    <form action="${pageContext.request.contextPath}/admin/orders" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="keyword" 
+                                   placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng..." 
+                                   value="${param.keyword}">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" name="status">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
+                                <option value="processing" ${param.status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="delivered" ${param.status == 'delivered' ? 'selected' : ''}>Đã giao</option>
+                                <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" class="form-control" name="dateFrom" 
+                                   value="${param.dateFrom}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                        <c:if test="${not empty param.keyword or not empty param.status or not empty param.dateFrom}">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <c:if test="${not empty param.keyword}">Từ khóa: "${param.keyword}" </c:if>
+                                        <c:if test="${not empty param.status}">
+                                            <c:choose>
+                                                <c:when test="${param.status == 'pending'}">Trạng thái: Chờ xử lý</c:when>
+                                                <c:when test="${param.status == 'processing'}">Trạng thái: Đang xử lý</c:when>
+                                                <c:when test="${param.status == 'delivered'}">Trạng thái: Đã giao</c:when>
+                                                <c:when test="${param.status == 'cancelled'}">Trạng thái: Đã hủy</c:when>
+                                            </c:choose>
+                                        </c:if>
+                                        <c:if test="${not empty param.dateFrom}">Từ ngày: ${param.dateFrom}</c:if>
+                                    </small>
+                                    <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Xóa bộ lọc
+                                    </a>
+                                </div>
+                            </div>
+                        </c:if>
+                    </form>
+                </div>
+            </div>
 
             <!-- Orders Table Card -->
             <div class="card">
@@ -618,9 +811,7 @@
                                class="btn btn-outline-secondary me-2" id="exportBtn">
                                 <i class="fas fa-download"></i> Xuất file CSV
                             </a>
-                            <button class="btn btn-success" id="newOrderBtn">
-                                <i class="fas fa-plus"></i> Đơn hàng mới
-                            </button>
+                           
                         </div>
                     </div>
 
@@ -723,102 +914,101 @@
                     </div>
 
                     <!-- Pagination -->
-                    <!-- Pagination -->
-<c:if test="${totalPages > 1}">
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                <a class="page-link" 
-                   href="?page=${currentPage - 1}
-                   <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
-                   <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                   <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
-                   Trước
-                </a>
-            </li>
-            
-            <c:forEach begin="1" end="${totalPages}" var="i">
-                <li class="page-item ${currentPage == i ? 'active' : ''}">
-                    <a class="page-link" 
-                       href="?page=${i}
-                       <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
-                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
-                       ${i}
-                    </a>
-                </li>
-            </c:forEach>
-            
-            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                <a class="page-link" 
-                   href="?page=${currentPage + 1}
-                   <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
-                   <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                   <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
-                   Sau
-                </a>
-            </li>
-        </ul>
-    </nav>
-</c:if>
+                    <c:if test="${totalPages > 1}">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" 
+                                       href="?page=${currentPage - 1}
+                                       <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
+                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                       Trước
+                                    </a>
+                                </li>
+                                
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                        <a class="page-link" 
+                                           href="?page=${i}
+                                           <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
+                                           <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                           <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                           ${i}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                                
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" 
+                                       href="?page=${currentPage + 1}
+                                       <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
+                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                       Sau
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </c:if>
                 </div>
             </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý nút export
-    const exportBtn = document.getElementById('exportBtn');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', function(e) {
-            console.log('Bắt đầu xuất file CSV...');
-            const originalHTML = exportBtn.innerHTML;
-            exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xuất file...';
-            exportBtn.classList.add('disabled');
-            
-            setTimeout(() => {
-                exportBtn.innerHTML = originalHTML;
-                exportBtn.classList.remove('disabled');
-            }, 15000);
-        });
-    }
-    
-    // Xử lý nút "Đơn hàng mới"
-    const newOrderBtn = document.getElementById('newOrderBtn');
-    if (newOrderBtn) {
-        newOrderBtn.addEventListener('click', function() {
-            alert('Chức năng tạo đơn hàng mới đang được phát triển');
-        });
-    }
-    
-    // Tự động submit form khi thay đổi select (tùy chọn)
-    const statusSelect = document.querySelector('select[name="status"]');
-    if (statusSelect) {
-        statusSelect.addEventListener('change', function() {
-            // Tự động submit form khi chọn trạng thái
-            this.form.submit();
-        });
-    }
-    
-    // Hiển thị loading khi tìm kiếm
-    const searchForm = document.querySelector('form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                const originalHTML = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm...';
-                submitBtn.disabled = true;
+            document.addEventListener('DOMContentLoaded', function() {
+                // Xử lý nút export
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', function(e) {
+                        console.log('Bắt đầu xuất file CSV...');
+                        const originalHTML = exportBtn.innerHTML;
+                        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xuất file...';
+                        exportBtn.classList.add('disabled');
+                        
+                        setTimeout(() => {
+                            exportBtn.innerHTML = originalHTML;
+                            exportBtn.classList.remove('disabled');
+                        }, 15000);
+                    });
+                }
                 
-                setTimeout(() => {
-                    submitBtn.innerHTML = originalHTML;
-                    submitBtn.disabled = false;
-                }, 3000);
-            }
-        });
-    }
-});
-</script>
+                // Xử lý nút "Đơn hàng mới"
+                const newOrderBtn = document.getElementById('newOrderBtn');
+                if (newOrderBtn) {
+                    newOrderBtn.addEventListener('click', function() {
+                        alert('Chức năng tạo đơn hàng mới đang được phát triển');
+                    });
+                }
+                
+                // Tự động submit form khi thay đổi select (tùy chọn)
+                const statusSelect = document.querySelector('select[name="status"]');
+                if (statusSelect) {
+                    statusSelect.addEventListener('change', function() {
+                        // Tự động submit form khi chọn trạng thái
+                        this.form.submit();
+                    });
+                }
+                
+                // Hiển thị loading khi tìm kiếm
+                const searchForm = document.querySelector('form');
+                if (searchForm) {
+                    searchForm.addEventListener('submit', function(e) {
+                        const submitBtn = this.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            const originalHTML = submitBtn.innerHTML;
+                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm...';
+                            submitBtn.disabled = true;
+                            
+                            setTimeout(() => {
+                                submitBtn.innerHTML = originalHTML;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        }
+                    });
+                }
+            });
+        </script>
     </body>
 </html>
