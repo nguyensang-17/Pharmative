@@ -100,29 +100,54 @@ public class ProductManagementController extends HttpServlet {
     }
 
     // 1. LIST PRODUCTS
-    private void listProducts(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException, Exception {
-
-        System.out.println("=== LISTING PRODUCTS IN CONTROLLER ===");
-
+    // 1. LIST PRODUCTS - Sửa lại để hỗ trợ tìm kiếm và phân trang
+private void listProducts(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException, Exception {
+    
+    System.out.println("=== LISTING PRODUCTS IN CONTROLLER ===");
+    
+    try {
+        // Lấy tham số tìm kiếm và phân trang
+        String keyword = req.getParameter("keyword");
+        String status = req.getParameter("status");
+        int page = 1;
+        int pageSize = 6; // Hiển thị 6 sản phẩm/trang
+        
         try {
-            // Get all products for admin
-            var products = productDAO.getAllProductsForAdmin();
-            System.out.println("Products retrieved: " + products.size());
-
-            req.setAttribute("products", products);
-
-            String jspPath = "/admin/products/product-list.jsp";
-            System.out.println("Forwarding to: " + jspPath);
-
-            req.getRequestDispatcher(jspPath).forward(req, resp);
-
-        } catch (Exception e) {
-            System.err.println("ERROR in listProducts:");
-            e.printStackTrace();
-            throw e;
+            page = Integer.parseInt(req.getParameter("page"));
+        } catch (NumberFormatException e) {
+            page = 1;
         }
+        
+        System.out.println("Search parameters - Keyword: " + keyword + ", Status: " + status + ", Page: " + page);
+        
+        // Lấy danh sách sản phẩm với phân trang và tìm kiếm
+        var products = productDAO.searchProductsWithPagination(keyword, status, page, pageSize);
+        int totalItems = productDAO.countSearchProducts(keyword, status);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        
+        System.out.println("Products found: " + products.size());
+        System.out.println("Total items: " + totalItems + ", Total pages: " + totalPages);
+        
+        // Set attributes cho JSP
+        req.setAttribute("products", products);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("totalItems", totalItems);
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("status", status);
+        
+        String jspPath = "/admin/products/product-list.jsp";
+        System.out.println("Forwarding to: " + jspPath);
+        
+        req.getRequestDispatcher(jspPath).forward(req, resp);
+        
+    } catch (Exception e) {
+        System.err.println("ERROR in listProducts:");
+        e.printStackTrace();
+        throw e;
     }
+}
 
     // 2. SHOW EDIT FORM
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp)

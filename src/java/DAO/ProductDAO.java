@@ -357,4 +357,109 @@ public List<Product> getAllProductsForAdmin() throws SQLException {
     System.out.println("Total products found: " + list.size());
     return list;
 }
+/**
+ * Tìm kiếm sản phẩm với phân trang
+ */
+public List<Product> searchProductsWithPagination(String keyword, String status, int page, int pageSize) throws SQLException {
+    System.out.println("=== SEARCHING PRODUCTS ===");
+    System.out.println("Keyword: " + keyword + ", Status: " + status + ", Page: " + page + ", PageSize: " + pageSize);
+    
+    StringBuilder sql = new StringBuilder(
+        "SELECT p.* FROM products p WHERE 1=1"
+    );
+    List<Object> params = new ArrayList<>();
+    
+    // Thêm điều kiện tìm kiếm theo keyword
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql.append(" AND (p.product_name LIKE ? OR p.description LIKE ?)");
+        String searchTerm = "%" + keyword.trim() + "%";
+        params.add(searchTerm);
+        params.add(searchTerm);
+    }
+    
+    // Thêm điều kiện lọc theo status
+    if (status != null && !status.isEmpty()) {
+        if ("instock".equals(status)) {
+            sql.append(" AND p.stock_quantity > 0");
+        } else if ("outstock".equals(status)) {
+            sql.append(" AND p.stock_quantity <= 0");
+        }
+    }
+    
+    // Thêm phân trang
+    sql.append(" ORDER BY p.created_at DESC LIMIT ? OFFSET ?");
+    int offset = (page - 1) * pageSize;
+    params.add(pageSize);
+    params.add(offset);
+    
+    System.out.println("SQL: " + sql.toString());
+    System.out.println("Params: " + params);
+    
+    List<Product> list = new ArrayList<>();
+    try (Connection c = DBContext.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql.toString())) {
+        
+        // Set parameters
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Product product = map(rs);
+                System.out.println("Found product: " + product.getProductName());
+                list.add(product);
+            }
+        }
+    }
+    System.out.println("Total products found in search: " + list.size());
+    return list;
+}
+
+/**
+ * Đếm tổng số sản phẩm sau khi tìm kiếm
+ */
+public int countSearchProducts(String keyword, String status) throws SQLException {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(*) FROM products p WHERE 1=1"
+    );
+    List<Object> params = new ArrayList<>();
+    
+    // Thêm điều kiện tìm kiếm theo keyword
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql.append(" AND (p.product_name LIKE ? OR p.description LIKE ?)");
+        String searchTerm = "%" + keyword.trim() + "%";
+        params.add(searchTerm);
+        params.add(searchTerm);
+    }
+    
+    // Thêm điều kiện lọc theo status
+    if (status != null && !status.isEmpty()) {
+        if ("instock".equals(status)) {
+            sql.append(" AND p.stock_quantity > 0");
+        } else if ("outstock".equals(status)) {
+            sql.append(" AND p.stock_quantity <= 0");
+        }
+    }
+    
+    System.out.println("Count SQL: " + sql.toString());
+    
+    try (Connection c = DBContext.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql.toString())) {
+        
+        // Set parameters
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Total count: " + count);
+                return count;
+            }
+        }
+    }
+    return 0;
+}
 }
