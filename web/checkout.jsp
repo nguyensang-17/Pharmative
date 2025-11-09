@@ -7,19 +7,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     response.setCharacterEncoding("UTF-8");
-    
+
     // Lấy thông tin user từ session
     User currentUser = (User) session.getAttribute("user");
     String userEmail = "";
     String userAddress = "";
     String userPhone = "";
     String userName = "";
-    
+
     if (currentUser != null) {
         userEmail = currentUser.getEmail() != null ? currentUser.getEmail() : "";
-        userPhone = currentUser.getPhoneNumber()!= null ? currentUser.getPhoneNumber(): "";
+        userPhone = currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "";
         userName = currentUser.getFullname() != null ? currentUser.getFullname() : "";
-        
+
         // Lấy địa chỉ từ database nếu có
         UserDAO userDAO = new UserDAO();
         User userDetails = userDAO.getUserById(currentUser.getId());
@@ -308,39 +308,39 @@
                     font-size: 1.5rem;
                 }
             }
-            
+
             .shipping-address {
                 margin-bottom: 30px;
             }
-            
+
             .address-form {
                 background: #f8f9fa;
                 padding: 20px;
                 border-radius: 8px;
                 margin-top: 15px;
             }
-            
+
             .form-group {
                 margin-bottom: 15px;
             }
-            
+
             .form-control {
                 border-radius: 6px;
                 padding: 10px 15px;
                 border: 1px solid #ddd;
                 transition: all 0.3s ease;
             }
-            
+
             .form-control:focus {
                 border-color: var(--primary-color);
                 box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
             }
-            
+
             .required-field::after {
                 content: " *";
                 color: red;
             }
-            
+
             .payment-method-desc {
                 font-size: 0.9rem;
                 color: #666;
@@ -361,7 +361,7 @@
                     </div>
 
                     <div class="checkout-body">
-                        <% if (cart != null && !cart.isEmpty()) { %>
+                        <% if (cart != null && !cart.isEmpty()) {%>
                         <form id="checkoutForm" method="post" action="${cpath}/checkout">
                             <div class="row">
                                 <!-- Thông tin giao hàng & Thanh toán -->
@@ -369,14 +369,14 @@
                                     <!-- Địa chỉ giao hàng -->
                                     <div class="shipping-address">
                                         <h4 class="mb-4">Địa chỉ giao hàng</h4>
-                                        
+
                                         <div class="address-form">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="required-field">Họ và tên</label>
                                                         <input type="text" class="form-control" name="fullName" 
-                                                               value="<%= userName %>" required 
+                                                               value="<%= userName%>" required 
                                                                placeholder="Nhập họ và tên người nhận">
                                                     </div>
                                                 </div>
@@ -384,25 +384,25 @@
                                                     <div class="form-group">
                                                         <label class="required-field">Số điện thoại</label>
                                                         <input type="tel" class="form-control" name="phone" 
-                                                               value="<%= userPhone %>" required 
+                                                               value="<%= userPhone%>" required 
                                                                placeholder="Nhập số điện thoại">
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label class="required-field">Email</label>
                                                 <input type="email" class="form-control" name="email" 
-                                                       value="<%= userEmail %>" required 
+                                                       value="<%= userEmail%>" required 
                                                        placeholder="Nhập email để nhận thông báo đơn hàng">
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label class="required-field">Địa chỉ giao hàng</label>
                                                 <textarea class="form-control" name="address" rows="3" required 
-                                                          placeholder="Nhập đầy đủ địa chỉ giao hàng (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"><%= userAddress %></textarea>
+                                                          placeholder="Nhập đầy đủ địa chỉ giao hàng (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"><%= userAddress%></textarea>
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label>Ghi chú đơn hàng (tùy chọn)</label>
                                                 <textarea class="form-control" name="note" rows="2" 
@@ -517,7 +517,7 @@
 
                                         <input type="hidden" name="paymentMethod" id="paymentMethod" value="vnpay">
                                         <input type="hidden" name="totalAmount" value="${cartTotal}">
-                                        
+
                                         <button type="submit" id="btnPay" class="btn btn-primary w-100 mt-4 py-3">
                                             🔒 Thanh toán an toàn
                                         </button>
@@ -558,7 +558,7 @@
 
         <script>
             $(document).ready(function () {
-                let selectedMethod = 'vnpay'; // Mặc định chọn VNPAY
+                let selectedMethod = 'vnpay';
                 $('#paymentMethod').val(selectedMethod);
 
                 // Xử lý chọn phương thức thanh toán
@@ -567,13 +567,10 @@
                     $(this).addClass('selected');
                     selectedMethod = $(this).data('method');
                     $('#paymentMethod').val(selectedMethod);
-                    console.log('Selected payment method:', selectedMethod);
-                    
-                    // Cập nhật text nút thanh toán
                     updatePaymentButtonText();
                 });
 
-                // Cập nhật text nút thanh toán theo phương thức
+                // Cập nhật text nút thanh toán
                 function updatePaymentButtonText() {
                     const $btn = $('#btnPay');
                     if (selectedMethod === 'cod') {
@@ -590,8 +587,8 @@
                     // Validate form
                     const requiredFields = $(this).find('[required]');
                     let isValid = true;
-                    
-                    requiredFields.each(function() {
+
+                    requiredFields.each(function () {
                         if (!$(this).val().trim()) {
                             isValid = false;
                             $(this).addClass('is-invalid');
@@ -613,82 +610,82 @@
                     $btn.prop('disabled', true);
 
                     try {
-                        if (selectedMethod === 'vnpay') {
-                            // Xử lý VNPay
-                            const formData = new URLSearchParams();
-                            formData.append('language', 'vn');
-                            formData.append('totalAmount', '${cartTotal}');
+                        // Lưu thông tin checkout vào session
+                        const formDataString = $('#checkoutForm').serialize();
 
-                            const response = await fetch('${cpath}/vnpay', {
+                        const saveResponse = await fetch('${cpath}/saveOrderInfo', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                            body: formDataString
+                        });
+
+                        if (!saveResponse.ok) {
+                            throw new Error('Không thể lưu thông tin đơn hàng');
+                        }
+
+                        const saveResult = await saveResponse.json();
+                        if (saveResult.status !== 'success') {
+                            throw new Error(saveResult.message || 'Lưu thông tin thất bại');
+                        }
+
+                        // Xử lý theo phương thức thanh toán
+                        if (selectedMethod === 'vnpay') {
+                            // Gọi API VNPay
+                            const vnpayParams = new URLSearchParams();
+                            vnpayParams.append('language', 'vn');
+                            vnpayParams.append('totalAmount', '${cartTotal}');
+
+                            const vnpayResponse = await fetch('${cpath}/vnpay', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                                 },
-                                body: formData.toString()
+                                body: vnpayParams.toString()
                             });
 
-                            if (!response.ok) {
-                                throw new Error('HTTP error! status: ' + response.status);
+                            if (!vnpayResponse.ok) {
+                                throw new Error('Lỗi kết nối VNPay');
                             }
 
-                            const result = await response.json();
-                            console.log('VNPay response:', result);
+                            const vnpayResult = await vnpayResponse.json();
 
-                            if (result && result.code === '00' && result.data) {
-                                // Lưu thông tin đơn hàng tạm thời trước khi chuyển hướng
-                                await saveOrderInfo();
-                                // Chuyển hướng đến trang thanh toán VNPay
-                                window.location.href = result.data;
+                            if (vnpayResult && vnpayResult.code === '00' && vnpayResult.data) {
+                                // Chuyển đến VNPay
+                                window.location.href = vnpayResult.data;
                             } else {
-                                throw new Error(result.message || 'Không tạo được URL thanh toán');
+                                throw new Error(vnpayResult.message || 'Không tạo được URL thanh toán');
                             }
+
                         } else if (selectedMethod === 'cod') {
-                            // Xử lý COD - gửi form trực tiếp
-                            await saveOrderInfo();
+                            // Submit form cho COD
                             this.submit();
                         }
 
                     } catch (error) {
-                        console.error('Payment error:', error);
-                        alert('Đã xảy ra lỗi khi xử lý thanh toán:\n' + error.message + '\n\nVui lòng thử lại sau.');
-
-                        // Khôi phục nút
+                        alert('Đã xảy ra lỗi:\n' + error.message + '\n\nVui lòng thử lại.');
                         $btn.html(originalText);
                         $btn.prop('disabled', false);
                     }
                 });
 
-                // Hàm lưu thông tin đơn hàng tạm thời
-                async function saveOrderInfo() {
-                    const formData = new FormData($('#checkoutForm')[0]);
-                    
-                    try {
-                        const response = await fetch('${cpath}/saveOrderInfo', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        
-                        if (!response.ok) {
-                            console.warn('Không thể lưu thông tin đơn hàng tạm thời');
-                        }
-                    } catch (error) {
-                        console.warn('Lỗi khi lưu thông tin đơn hàng:', error);
-                    }
-                }
-
-                // Kiểm tra nếu có thông báo từ URL
+                // Xử lý thông báo từ URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const paymentStatus = urlParams.get('vnp_ResponseCode');
                 const orderStatus = urlParams.get('orderStatus');
 
                 if (paymentStatus === '00') {
-                    alert('✓ Thanh toán thành công! Đơn hàng của bạn đã được xác nhận.');
+                    alert('✓ Thanh toán thành công!');
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 } else if (paymentStatus) {
                     alert('✗ Thanh toán thất bại. Mã lỗi: ' + paymentStatus);
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }
-                
+
                 if (orderStatus === 'success') {
-                    alert('✓ Đặt hàng COD thành công! Chúng tôi sẽ liên hệ với bạn sớm.');
+                    alert('✓ Đặt hàng COD thành công!');
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }
             });
         </script>

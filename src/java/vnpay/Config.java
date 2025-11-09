@@ -12,7 +12,10 @@ public class Config {
 
     // === CẤU HÌNH SANDBOX (đổi theo merchant của bạn) ===
     public static String vnp_PayUrl   = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl= "http://localhost:8080/Pharmative/vnpay_return.jsp"; 
+    
+    // *** QUAN TRỌNG: Đổi return URL để trỏ đến servlet xử lý ***
+    public static String vnp_ReturnUrl= "http://localhost:8080/Pharmative/vnpay-return"; 
+    
     public static String vnp_TmnCode  = "8S14KTHI";   
     public static String secretKey    = "P157NR8XKX5ZVIJNJVCX8ITJ98LCTZNT".trim();
 
@@ -50,7 +53,7 @@ public class Config {
         }
     }
 
-    /** Ghép "key=value" (không encode) theo alpha, nối '&' — giữ để tương thích cũ */
+    /** Ghép "key=value" (không encode) theo alpha, nối '&' – giữ để tương thích cũ */
     public static String hashAllFields(Map<String, String> fields) {
         List<String> names = new ArrayList<>(fields.keySet());
         Collections.sort(names);
