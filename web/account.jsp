@@ -14,293 +14,449 @@
         <title>Tài khoản của tôi | Pharmative</title>
         <base href="${cpath}/">
 
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
         <style>
             :root {
-                --primary-color: #2e7d32;
+                --primary: #2e7d32;
                 --primary-light: #4caf50;
                 --primary-dark: #1b5e20;
-                --accent-color: #8bc34a;
-                --text-dark: #1a1a1a;
-                --text-light: #666;
-                --bg-light: #f8f9fa;
+                --secondary: #8bc34a;
+                --success: #4caf50;
+                --warning: #ff9800;
+                --danger: #f44336;
+                --info: #2196f3;
+                --dark: #1a1a1a;
+                --light: #f8f9fa;
                 --white: #ffffff;
-                --border-radius: 8px;
-                --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                --transition: all 0.3s ease;
+                --shadow: 0 2px 20px rgba(0,0,0,0.08);
+                --shadow-hover: 0 8px 30px rgba(46,125,50,0.15);
+                --radius: 16px;
+                --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
 
             body {
                 font-family: 'Nunito', sans-serif;
-                color: var(--text-dark);
-                line-height: 1.6;
-                background-color: var(--bg-light);
+                background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+                color: var(--dark);
+                min-height: 100vh;
             }
 
-            .text-primary {
-                color: var(--primary-color) !important;
-            }
-
-            .btn-primary {
-                background-color: var(--primary-color);
-                border-color: var(--primary-color);
-                border-radius: 30px;
-                padding: 12px 30px;
-                font-weight: 600;
-                transition: var(--transition);
-            }
-
-            .btn-primary:hover {
-                background-color: var(--primary-dark);
-                border-color: var(--primary-dark);
-                transform: translateY(-2px);
-                box-shadow: 0 6px 15px rgba(46, 125, 50, 0.3);
-            }
-
-            .btn-outline-primary {
-                color: var(--primary-color);
-                border-color: var(--primary-color);
-                border-radius: 30px;
-                padding: 10px 25px;
-                font-weight: 600;
-                transition: var(--transition);
-            }
-
-            .btn-outline-primary:hover {
-                background-color: var(--primary-color);
+            /* Header Banner */
+            .account-banner {
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
                 color: white;
+                padding: 60px 0 40px;
+                margin-bottom: -50px;
+                position: relative;
+                overflow: hidden;
             }
 
+            .account-banner::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 400px;
+                height: 400px;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                border-radius: 50%;
+            }
+
+            .user-profile-header {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .user-avatar-large {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--secondary), var(--primary-light));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3rem;
+                font-weight: 800;
+                color: white;
+                border: 5px solid rgba(255,255,255,0.3);
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            }
+
+            .user-info h1 {
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .user-info p {
+                font-size: 1.1rem;
+                opacity: 0.9;
+            }
+
+            /* Container */
             .account-container {
                 max-width: 1200px;
-                margin: 40px auto;
-                padding: 0 15px;
+                margin: 0 auto;
+                padding: 0 20px 60px;
             }
 
-            .account-card {
-                background: var(--white);
-                border-radius: var(--border-radius);
-                box-shadow: var(--box-shadow);
+            /* Stats Cards */
+            .stats-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+
+            .stat-card {
+                background: white;
+                border-radius: var(--radius);
+                padding: 30px;
+                box-shadow: var(--shadow);
+                transition: var(--transition);
+                position: relative;
                 overflow: hidden;
+            }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background: linear-gradient(180deg, var(--primary), var(--secondary));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, var(--primary-light), var(--primary));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.8rem;
+                color: white;
+                margin-bottom: 15px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+                font-weight: 800;
+                color: var(--primary);
+                margin-bottom: 5px;
+            }
+
+            .stat-label {
+                font-size: 0.95rem;
+                color: #666;
+                font-weight: 600;
+            }
+
+            /* Content Cards */
+            .content-card {
+                background: white;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
                 margin-bottom: 30px;
+                overflow: hidden;
                 transition: var(--transition);
             }
 
-            .account-card:hover {
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            .content-card:hover {
+                box-shadow: var(--shadow-hover);
             }
 
-            .account-header {
+            .card-header {
                 padding: 25px 30px;
-                border-bottom: 1px solid #eee;
-                background-color: #f8f9fa;
+                background: linear-gradient(135deg, #f8f9fa, #e8f5e9);
+                border-bottom: 2px solid var(--primary);
             }
 
-            .account-body {
+            .card-header h3 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--primary-dark);
+                margin: 0 0 5px;
+            }
+
+            .card-header p {
+                color: #666;
+                margin: 0;
+            }
+
+            .card-body {
                 padding: 30px;
             }
 
-            .section-title {
-                position: relative;
-                margin-bottom: 30px;
-            }
-
-            .section-title h3 {
-                font-weight: 700;
-                display: inline-block;
-                position: relative;
-                color: var(--primary-dark);
-            }
-
-            .section-title h3::after {
-                content: '';
-                position: absolute;
-                width: 50px;
-                height: 3px;
-                background: var(--primary-color);
-                bottom: -8px;
-                left: 0;
-            }
-
+            /* Form Styles */
             .form-group {
                 margin-bottom: 25px;
             }
 
             .form-label {
                 font-weight: 600;
+                color: var(--dark);
                 margin-bottom: 8px;
-                color: var(--text-dark);
+                display: block;
+                font-size: 0.95rem;
             }
 
             .form-control {
-                border-radius: var(--border-radius);
-                padding: 12px 15px;
-                border: 1px solid #ddd;
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 10px;
+                font-size: 1rem;
                 transition: var(--transition);
+                background: #fafafa;
             }
 
             .form-control:focus {
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+                outline: none;
+                border-color: var(--primary);
+                background: white;
+                box-shadow: 0 0 0 4px rgba(46,125,50,0.1);
             }
 
-            .user-avatar {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            .form-control:disabled {
+                background: #f5f5f5;
+                cursor: not-allowed;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 12px 30px;
+                border-radius: 25px;
+                font-weight: 600;
+                font-size: 1rem;
+                border: none;
+                cursor: pointer;
+                transition: var(--transition);
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                color: white;
+                box-shadow: 0 4px 15px rgba(46,125,50,0.3);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(46,125,50,0.4);
+            }
+
+            .btn-outline-primary {
+                background: white;
+                color: var(--primary);
+                border: 2px solid var(--primary);
+            }
+
+            .btn-outline-primary:hover {
+                background: var(--primary);
+                color: white;
+            }
+
+            /* Alerts */
+            .alert {
+                padding: 16px 20px;
+                border-radius: 12px;
+                margin-bottom: 25px;
+                border: none;
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 2rem;
-                font-weight: 700;
-                margin-bottom: 20px;
-            }
-
-            .welcome-section {
-                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-                color: white;
-                border-radius: var(--border-radius);
-                padding: 30px;
-                margin-bottom: 30px;
-                text-align: center;
-            }
-
-            .stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
-                margin: 25px 0;
-            }
-
-            .stat-card {
-                background: var(--white);
-                border-radius: var(--border-radius);
-                padding: 20px;
-                text-align: center;
-                box-shadow: var(--box-shadow);
-                transition: var(--transition);
-                border: 1px solid #eee;
-            }
-
-            .stat-card:hover {
-                transform: translateY(-3px);
-            }
-
-            .stat-number {
-                font-size: 1.8rem;
-                font-weight: 700;
-                color: var(--primary-color);
-                margin-bottom: 5px;
-            }
-
-            .stat-label {
-                color: var(--text-light);
-                font-size: 0.9rem;
+                gap: 12px;
                 font-weight: 600;
+            }
+
+            .alert-success {
+                background: #e8f5e9;
+                color: var(--success);
+            }
+
+            .alert-danger {
+                background: #ffebee;
+                color: var(--danger);
+            }
+
+            /* Order Table */
+            .order-table-wrapper {
+                overflow-x: auto;
             }
 
             .order-table {
                 width: 100%;
-                border-collapse: collapse;
+                border-collapse: separate;
+                border-spacing: 0 12px;
             }
 
-            .order-table th {
-                background-color: #f8f9fa;
-                font-weight: 600;
-                padding: 15px;
+            .order-table thead th {
+                background: #f8f9fa;
+                padding: 15px 20px;
+                font-weight: 700;
+                color: var(--dark);
                 text-align: left;
-                border-bottom: 2px solid #eee;
-                color: var(--text-dark);
+                border: none;
+                white-space: nowrap;
             }
 
-            .order-table td {
-                padding: 15px;
-                border-bottom: 1px solid #eee;
-                vertical-align: middle;
+            .order-table tbody tr {
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                transition: var(--transition);
             }
 
-            .order-table tr:hover {
-                background-color: #f8f9fa;
+            .order-table tbody tr:hover {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
+
+            .order-table tbody td {
+                padding: 20px;
+                border: none;
+            }
+
+            .order-table tbody tr td:first-child {
+                border-radius: 12px 0 0 12px;
+            }
+
+            .order-table tbody tr td:last-child {
+                border-radius: 0 12px 12px 0;
+            }
+
+            .order-id {
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 1.1rem;
             }
 
             .badge {
-                padding: 6px 12px;
+                padding: 8px 16px;
                 border-radius: 20px;
-                font-size: 0.8rem;
-                font-weight: 600;
+                font-size: 0.85rem;
+                font-weight: 700;
+                display: inline-block;
             }
 
-            .badge-success {
-                background-color: rgba(46, 125, 50, 0.1);
-                color: var(--primary-color);
+            .badge-pending {
+                background: #fff3cd;
+                color: #ff9800;
             }
 
-            .badge-warning {
-                background-color: rgba(255, 193, 7, 0.1);
-                color: #ffc107;
+            .badge-processing {
+                background: #cfe2ff;
+                color: #0d6efd;
             }
 
-            .badge-secondary {
-                background-color: rgba(108, 117, 125, 0.1);
-                color: #6c757d;
+            .badge-shipped {
+                background: #d1ecf1;
+                color: #0c5460;
             }
 
-            .alert {
-                border-radius: var(--border-radius);
-                border: none;
-                padding: 15px 20px;
+            .badge-delivered {
+                background: #d4edda;
+                color: var(--success);
+            }
+
+            .badge-cancelled {
+                background: #f8d7da;
+                color: var(--danger);
+            }
+
+            /* Empty State */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+            }
+
+            .empty-state-icon {
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 25px;
+                background: linear-gradient(135deg, var(--primary-light), var(--primary));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3rem;
+                color: white;
+            }
+
+            .empty-state h4 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--dark);
+                margin-bottom: 15px;
+            }
+
+            .empty-state p {
+                color: #666;
                 margin-bottom: 25px;
             }
 
-            .alert-success {
-                background-color: rgba(46, 125, 50, 0.1);
-                border: 1px solid var(--primary-color);
-                color: var(--primary-dark);
-            }
-
-            .alert-danger {
-                background-color: rgba(220, 53, 69, 0.1);
-                border: 1px solid #dc3545;
-                color: #dc3545;
-            }
-
-            .empty-state {
-                text-align: center;
-                padding: 40px 20px;
-                color: var(--text-light);
-            }
-
-            .empty-state i {
-                font-size: 3rem;
-                margin-bottom: 15px;
-                opacity: 0.5;
-            }
-
+            /* Responsive */
             @media (max-width: 768px) {
-                .account-container {
-                    margin: 20px auto;
+                .account-banner {
+                    padding: 40px 0 30px;
                 }
 
-                .account-body {
-                    padding: 20px;
+                .user-profile-header {
+                    flex-direction: column;
+                    text-align: center;
                 }
 
-                .stats-grid {
+                .user-info h1 {
+                    font-size: 2rem;
+                }
+
+                .stats-row {
                     grid-template-columns: repeat(2, 1fr);
+                }
+
+                .card-body {
+                    padding: 20px;
                 }
 
                 .order-table {
                     font-size: 0.9rem;
                 }
 
-                .order-table th,
-                .order-table td {
-                    padding: 10px 8px;
+                .order-table thead {
+                    display: none;
+                }
+
+                .order-table tbody tr {
+                    display: grid;
+                    gap: 10px;
+                    padding: 15px;
+                    margin-bottom: 15px;
+                }
+
+                .order-table tbody tr td:first-child,
+                .order-table tbody tr td:last-child {
+                    border-radius: 0;
                 }
             }
         </style>
@@ -309,265 +465,345 @@
     <body>
         <jsp:include page="/common/headerChinh.jsp" />
 
-        <div class="site-wrap">
-            <!-- Breadcrumb -->
-            <div class="bg-light py-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 mb-0">
-                            <a href="${cpath}/home">Trang chủ</a> 
-                            <span class="mx-2 mb-0">/</span>
-                            <strong class="text-black">Tài khoản của tôi</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="account-container">
-                <!-- Welcome Section -->
-                <div class="welcome-section">
-                    <div class="user-avatar">
+        <!-- Banner -->
+        <div class="account-banner">
+            <div class="container">
+                <div class="user-profile-header">
+                    <div class="user-avatar-large">
                         <c:set var="userName" value="${user.fullname}" />
                         <c:choose>
                             <c:when test="${not empty userName}">
-                                ${userName.charAt(0)}
+                                ${userName.substring(0,1).toUpperCase()}
                             </c:when>
                             <c:otherwise>
-                                <c:set var="email" value="${user.email}" />
-                                <c:if test="${not empty email}">
-                                    ${email.charAt(0)}
-                                </c:if>
+                                <i class="fas fa-user"></i>
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <h2 class="mb-2">Xin chào, <c:out value="${user.fullname}" default="Khách hàng"/>!</h2>
-                    <p class="mb-0 opacity-75">Quản lý thông tin cá nhân và theo dõi đơn hàng của bạn</p>
-                </div>
-
-                <!-- Thông báo -->
-                <c:if test="${not empty successMessage}">
-                    <div class="alert alert-success">
-                        <i class="icon-check"></i> ${successMessage}
-                    </div>
-                </c:if>
-
-                <c:if test="${not empty errorMessage}">
-                    <div class="alert alert-danger">
-                        <i class="icon-warning"></i> ${errorMessage}
-                    </div>
-                </c:if>
-
-                <!-- Thống kê nhanh -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">
-                            <c:choose>
-                                <c:when test="${not empty orderHistory}">${orderHistory.size()}</c:when>
-                                <c:otherwise>0</c:otherwise>
-                            </c:choose>
-                        </div>
-                        <div class="stat-label">Đơn hàng</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">⭐</div>
-                        <div class="stat-label">Thành viên</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">
-                            <c:choose>
-                                <c:when test="${not empty user.createdAt}">✓</c:when>
-                                <c:otherwise>-</c:otherwise>
-                            </c:choose>
-                        </div>
-                        <div class="stat-label">Đã xác thực</div>
+                    <div class="user-info">
+                        <h1>Xin chào, <c:out value="${user.fullname}" default="Khách hàng"/>!</h1>
+                        <p><i class="fas fa-envelope"></i> <c:out value="${user.email}"/></p>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="row">
-                    <!-- Thông tin cá nhân -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="account-card">
-                            <div class="account-header">
-                                <h4 class="mb-0">Thông tin cá nhân</h4>
-                                <p class="mb-0 text-muted">Cập nhật thông tin của bạn</p>
-                            </div>
-                            <div class="account-body">
-                                <form method="post" action="${cpath}/account">
-                                    <input type="hidden" name="action" value="updateProfile" />
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="fullname">Họ và tên</label>
-                                        <input type="text" class="form-control" id="fullname" name="fullname"
-                                               value="<c:out value='${user.fullname}'/>" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" 
-                                               value="<c:out value='${user.email}'/>" disabled>
-                                        <small class="form-text text-muted">Email không thể thay đổi</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="phone_number">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="phone_number" name="phone_number"
-                                               value="<c:out value='${user.phoneNumber}'/>" 
-                                               placeholder="Nhập số điện thoại">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="address">Địa chỉ giao hàng</label>
-                                        <textarea class="form-control" id="address" name="address" rows="3" 
-                                                  placeholder="Nhập địa chỉ giao hàng đầy đủ"><c:out value='${user.address}'/></textarea>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-save"></i> Lưu thay đổi
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Đổi mật khẩu -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="account-card">
-                            <div class="account-header">
-                                <h4 class="mb-0">Đổi mật khẩu</h4>
-                                <p class="mb-0 text-muted">Bảo mật tài khoản của bạn</p>
-                            </div>
-                            <div class="account-body">
-                                <form method="post" action="${cpath}/account">
-                                    <input type="hidden" name="action" value="changePassword" />
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="currentPassword">Mật khẩu hiện tại</label>
-                                        <input type="password" class="form-control" id="currentPassword" 
-                                               name="currentPassword" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="newPassword">Mật khẩu mới</label>
-                                        <input type="password" class="form-control" id="newPassword" 
-                                               name="newPassword" required>
-                                        <small class="form-text text-muted">Ít nhất 6 ký tự, nên kết hợp chữ hoa, chữ thường và số</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label" for="confirmPassword">Xác nhận mật khẩu mới</label>
-                                        <input type="password" class="form-control" id="confirmPassword" 
-                                               name="confirmPassword" required>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        <i class="icon-lock"></i> Đổi mật khẩu
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+        <div class="account-container">
+            <!-- Alerts -->
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle fa-lg"></i>
+                    <span>${successMessage}</span>
                 </div>
+            </c:if>
 
-                <!-- Lịch sử đơn hàng -->
-                <div class="account-card">
-                    <div class="account-header">
-                        <h4 class="mb-0">Lịch sử đơn hàng</h4>
-                        <p class="mb-0 text-muted">Theo dõi các đơn hàng của bạn</p>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle fa-lg"></i>
+                    <span>${errorMessage}</span>
+                </div>
+            </c:if>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-bag"></i>
                     </div>
-                    <div class="account-body">
+                    <div class="stat-value">
                         <c:choose>
-                            <c:when test="${empty orderHistory}">
-                                <div class="empty-state">
-                                    <i class="icon-shopping-bag"></i>
-                                    <h5>Chưa có đơn hàng nào</h5>
-                                    <p class="mb-4">Hãy khám phá các sản phẩm và thực hiện đơn hàng đầu tiên của bạn</p>
-                                    <a href="${cpath}/shop" class="btn btn-primary">
-                                        <i class="icon-store"></i> Mua sắm ngay
-                                    </a>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="table-responsive">
-                                    <table class="order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Mã đơn</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Trạng thái</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Địa chỉ giao</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach var="order" items="${orderHistory}">
-                                                <tr>
-                                                    <td>
-                                                        <strong>#${order.orderId}</strong>
-                                                    </td>
-                                                    <td>
-                                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" />
-                                                    </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'completed' || order.status == 'COMPLETED'}">
-                                                                <span class="badge badge-success">Hoàn thành</span>
-                                                            </c:when>
-                                                            <c:when test="${order.status == 'pending' || order.status == 'PENDING'}">
-                                                                <span class="badge badge-warning">Đang xử lý</span>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="badge badge-secondary">${order.status}</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <strong>
-                                                            <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" minFractionDigits="0" />
-                                                        </strong>
-                                                    </td>
-                                                    <td>
-                                                        <small><c:out value="${order.shippingAddress}"/></small>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </c:otherwise>
+                            <c:when test="${not empty orderHistory}">${orderHistory.size()}</c:when>
+                            <c:otherwise>0</c:otherwise>
                         </c:choose>
+                    </div>
+                    <div class="stat-label">Đơn hàng</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value">VIP</div>
+                    <div class="stat-label">Thành viên</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-value">
+                        <i class="fas fa-check" style="color: var(--success);"></i>
+                    </div>
+                    <div class="stat-label">Đã xác thực</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Ưu đãi</div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="row">
+                <!-- Thông tin cá nhân -->
+                <div class="col-lg-6 mb-4">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user-edit"></i> Thông tin cá nhân</h3>
+                            <p>Cập nhật thông tin của bạn</p>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="${cpath}/account">
+                                <input type="hidden" name="action" value="updateProfile" />
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-user"></i> Họ và tên
+                                    </label>
+                                    <input type="text" class="form-control" name="fullname"
+                                           value="<c:out value='${user.fullname}'/>" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" class="form-control" 
+                                           value="<c:out value='${user.email}'/>" disabled>
+                                    <small style="color: #666; font-size: 0.85rem;">
+                                        <i class="fas fa-info-circle"></i> Email không thể thay đổi
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-phone"></i> Số điện thoại
+                                    </label>
+                                    <input type="text" class="form-control" name="phone_number"
+                                           value="<c:out value='${user.phoneNumber}'/>" 
+                                           placeholder="Nhập số điện thoại">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng
+                                    </label>
+                                    <textarea class="form-control" name="address" rows="3" 
+                                              placeholder="Nhập địa chỉ giao hàng đầy đủ"><c:out value='${user.address}'/></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu thay đổi
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đổi mật khẩu -->
+                <div class="col-lg-6 mb-4">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-lock"></i> Đổi mật khẩu</h3>
+                            <p>Bảo mật tài khoản của bạn</p>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="${cpath}/account" id="changePasswordForm">
+                                <input type="hidden" name="action" value="changePassword" />
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-key"></i> Mật khẩu hiện tại
+                                    </label>
+                                    <input type="password" class="form-control" 
+                                           name="currentPassword" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-lock"></i> Mật khẩu mới
+                                    </label>
+                                    <input type="password" class="form-control" 
+                                           name="newPassword" id="newPassword" required>
+                                    <small style="color: #666; font-size: 0.85rem;">
+                                        <i class="fas fa-info-circle"></i> Ít nhất 6 ký tự
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-check-circle"></i> Xác nhận mật khẩu mới
+                                    </label>
+                                    <input type="password" class="form-control" 
+                                           name="confirmPassword" id="confirmPassword" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="fas fa-shield-alt"></i> Đổi mật khẩu
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <jsp:include page="/common/footerChinh.jsp" />
+            <!-- Lịch sử đơn hàng -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Lịch sử đơn hàng</h3>
+                    <p>Theo dõi các đơn hàng của bạn</p>
+                </div>
+                <div class="card-body">
+                    <c:choose>
+                        <c:when test="${empty orderHistory}">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h4>Chưa có đơn hàng nào</h4>
+                                <p>Hãy khám phá các sản phẩm và thực hiện đơn hàng đầu tiên của bạn!</p>
+                                <a href="${cpath}/shop" class="btn btn-primary">
+                                    <i class="fas fa-store"></i> Mua sắm ngay
+                                </a>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="order-table-wrapper">
+                                <table class="order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã đơn</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Trạng thái</th>
+                                            <th>Phương thức</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Địa chỉ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="order" items="${orderHistory}">
+                                            <tr>
+                                                <td>
+                                                    <span class="order-id">#${order.orderId}</span>
+                                                </td>
+                                                <td>
+                                                    <i class="far fa-calendar"></i>
+                                                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" />
+                                                    <br>
+                                                    <small style="color: #999;">
+                                                        <fmt:formatDate value="${order.orderDate}" pattern="HH:mm" />
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.status == 'pending'}">
+                                                            <span class="badge badge-pending">
+                                                                <i class="fas fa-clock"></i> Đang xử lý
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 'processing'}">
+                                                            <span class="badge badge-processing">
+                                                                <i class="fas fa-cog fa-spin"></i> Đang chuẩn bị
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 'shipped'}">
+                                                            <span class="badge badge-shipped">
+                                                                <i class="fas fa-shipping-fast"></i> Đang giao
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 'delivered'}">
+                                                            <span class="badge badge-delivered">
+                                                                <i class="fas fa-check-circle"></i> Hoàn thành
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 'cancelled'}">
+                                                            <span class="badge badge-cancelled">
+                                                                <i class="fas fa-times-circle"></i> Đã hủy
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge badge-pending">${order.status}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.paymentMethod == 'cod'}">
+                                                            <i class="fas fa-money-bill-wave" style="color: #4caf50;"></i> COD
+                                                        </c:when>
+                                                        <c:when test="${order.paymentMethod == 'vnpay'}">
+                                                            <i class="fas fa-credit-card" style="color: #2196f3;"></i> VNPay
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${order.paymentMethod}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <strong style="color: var(--primary); font-size: 1.1rem;">
+                                                        <fmt:formatNumber value="${order.totalAmount}" pattern="#,###₫"/>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <small style="color: #666; max-width: 200px; display: block;">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                        <c:out value="${order.shippingAddress}"/>
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
         </div>
+
+        <jsp:include page="/common/footerChinh.jsp" />
 
         <script src="js/jquery-3.3.1.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
-
         <script>
             $(document).ready(function () {
-                // Kiểm tra mật khẩu khớp nhau
+                // Password match validation
                 $('#confirmPassword').on('input', function () {
                     const newPassword = $('#newPassword').val();
                     const confirmPassword = $(this).val();
 
                     if (confirmPassword && newPassword !== confirmPassword) {
-                        $(this).addClass('is-invalid');
+                        $(this).css('border-color', 'var(--danger)');
                     } else {
-                        $(this).removeClass('is-invalid');
+                        $(this).css('border-color', 'var(--primary)');
                     }
                 });
 
-                // Hiệu ứng cho card
-                $('.account-card').hover(
-                        function () {
-                            $(this).css('transform', 'translateY(-5px)');
-                        },
-                        function () {
-                            $(this).css('transform', 'translateY(0)');
-                        }
-                );
+                // Form validation
+                $('#changePasswordForm').on('submit', function (e) {
+                    const newPassword = $('#newPassword').val();
+                    const confirmPassword = $('#confirmPassword').val();
+
+                    if (newPassword !== confirmPassword) {
+                        e.preventDefault();
+                        alert('Mật khẩu mới và xác nhận không khớp!');
+                        return false;
+                    }
+
+                    if (newPassword.length < 6) {
+                        e.preventDefault();
+                        alert('Mật khẩu phải có ít nhất 6 ký tự!');
+                        return false;
+                    }
+                });
+
+                // Auto hide alerts
+                setTimeout(function () {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
             });
         </script>
     </body>

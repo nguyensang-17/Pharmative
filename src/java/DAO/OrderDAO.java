@@ -275,7 +275,6 @@ public class OrderDAO {
         return details;
     }
 
-    // PHƯƠNG THỨC MAP - ĐÃ SỬA THEO DATABASE THỰC TẾ
     private Order map(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setOrderId(rs.getInt("order_id"));
@@ -283,23 +282,118 @@ public class OrderDAO {
         o.setOrderDate(rs.getTimestamp("order_date"));
         o.setTotalAmount(rs.getBigDecimal("total_amount"));
         o.setStatus(rs.getString("status"));
-        o.setShippingAddressId(rs.getInt("shipping_address_id"));
 
-        // Lấy tên khách hàng
-        String customerName = rs.getString("fullname");
-        if (customerName != null && !customerName.trim().isEmpty()) {
-            o.setCustomerName(customerName);
-        } else {
+        // Lấy shipping_address_id nếu có
+        int addressId = rs.getInt("shipping_address_id");
+        if (!rs.wasNull()) {
+            o.setShippingAddressId(addressId);
+        }
+
+        // Lấy thông tin customer
+        try {
+            String customerName = rs.getString("customer_name");
+            if (customerName != null && !customerName.trim().isEmpty()) {
+                o.setCustomerName(customerName);
+            } else {
+                // Fallback: lấy từ user nếu có
+                String userName = rs.getString("fullname");
+                if (userName != null && !userName.trim().isEmpty()) {
+                    o.setCustomerName(userName);
+                } else {
+                    o.setCustomerName("Khách hàng #" + rs.getInt("user_id"));
+                }
+            }
+        } catch (SQLException e) {
             o.setCustomerName("Khách hàng #" + rs.getInt("user_id"));
         }
 
-        // Tạo địa chỉ giao hàng
-        String address = rs.getString("recipient_name") + " - "
-                  + rs.getString("street_address") + ", "
-                  + rs.getString("ward") + ", "
-                  + rs.getString("district") + ", "
-                  + rs.getString("city");
-        o.setShippingAddress(address);
+        // Lấy customer_email
+        try {
+            String customerEmail = rs.getString("customer_email");
+            if (customerEmail != null && !customerEmail.trim().isEmpty()) {
+                o.setCustomerEmail(customerEmail);
+            } else {
+                String email = rs.getString("email");
+                if (email != null) {
+                    o.setCustomerEmail(email);
+                }
+            }
+        } catch (SQLException e) {
+            // Column không tồn tại, bỏ qua
+        }
+
+        // Lấy customer_phone
+        try {
+            String customerPhone = rs.getString("customer_phone");
+            if (customerPhone != null && !customerPhone.trim().isEmpty()) {
+                o.setCustomerPhone(customerPhone);
+            } else {
+                String phone = rs.getString("phone_number");
+                if (phone != null) {
+                    o.setCustomerPhone(phone);
+                }
+            }
+        } catch (SQLException e) {
+            // Column không tồn tại, bỏ qua
+        }
+
+        // Lấy payment_method
+        try {
+            o.setPaymentMethod(rs.getString("payment_method"));
+        } catch (SQLException e) {
+            o.setPaymentMethod("cod"); // Default
+        }
+
+        // Lấy note
+        try {
+            o.setNote(rs.getString("note"));
+        } catch (SQLException e) {
+            o.setNote("");
+        }
+
+        // XỬ LÝ SHIPPING ADDRESS
+        try {
+            // Ưu tiên lấy từ cột shipping_address (text)
+            String shippingAddr = rs.getString("shipping_address");
+
+            if (shippingAddr != null && !shippingAddr.trim().isEmpty()) {
+                o.setShippingAddress(shippingAddr);
+            } else {
+                // Fallback: Ghép từ addresses table nếu có JOIN
+                try {
+                    String recipientName = rs.getString("recipient_name");
+                    String streetAddress = rs.getString("street_address");
+                    String ward = rs.getString("ward");
+                    String district = rs.getString("district");
+                    String city = rs.getString("city");
+
+                    if (streetAddress != null) {
+                        StringBuilder addr = new StringBuilder();
+                        if (recipientName != null) {
+                            addr.append(recipientName).append(" - ");
+                        }
+                        addr.append(streetAddress);
+                        if (ward != null) {
+                            addr.append(", ").append(ward);
+                        }
+                        if (district != null) {
+                            addr.append(", ").append(district);
+                        }
+                        if (city != null) {
+                            addr.append(", ").append(city);
+                        }
+
+                        o.setShippingAddress(addr.toString());
+                    } else {
+                        o.setShippingAddress("Chưa có địa chỉ");
+                    }
+                } catch (SQLException ex) {
+                    o.setShippingAddress("Chưa có địa chỉ");
+                }
+            }
+        } catch (SQLException e) {
+            o.setShippingAddress("Chưa có địa chỉ");
+        }
 
         return o;
     }
@@ -381,22 +475,52 @@ public class OrderDAO {
     }
 
     public List<Order> getOrdersByUserId(int userId) {
-        // SỬA: THÊM ĐẦY ĐỦ CÁC CỘT
-        String sql = "SELECT o.*, a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
+        // FIX: Lấy trực tiếp shipping_address từ bảng orders (không cần JOIN addresses)
+        String sql = "SELECT o.order_id, o.user_id, o.order_date, o.total_amount, o.status, "
+                  + "o.customer_name, o.customer_email, o.customer_phone, "
+                  + "o.shipping_address, o.payment_method, o.note, o.shipping_address_id "
                   + "FROM orders o "
-                  + "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id "
-                  + "WHERE o.user_id=? ORDER BY o.order_date DESC";
+                  + "WHERE o.user_id = ? "
+                  + "ORDER BY o.order_date DESC";
+
         List<Order> list = new ArrayList<>();
+
         try ( Connection c = DBContext.getConnection();  PreparedStatement ps = c.prepareStatement(sql)) {
+
             ps.setInt(1, userId);
+
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(map(rs));
+                    Order order = new Order();
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount"));
+                    order.setStatus(rs.getString("status"));
+
+                    // Các trường mới
+                    order.setCustomerName(rs.getString("customer_name"));
+                    order.setCustomerEmail(rs.getString("customer_email"));
+                    order.setCustomerPhone(rs.getString("customer_phone"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setPaymentMethod(rs.getString("payment_method"));
+                    order.setNote(rs.getString("note"));
+
+                    // Trường cũ (có thể null)
+                    int addressId = rs.getInt("shipping_address_id");
+                    if (!rs.wasNull()) {
+                        order.setShippingAddressId(addressId);
+                    }
+
+                    list.add(order);
                 }
             }
+
         } catch (SQLException e) {
+            System.err.println("[OrderDAO] Error in getOrdersByUserId: " + e.getMessage());
             e.printStackTrace();
         }
+
         return list;
     }
 
