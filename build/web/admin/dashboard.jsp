@@ -11,6 +11,8 @@
     <!-- Bootstrap + FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root{
@@ -420,6 +422,26 @@
             }
         }
 
+        /* Chart Containers */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Recent Activity Enhanced */
         .activity-section {
             display: grid;
@@ -601,6 +623,7 @@
             .page-header::before { width: 80px; height: 80px; }
             .stats-cards { grid-template-columns: 1fr 1fr; }
             .action-buttons { grid-template-columns: 1fr 1fr; }
+            .chart-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 576px) {
@@ -697,6 +720,9 @@
                     <div class="stat-value">
                         <fmt:formatNumber value="${totalUsers}" pattern="#,###"/>
                     </div>
+                    <div class="stat-change text-success">
+                        <i class="fas fa-arrow-up"></i> +12% so với tháng trước
+                    </div>
                 </div>
                 <div class="stat-icon primary">
                     <i class="fas fa-users"></i>
@@ -708,6 +734,9 @@
                     <div class="stat-title">Đơn hàng</div>
                     <div class="stat-value">
                         <fmt:formatNumber value="${totalOrders}" pattern="#,###"/>
+                    </div>
+                    <div class="stat-change text-success">
+                        <i class="fas fa-arrow-up"></i> +8% so với tháng trước
                     </div>
                 </div>
                 <div class="stat-icon success">
@@ -721,6 +750,9 @@
                     <div class="stat-value">
                         ₫<fmt:formatNumber value="${totalRevenue}" pattern="#,###"/>
                     </div>
+                    <div class="stat-change text-success">
+                        <i class="fas fa-arrow-up"></i> +15% so với tháng trước
+                    </div>
                 </div>
                 <div class="stat-icon info">
                     <i class="fas fa-coins"></i>
@@ -733,9 +765,54 @@
                     <div class="stat-value">
                         <fmt:formatNumber value="${totalProducts}" pattern="#,###"/>
                     </div>
+                    <div class="stat-change text-success">
+                        <i class="fas fa-arrow-up"></i> +5% so với tháng trước
+                    </div>
                 </div>
                 <div class="stat-icon warning">
                     <i class="fas fa-box"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê biểu đồ -->
+        <div class="chart-grid">
+            <!-- Biểu đồ doanh thu theo tháng -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-chart-line" style="color:var(--brand-green); margin-right:8px"></i> 
+                        Doanh thu theo tháng
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ đơn hàng theo trạng thái -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-chart-pie" style="color:var(--brand-green); margin-right:8px"></i> 
+                        Phân loại đơn hàng
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ sản phẩm bán chạy -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-chart-bar" style="color:var(--brand-green); margin-right:8px"></i> 
+                    Top sản phẩm bán chạy
+                </h5>
+                <div class="chart-container">
+                    <canvas id="topProductsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -911,5 +988,123 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Khởi tạo biểu đồ
+        document.addEventListener('DOMContentLoaded', function() {
+            // Biểu đồ doanh thu theo tháng
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
+                    datasets: [{
+                        label: 'Doanh thu (triệu VNĐ)',
+                        data: [120, 150, 180, 200, 240, 280],
+                        borderColor: '#75b239',
+                        backgroundColor: 'rgba(117, 178, 57, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Biểu đồ trạng thái đơn hàng
+            const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+            const orderStatusChart = new Chart(orderStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Thành công', 'Đang xử lý', 'Đã hủy', 'Chờ thanh toán'],
+                    datasets: [{
+                        data: [65, 20, 10, 5],
+                        backgroundColor: [
+                            '#75b239',
+                            '#ffc107',
+                            '#dc3545',
+                            '#17a2b8'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Biểu đồ sản phẩm bán chạy
+            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            const topProductsChart = new Chart(topProductsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Vitamin C', 'Vitamin D3', 'Omega-3', 'Kẽm', 'Magie'],
+                    datasets: [{
+                        label: 'Số lượng bán',
+                        data: [120, 95, 80, 65, 50],
+                        backgroundColor: [
+                            'rgba(117, 178, 57, 0.8)',
+                            'rgba(117, 178, 57, 0.7)',
+                            'rgba(117, 178, 57, 0.6)',
+                            'rgba(117, 178, 57, 0.5)',
+                            'rgba(117, 178, 57, 0.4)'
+                        ],
+                        borderColor: '#75b239',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -573,7 +573,6 @@
                                 <th>Danh mục cha</th>
                                 <th>Số sản phẩm</th>
                                 <th>Loại</th>
-                                
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -614,54 +613,57 @@
                                             <button type="button" class="btn btn-sm btn-outline-danger btn-action" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteModal${category.categoryId}"
-                                                    title="Xóa">
+                                                    title="Xóa"
+                                                    <c:if test="${category.productCount > 0}">disabled</c:if>>
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
 
                                         <!-- Delete Confirmation Modal -->
-                                        <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal${category.categoryId}" tabindex="-1" aria-labelledby="deleteModalLabel${category.categoryId}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel${category.categoryId}">Xác nhận xóa</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <c:choose>
-                    <c:when test="${category.productCount > 0}">
-                        <div class="alert alert-warning mb-0">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <strong>Không thể xóa danh mục!</strong><br>
-                            Danh mục <strong>${category.categoryName}</strong> đang có 
-                            <strong>${category.productCount}</strong> sản phẩm. 
-                            Vui lòng di chuyển hoặc xóa các sản phẩm trước khi xóa danh mục.
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <p>Bạn có chắc chắn muốn xóa danh mục <strong>${category.categoryName}</strong>?</p>
-                        <small class="text-danger">Hành động này không thể hoàn tác!</small>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <c:if test="${category.productCount == 0}">
-                    <a href="${pageContext.request.contextPath}/admin/categories?action=delete&id=${category.categoryId}" 
-                       class="btn btn-danger" id="confirmDelete${category.categoryId}">Xóa</a>
-                </c:if>
-            </div>
-        </div>
-    </div>
-</div>
+                                        <div class="modal fade" id="deleteModal${category.categoryId}" tabindex="-1" aria-labelledby="deleteModalLabel${category.categoryId}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel${category.categoryId}">Xác nhận xóa</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <c:choose>
+                                                            <c:when test="${category.productCount > 0}">
+                                                                <div class="alert alert-warning mb-0">
+                                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                                    <strong>Không thể xóa danh mục!</strong><br>
+                                                                    Danh mục <strong>${category.categoryName}</strong> đang có 
+                                                                    <strong>${category.productCount}</strong> sản phẩm. 
+                                                                    Vui lòng di chuyển hoặc xóa các sản phẩm trước khi xóa danh mục.
+                                                                </div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <p>Bạn có chắc chắn muốn xóa danh mục <strong>${category.categoryName}</strong>?</p>
+                                                                <small class="text-danger">Hành động này không thể hoàn tác!</small>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                        <c:if test="${category.productCount == 0}">
+                                                            <form action="${pageContext.request.contextPath}/admin/categories" method="post" style="display: inline;">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="id" value="${category.categoryId}">
+                                                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                                            </form>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
                             
                             <c:if test="${empty categories}">
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">
+                                    <td colspan="6" class="text-center text-muted py-4">
                                         <i class="fas fa-tags fa-2x mb-3"></i>
                                         <p>Không có danh mục nào được tìm thấy</p>
                                         <a href="${pageContext.request.contextPath}/admin/categories?action=add" 
@@ -699,6 +701,26 @@
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
             alert.style.transition = 'all 0.3s ease';
+        });
+
+        // Xử lý modal để tránh lỗi overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            // Đảm bảo modal hoạt động đúng
+            var modals = document.querySelectorAll('.modal');
+            modals.forEach(function(modal) {
+                modal.addEventListener('show.bs.modal', function () {
+                    // Đảm bảo backdrop hiển thị đúng
+                    document.body.classList.add('modal-open');
+                });
+                
+                modal.addEventListener('hidden.bs.modal', function () {
+                    // Dọn dẹp khi modal đóng
+                    document.body.classList.remove('modal-open');
+                    document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+                        backdrop.remove();
+                    });
+                });
+            });
         });
     </script>
 </body>

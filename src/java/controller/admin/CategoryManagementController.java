@@ -32,7 +32,9 @@ public class CategoryManagementController extends HttpServlet {
                     showCategoryForm(request, response);
                     break;
                 case "delete":
-                    deleteCategory(request, response);
+                    // CHỈ gọi delete từ GET khi có confirm trước đó
+                    // Trong hầu hết trường hợp, nên dùng POST để xoá
+                    response.sendRedirect(request.getContextPath() + "/admin/categories");
                     break;
                 default:
                     listCategories(request, response);
@@ -132,8 +134,17 @@ public class CategoryManagementController extends HttpServlet {
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         HttpSession session = request.getSession();
         
+        String idStr = request.getParameter("id");
+        
+        // Kiểm tra id có tồn tại và hợp lệ không
+        if (idStr == null || idStr.trim().isEmpty()) {
+            session.setAttribute("error", "ID danh mục không được để trống");
+            response.sendRedirect(request.getContextPath() + "/admin/categories");
+            return;
+        }
+        
         try {
-            int id = Integer.parseInt(request.getParameter("id"));
+            int id = Integer.parseInt(idStr);
             Category category = categoryDAO.getCategoryById(id);
             
             if (category == null) {
@@ -164,18 +175,20 @@ public class CategoryManagementController extends HttpServlet {
             if (isDeleted) {
                 session.setAttribute("message", "Xóa danh mục '" + category.getCategoryName() + "' thành công!");
             } else {
-                session.setAttribute("error", "Xóa danh mục thất bại!");
+                session.setAttribute("error", "Xóa danh mục thất bại! Danh mục không tồn tại hoặc đã bị xóa trước đó.");
             }
             
         } catch (NumberFormatException e) {
-            session.setAttribute("error", "ID danh mục không hợp lệ");
+            session.setAttribute("error", "ID danh mục không hợp lệ: " + idStr);
         } catch (SQLException e) {
             // Xử lý lỗi constraint
-            if (e.getMessage().contains("foreign key constraint")) {
+            String errorMessage = e.getMessage().toLowerCase();
+            if (errorMessage.contains("foreign key constraint") || errorMessage.contains("constraint")) {
                 session.setAttribute("error", "Không thể xóa danh mục vì có dữ liệu liên quan trong hệ thống.");
             } else {
                 session.setAttribute("error", "Lỗi khi xóa danh mục: " + e.getMessage());
             }
+            e.printStackTrace(); // Log lỗi để debug
         }
         
         response.sendRedirect(request.getContextPath() + "/admin/categories");
