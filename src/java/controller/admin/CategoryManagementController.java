@@ -41,7 +41,16 @@ public class CategoryManagementController extends HttpServlet {
                     break;
             }
         } catch (SQLException e) {
-            throw new ServletException("Lỗi truy vấn cơ sở dữ liệu", e);
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi truy vấn cơ sở dữ liệu: " + e.getMessage());
+            try {
+                listCategories(request, response);
+            } catch (SQLException ex) {
+                throw new ServletException("Lỗi nghiêm trọng khi tải danh sách", ex);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException("Lỗi xử lý yêu cầu", e);
         }
     }
 
@@ -55,7 +64,13 @@ public class CategoryManagementController extends HttpServlet {
                 saveCategory(request, response);
             }
         } catch (SQLException e) {
-            throw new ServletException("Lỗi khi lưu danh mục", e);
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/admin/categories");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException("Lỗi xử lý yêu cầu", e);
         }
     }
 
@@ -80,9 +95,17 @@ public class CategoryManagementController extends HttpServlet {
         
         if (idStr != null && !idStr.isEmpty()) {
             // Chế độ sửa
-            int id = Integer.parseInt(idStr);
-            Category category = categoryDAO.getCategoryById(id);
-            request.setAttribute("category", category);
+            try {
+                int id = Integer.parseInt(idStr);
+                Category category = categoryDAO.getCategoryById(id);
+                if (category == null) {
+                    request.setAttribute("error", "Danh mục không tồn tại");
+                } else {
+                    request.setAttribute("category", category);
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "ID danh mục không hợp lệ");
+            }
         }
         // Nếu không có id, đây là chế độ thêm mới
         request.getRequestDispatcher("/admin/categories/category-form.jsp").forward(request, response);
@@ -95,8 +118,15 @@ public class CategoryManagementController extends HttpServlet {
         String parentIdStr = request.getParameter("parentCategoryId");
         String idStr = request.getParameter("id");
         
+        // Validation
         if (name == null || name.trim().isEmpty()) {
             session.setAttribute("error", "Tên danh mục không được để trống");
+            response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
+            return;
+        }
+        
+        if (name.trim().length() < 2 || name.trim().length() > 100) {
+            session.setAttribute("error", "Tên danh mục phải từ 2 đến 100 ký tự");
             response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
             return;
         }
@@ -106,27 +136,63 @@ public class CategoryManagementController extends HttpServlet {
         
         // Xử lý danh mục cha
         if (parentIdStr != null && !parentIdStr.isEmpty() && !parentIdStr.equals("0")) {
-            category.setParentCategoryId(Integer.parseInt(parentIdStr));
+            try {
+                int parentId = Integer.parseInt(parentIdStr);
+                // Kiểm tra danh mục cha có tồn tại không
+                Category parent = categoryDAO.getCategoryById(parentId);
+                if (parent != null) {
+                    category.setParentCategoryId(parentId);
+                } else {
+                    session.setAttribute("error", "Danh mục cha không tồn tại");
+                    response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                session.setAttribute("error", "ID danh mục cha không hợp lệ");
+                response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
+                return;
+            }
         } else {
             category.setParentCategoryId(null);
         }
 
         try {
+            boolean success;
             if (idStr == null || idStr.isEmpty()) {
                 // Thêm mới
-                categoryDAO.addCategory(category);
-                session.setAttribute("message", "Thêm danh mục thành công!");
+                success = categoryDAO.addCategory(category);
+                if (success) {
+                    session.setAttribute("message", "Thêm danh mục thành công!");
+                } else {
+                    session.setAttribute("error", "Thêm danh mục thất bại!");
+                }
             } else {
                 // Cập nhật
-                category.setCategoryId(Integer.parseInt(idStr));
-                categoryDAO.updateCategory(category);
-                session.setAttribute("message", "Cập nhật danh mục thành công!");
+                try {
+                    category.setCategoryId(Integer.parseInt(idStr));
+                    success = categoryDAO.updateCategory(category);
+                    if (success) {
+                        session.setAttribute("message", "Cập nhật danh mục thành công!");
+                    } else {
+                        session.setAttribute("error", "Cập nhật danh mục thất bại! Danh mục không tồn tại.");
+                    }
+                } catch (NumberFormatException e) {
+                    session.setAttribute("error", "ID danh mục không hợp lệ");
+                    response.sendRedirect(request.getContextPath() + "/admin/categories?action=edit&id=" + idStr);
+                    return;
+                }
             }
             
             response.sendRedirect(request.getContextPath() + "/admin/categories");
             
         } catch (SQLException e) {
-            session.setAttribute("error", "Lỗi khi lưu danh mục: " + e.getMessage());
+            e.printStackTrace();
+            // Kiểm tra lỗi trùng lặp tên
+            if (e.getMessage().toLowerCase().contains("duplicate") || e.getMessage().toLowerCase().contains("unique")) {
+                session.setAttribute("error", "Tên danh mục đã tồn tại");
+            } else {
+                session.setAttribute("error", "Lỗi khi lưu danh mục: " + e.getMessage());
+            }
             response.sendRedirect(request.getContextPath() + "/admin/categories?action=" + (idStr != null ? "edit&id=" + idStr : "add"));
         }
     }
@@ -181,6 +247,7 @@ public class CategoryManagementController extends HttpServlet {
         } catch (NumberFormatException e) {
             session.setAttribute("error", "ID danh mục không hợp lệ: " + idStr);
         } catch (SQLException e) {
+            e.printStackTrace();
             // Xử lý lỗi constraint
             String errorMessage = e.getMessage().toLowerCase();
             if (errorMessage.contains("foreign key constraint") || errorMessage.contains("constraint")) {
@@ -188,7 +255,6 @@ public class CategoryManagementController extends HttpServlet {
             } else {
                 session.setAttribute("error", "Lỗi khi xóa danh mục: " + e.getMessage());
             }
-            e.printStackTrace(); // Log lỗi để debug
         }
         
         response.sendRedirect(request.getContextPath() + "/admin/categories");

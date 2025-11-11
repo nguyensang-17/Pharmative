@@ -235,4 +235,15 @@ public class CategoryDAO {
     public boolean deleteCategory(int id) throws SQLException {
         return delete(id);
     }
+
+    public int countChildCategories(int id) throws SQLException {
+    String sql = "SELECT COUNT(*) FROM categories WHERE parent_category_id = ?";
+    try (Connection c = DBContext.getConnection(); 
+         PreparedStatement ps = c.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) { 
+            return rs.next() ? rs.getInt(1) : 0; 
+        }
+    }
+}
 }

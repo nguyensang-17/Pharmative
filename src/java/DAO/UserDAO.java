@@ -27,6 +27,14 @@ public class UserDAO {
         }
         return null;
     }
+     public int getTotalUsers() throws SQLException {
+        String sql = "SELECT COUNT(*) as total FROM users WHERE role = 'customer'";
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt("total") : 0;
+        }
+    }
 
     // TẠO USER MỚI 
     public void createUser(User user) throws SQLException {
@@ -202,17 +210,7 @@ public List<User> getAllUsers(int page, int pageSize) throws SQLException {
 }
 
 // 2. Đếm tổng số users
-public int getTotalUsers() throws SQLException {
-    String sql = "SELECT COUNT(*) FROM users";
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-            return rs.getInt(1);
-        }
-    }
-    return 0;
-}
+
 /**
  * Đếm tổng số customer (không bao gồm admin)
  */

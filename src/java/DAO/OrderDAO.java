@@ -25,6 +25,7 @@ public class OrderDAO {
         }
         return list;
     }
+    
 
     // PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG - ĐÃ BỔ SUNG THÊM FILTER
     public List<Order> searchOrders(String keyword, String status, String paymentMethod, String dateFrom, String dateTo) throws SQLException {
@@ -467,6 +468,21 @@ public class OrderDAO {
         }
         return list;
     }
+     public Map<String, Integer> getOrderStatusStatistics() throws SQLException {
+        Map<String, Integer> statusMap = new HashMap<>();
+        String sql = "SELECT status, COUNT(*) as count FROM orders GROUP BY status";
+        
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String status = rs.getString("status");
+                int count = rs.getInt("count");
+                statusMap.put(status, count);
+            }
+        }
+        return statusMap;
+    }
 
     public List<Order> getOrdersByUserId(int userId) {
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.total_amount, o.status, "
@@ -516,6 +532,32 @@ public class OrderDAO {
 
         return list;
     }
+     public Map<String, Double> getMonthlyRevenue(int months) throws SQLException {
+        Map<String, Double> revenueMap = new LinkedHashMap<>();
+        String sql = """
+            SELECT 
+                DATE_FORMAT(order_date, '%Y-%m') as month,
+                COALESCE(SUM(total_amount), 0) as revenue
+            FROM orders 
+            WHERE order_date >= DATE_SUB(NOW(), INTERVAL ? MONTH)
+                AND status = 'completed'
+            GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+            ORDER BY month
+            """;
+            
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, months);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String month = rs.getString("month");
+                    double revenue = rs.getDouble("revenue");
+                    revenueMap.put(month, revenue);
+                }
+            }
+        }
+        return revenueMap;
+    }
 
     // CÁC PHƯƠNG THỨC THỐNG KÊ
     public int countAllOrders() throws SQLException {
@@ -558,6 +600,38 @@ public class OrderDAO {
         try ( Connection conn = getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
             return rs.next() ? rs.getInt(1) : 0;
         }
+    }
+    public List<Map<String, Object>> getRecentActivities(int limit) throws SQLException {
+        List<Map<String, Object>> activities = new ArrayList<>();
+        String sql = """
+            SELECT 
+                o.order_id,
+                o.order_date,
+                o.status,
+                o.total_amount,
+                u.fullname as customer_name
+            FROM orders o 
+            JOIN users u ON o.user_id = u.user_id 
+            ORDER BY o.order_date DESC 
+            LIMIT ?
+            """;
+            
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> activity = new HashMap<>();
+                    activity.put("orderId", rs.getInt("order_id"));
+                    activity.put("orderDate", rs.getTimestamp("order_date"));
+                    activity.put("status", rs.getString("status"));
+                    activity.put("totalAmount", rs.getDouble("total_amount"));
+                    activity.put("customerName", rs.getString("customer_name"));
+                    activities.add(activity);
+                }
+            }
+        }
+        return activities;
     }
 
     public double getRevenueByDateRange(java.sql.Date startDate, java.sql.Date endDate) throws SQLException {

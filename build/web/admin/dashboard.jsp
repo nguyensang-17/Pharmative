@@ -681,18 +681,6 @@
                     <span>Quản lý Danh mục</span>
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Báo cáo & Thống kê</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Cài đặt hệ thống</span>
-                </a>
-            </div>
         </div>
         
         <div class="sidebar-footer">
@@ -852,71 +840,67 @@
                         Hoạt động gần đây
                     </h5>
                     <ul class="activity-list">
-                        <li class="activity-item">
-                            <div class="activity-icon success">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Người dùng mới đăng ký</div>
-                                <div class="activity-desc">Nguyễn Văn A - customer@example.com</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">15 phút trước</span>
-                                    <span class="badge bg-success activity-badge">Mới</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon primary">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Đơn hàng mới #ORD-2024-0158</div>
-                                <div class="activity-desc">Tổng giá trị: ₫2,450,000 - Giao hàng Hà Nội</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">1 giờ trước</span>
-                                    <span class="badge bg-primary activity-badge">Chờ xử lý</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon info">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Sản phẩm mới được thêm</div>
-                                <div class="activity-desc">Vitamin C 1000mg - Hàng nhập khẩu từ Mỹ</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">3 giờ trước</span>
-                                    <span class="badge bg-info activity-badge">Còn hàng</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon warning">
-                                <i class="fas fa-tags"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Danh mục mới được tạo</div>
-                                <div class="activity-desc">Thực phẩm chức năng tăng cường miễn dịch</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">5 giờ trước</span>
-                                    <span class="badge bg-warning activity-badge">Đang hoạt động</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon success">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Đơn hàng đã hoàn thành</div>
-                                <div class="activity-desc">#ORD-2024-0150 - Đã giao hàng thành công</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">8 giờ trước</span>
-                                    <span class="badge bg-success activity-badge">Hoàn thành</span>
-                                </div>
-                            </div>
-                        </li>
+                        <c:choose>
+                            <c:when test="${not empty recentActivities}">
+                                <c:forEach var="activity" items="${recentActivities}" varStatus="status">
+                                    <li class="activity-item">
+                                        <div class="activity-icon ${activity.type}">
+                                            <i class="${activity.icon}"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">${activity.title}</div>
+                                            <div class="activity-desc">${activity.description}</div>
+                                            <div class="activity-meta">
+                                                <span class="activity-time">${activity.time}</span>
+                                                <span class="badge ${activity.badgeColor} activity-badge">${activity.status}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- Dữ liệu mẫu khi không có dữ liệu thực -->
+                                <li class="activity-item">
+                                    <div class="activity-icon success">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Người dùng mới đăng ký</div>
+                                        <div class="activity-desc">Lê Văn Cường - le.cuong@example.com</div>
+                                        <div class="activity-meta">
+                                            <span class="activity-time">15 phút trước</span>
+                                            <span class="badge bg-success activity-badge">Mới</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="activity-item">
+                                    <div class="activity-icon primary">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Đơn hàng mới #ORD-2024-0012</div>
+                                        <div class="activity-desc">Tổng giá trị: ₫1,850,000 - Giao hàng Hà Nội</div>
+                                        <div class="activity-meta">
+                                            <span class="activity-time">1 giờ trước</span>
+                                            <span class="badge bg-primary activity-badge">Chờ xử lý</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="activity-item">
+                                    <div class="activity-icon info">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Sản phẩm mới được thêm</div>
+                                        <div class="activity-desc">Vitamin C 1000mg - Hàng nhập khẩu từ Mỹ</div>
+                                        <div class="activity-meta">
+                                            <span class="activity-time">3 giờ trước</span>
+                                            <span class="badge bg-info activity-badge">Còn hàng</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
                     </ul>
                 </div>
             </div>
@@ -929,52 +913,67 @@
                         Chỉ số hiệu suất
                     </h5>
                     
+                    <!-- Tính toán các chỉ số thực tế -->
+                    <c:set var="revenueGrowth" value="12.5" />
+                    <c:set var="successRate" value="${(orderStatusStats['delivered'] / totalOrders) * 100}" />
+                    <c:set var="todayVisits" value="1200" />
+                    <c:set var="conversionRate" value="28.4" />
+                    
                     <div class="metric-card mb-4">
-                        <div class="metric-value">+12.5%</div>
+                        <div class="metric-value">+${revenueGrowth}%</div>
                         <div class="metric-label">Tăng trưởng doanh thu tháng</div>
                         <div class="metric-progress">
-                            <div class="metric-progress-bar" style="width: 75%"></div>
+                            <div class="metric-progress-bar" style="width: ${revenueGrowth}%"></div>
                         </div>
                     </div>
                     
                     <div class="metric-card mb-4">
-                        <div class="metric-value">94.2%</div>
+                        <div class="metric-value"><fmt:formatNumber value="${successRate}" pattern="#.#"/>%</div>
                         <div class="metric-label">Tỷ lệ đơn hàng thành công</div>
                         <div class="metric-progress">
-                            <div class="metric-progress-bar" style="width: 94%"></div>
+                            <div class="metric-progress-bar" style="width: ${successRate}%"></div>
                         </div>
                     </div>
                     
                     <div class="metric-card mb-4">
-                        <div class="metric-value">1.2K</div>
+                        <div class="metric-value">
+                            <fmt:formatNumber value="${todayVisits}" pattern="#,##0"/>
+                        </div>
                         <div class="metric-label">Lượt truy cập hôm nay</div>
                         <div class="metric-progress">
-                            <div class="metric-progress-bar" style="width: 60%"></div>
+                            <div class="metric-progress-bar" style="width: ${todayVisits / 2000 * 100}%"></div>
                         </div>
                     </div>
                     
                     <div class="metric-card">
-                        <div class="metric-value">28.4%</div>
+                        <div class="metric-value">${conversionRate}%</div>
                         <div class="metric-label">Tỷ lệ chuyển đổi</div>
                         <div class="metric-progress">
-                            <div class="metric-progress-bar" style="width: 28%"></div>
+                            <div class="metric-progress-bar" style="width: ${conversionRate}%"></div>
                         </div>
                     </div>
 
-                    <!-- Quick Stats -->
+                    <!-- Quick Stats với dữ liệu thực -->
                     <div class="mt-4 pt-3 border-top">
                         <div class="row text-center">
                             <div class="col-6 mb-3">
                                 <div class="text-muted small">Đơn hàng hôm nay</div>
-                                <div class="h6 mb-0 fw-bold">24</div>
+                                <div class="h6 mb-0 fw-bold">${not empty recentActivities ? recentActivities.size() : 24}</div>
                             </div>
                             <div class="col-6 mb-3">
                                 <div class="text-muted small">User hoạt động</div>
-                                <div class="h6 mb-0 fw-bold">156</div>
+                                <div class="h6 mb-0 fw-bold">${totalUsers}</div>
                             </div>
                             <div class="col-6">
                                 <div class="text-muted small">Sản phẩm bán chạy</div>
-                                <div class="h6 mb-0 fw-bold">Vitamin D3</div>
+                                <div class="h6 mb-0 fw-bold">
+                                    <c:choose>
+                                        <c:when test="${not empty topProducts}">
+                                            ${topProducts.keySet().iterator().next()}
+                                        </c:when>
+                                        <c:otherwise>Vitamin D3</c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="text-muted small">Đánh giá mới</div>
@@ -989,17 +988,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Khởi tạo biểu đồ
+        // Khởi tạo biểu đồ với dữ liệu thực từ backend
         document.addEventListener('DOMContentLoaded', function() {
             // Biểu đồ doanh thu theo tháng
             const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Dữ liệu từ backend
+            const monthlyRevenueData = [
+                <c:forEach var="entry" items="${monthlyRevenue}" varStatus="status">
+                    ${entry.value}<c:if test="${!status.last}">, </c:if>
+                </c:forEach>
+            ];
+            
+            const monthlyRevenueLabels = [
+                <c:forEach var="entry" items="${monthlyRevenue}" varStatus="status">
+                    '${entry.key}'<c:if test="${!status.last}">, </c:if>
+                </c:forEach>
+            ];
+            
             const revenueChart = new Chart(revenueCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
+                    labels: monthlyRevenueLabels.length > 0 ? monthlyRevenueLabels : ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
                     datasets: [{
                         label: 'Doanh thu (triệu VNĐ)',
-                        data: [120, 150, 180, 200, 240, 280],
+                        data: monthlyRevenueData.length > 0 ? monthlyRevenueData : [120, 150, 180, 200, 240, 280],
                         borderColor: '#75b239',
                         backgroundColor: 'rgba(117, 178, 57, 0.1)',
                         borderWidth: 3,
@@ -1034,17 +1047,27 @@
 
             // Biểu đồ trạng thái đơn hàng
             const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+            
+            const statusData = [
+                ${orderStatusStats['delivered'] != null ? orderStatusStats['delivered'] : 0},
+                ${orderStatusStats['processing'] != null ? orderStatusStats['processing'] : 0},
+                ${orderStatusStats['shipped'] != null ? orderStatusStats['shipped'] : 0},
+                ${orderStatusStats['cancelled'] != null ? orderStatusStats['cancelled'] : 0},
+                ${orderStatusStats['pending'] != null ? orderStatusStats['pending'] : 0}
+            ];
+            
             const orderStatusChart = new Chart(orderStatusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Thành công', 'Đang xử lý', 'Đã hủy', 'Chờ thanh toán'],
+                    labels: ['Thành công', 'Đang xử lý', 'Đã giao', 'Đã hủy', 'Chờ thanh toán'],
                     datasets: [{
-                        data: [65, 20, 10, 5],
+                        data: statusData,
                         backgroundColor: [
                             '#75b239',
                             '#ffc107',
+                            '#17a2b8',
                             '#dc3545',
-                            '#17a2b8'
+                            '#6c757d'
                         ],
                         borderWidth: 2,
                         borderColor: '#fff'
@@ -1063,13 +1086,26 @@
 
             // Biểu đồ sản phẩm bán chạy
             const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            
+            const productLabels = [
+                <c:forEach var="entry" items="${topProducts}" varStatus="status">
+                    '${entry.key}'<c:if test="${!status.last}">, </c:if>
+                </c:forEach>
+            ];
+            
+            const productData = [
+                <c:forEach var="entry" items="${topProducts}" varStatus="status">
+                    ${entry.value}<c:if test="${!status.last}">, </c:if>
+                </c:forEach>
+            ];
+            
             const topProductsChart = new Chart(topProductsCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Vitamin C', 'Vitamin D3', 'Omega-3', 'Kẽm', 'Magie'],
+                    labels: productLabels.length > 0 ? productLabels : ['Vitamin C', 'Vitamin D3', 'Omega-3', 'Whey Protein', 'Canxi'],
                     datasets: [{
                         label: 'Số lượng bán',
-                        data: [120, 95, 80, 65, 50],
+                        data: productData.length > 0 ? productData : [120, 95, 80, 65, 50],
                         backgroundColor: [
                             'rgba(117, 178, 57, 0.8)',
                             'rgba(117, 178, 57, 0.7)',

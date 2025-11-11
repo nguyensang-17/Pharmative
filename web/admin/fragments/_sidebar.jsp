@@ -47,19 +47,7 @@
                 <i class="fas fa-tags"></i>
                 <span>Quản lý Danh mục</span>
             </a>
-        </div>
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-chart-bar"></i>
-                <span>Báo cáo & Thống kê</span>
-            </a>
-        </div>
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-cog"></i>
-                <span>Cài đặt hệ thống</span>
-            </a>
-        </div>
+        </div> 
     </div>
     
     <div class="sidebar-footer">

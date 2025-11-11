@@ -6,11 +6,10 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Danh mục - Admin</title>
     
@@ -166,6 +165,7 @@
             flex: 1;
             padding: 28px;
             overflow-y: auto;
+            animation: fadeIn 0.6s ease-in-out;
         }
         
         .page-header {
@@ -177,6 +177,7 @@
             box-shadow: 0 6px 18px rgba(117,178,57,0.12);
             position: relative;
             overflow: hidden;
+            animation: slideDown 0.5s ease-out;
         }
 
         .page-header::before {
@@ -197,9 +198,10 @@
             box-shadow: var(--shadow);
             margin-bottom: 24px;
             border: 1px solid rgba(117,178,57,0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
         }
-
+        
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(24,39,75,0.12);
@@ -208,119 +210,157 @@
         .btn-success {
             background: var(--brand-green);
             border: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
         .btn-success:hover {
             background: var(--brand-green-dark);
             transform: translateY(-1px);
         }
+
+        .stats-card {
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .table {
+            animation: fadeIn 0.8s ease-out;
+        }
         
         .table th {
-            border-top: none;
+            background-color: var(--brand-green-soft);
+            border-bottom: 2px solid var(--brand-green);
             font-weight: 600;
-            color: #6c757d;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
         }
-
+        
         .table tbody tr {
             transition: all 0.2s ease;
         }
-
+        
         .table tbody tr:hover {
-            background-color: var(--brand-green-soft);
-            transform: translateX(4px);
+            background-color: rgba(117,178,57,0.05);
+            transform: scale(1.002);
         }
-
-        /* Stats Cards */
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 18px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            transition: transform .18s ease, box-shadow .18s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 110px;
-            border: 1px solid rgba(117,178,57,0.1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 30px rgba(117,178,57,0.12);
-            border-color: rgba(117,178,57,0.3);
-        }
-
-        .stat-title {
-            font-size: 0.8rem;
-            color: #6c6f76;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: .08em;
-        }
-
-        .stat-value {
-            margin-top: 6px;
-            font-size: 1.9rem;
-            font-weight: 800;
-            color: #2b2e33;
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #fff;
-            box-shadow: 0 6px 14px rgba(117,178,57,0.18);
-            flex-shrink: 0;
-        }
-
-        .stat-icon.primary { 
-            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark)); 
-        }
-        .stat-icon.success { 
-            background: linear-gradient(135deg, #8bc34a, #7cb342); 
-        }
-        .stat-icon.warning { 
-            background: linear-gradient(135deg, #cddc39, #d4e157); 
-        }
-        .stat-icon.info { 
-            background: linear-gradient(135deg, #4caf50, #66bb6a); 
-        }
-
-        /* Badge styles */
+        
         .badge-parent {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--brand-green);
+            transition: all 0.3s ease;
         }
-
+        
         .badge-child {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            background: #6c757d;
+            transition: all 0.3s ease;
         }
 
-        /* Action buttons */
-        .btn-action {
-            transition: all 0.2s ease;
-            border-radius: 8px;
+        /* Alert animations */
+        .alert {
+            animation: slideInRight 0.5s ease-out;
         }
 
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .alert-dismissible .btn-close {
+            transition: all 0.3s ease;
         }
+
+        .alert-dismissible .btn-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Button animations */
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary:hover, 
+        .btn-outline-danger:hover {
+            transform: translateY(-1px) scale(1.05);
+        }
+
+        /* Modal animations */
+        .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Staggered animation for table rows */
+        .table tbody tr {
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .table tbody tr:nth-child(2) { animation-delay: 0.15s; }
+        .table tbody tr:nth-child(3) { animation-delay: 0.2s; }
+        .table tbody tr:nth-child(4) { animation-delay: 0.25s; }
+        .table tbody tr:nth-child(5) { animation-delay: 0.3s; }
+        .table tbody tr:nth-child(6) { animation-delay: 0.35s; }
+        .table tbody tr:nth-child(7) { animation-delay: 0.4s; }
+        .table tbody tr:nth-child(8) { animation-delay: 0.45s; }
+        .table tbody tr:nth-child(9) { animation-delay: 0.5s; }
+        .table tbody tr:nth-child(10) { animation-delay: 0.55s; }
+
+        /* Stats cards staggered animation */
+        .stats-card:nth-child(1) { animation-delay: 0.1s; }
+        .stats-card:nth-child(2) { animation-delay: 0.2s; }
+        .stats-card:nth-child(3) { animation-delay: 0.3s; }
+        .stats-card:nth-child(4) { animation-delay: 0.4s; }
 
         /* Responsive */
         @media (max-width: 992px) {
@@ -360,45 +400,16 @@
             .user-info, .sidebar-footer {
                 display: none;
             }
+
+            /* Disable some animations on mobile for performance */
+            .table tbody tr:hover {
+                transform: none;
+            }
+            
+            .card:hover {
+                transform: none;
+            }
         }
-
-        @media (max-width: 768px) {
-            .page-header { padding: 18px; border-radius: 12px; }
-            .page-header::before { width: 80px; height: 80px; }
-            .stats-cards { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 576px) {
-            .stats-cards { grid-template-columns: 1fr; }
-            .main-content { padding: 15px; }
-        }
-        /* Fix modal issues */
-.modal-backdrop {
-    z-index: 1040;
-}
-
-.modal {
-    z-index: 1050;
-}
-
-.modal-dialog {
-    margin: 1.75rem auto;
-}
-
-/* Ensure modal is clickable */
-.modal-content {
-    pointer-events: auto;
-}
-
-/* Fix for modal overlay */
-.modal.show .modal-dialog {
-    transform: none;
-}
-
-/* Ensure buttons are clickable */
-.btn:not(:disabled) {
-    cursor: pointer;
-}
     </style>
 </head>
 <body>
@@ -449,18 +460,7 @@
                     <span>Quản lý Danh mục</span>
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Báo cáo & Thống kê</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Cài đặt hệ thống</span>
-                </a>
-            </div>
+            
         </div>
         
         <div class="sidebar-footer">
@@ -474,16 +474,21 @@
     <div class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <div>
-                <h2><i class="fas fa-tags" style="margin-right:10px"></i> Quản lý Danh mục</h2>
-                <p class="mb-0" style="opacity:0.9">Quản lý danh mục sản phẩm hệ thống</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-tags" style="margin-right:10px"></i> Quản lý Danh mục</h2>
+                    <p class="mb-0" style="opacity:0.9">Quản lý danh mục sản phẩm và phân loại</p>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/categories?action=add" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Thêm danh mục
+                </a>
             </div>
         </div>
 
         <!-- Messages -->
         <c:if test="${not empty sessionScope.message}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                ${sessionScope.message}
+                <i class="fas fa-check-circle"></i> ${sessionScope.message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <c:remove var="message" scope="session"/>
@@ -491,237 +496,232 @@
 
         <c:if test="${not empty sessionScope.error}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                ${sessionScope.error}
+                <i class="fas fa-exclamation-circle"></i> ${sessionScope.error}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <c:remove var="error" scope="session"/>
         </c:if>
 
-        <!-- Stats Cards -->
-        <div class="stats-cards">
-            <div class="stat-card">
-                <div>
-                    <div class="stat-title">Tổng Danh mục</div>
-                    <div class="stat-value">
-                        <fmt:formatNumber value="${totalCategories}" pattern="#,###"/>
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h4 class="mb-0">${totalCategories}</h4>
+                                <p class="text-muted mb-0">Tổng danh mục</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-tags fa-2x text-success"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-icon primary">
-                    <i class="fas fa-tags"></i>
                 </div>
             </div>
-
-            <div class="stat-card">
-                <div>
-                    <div class="stat-title">Danh mục cha</div>
-                    <div class="stat-value">
-                        <fmt:formatNumber value="${totalParentCategories}" pattern="#,###"/>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h4 class="mb-0">${totalParentCategories}</h4>
+                                <p class="text-muted mb-0">Danh mục cha</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-folder fa-2x text-primary"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-icon success">
-                    <i class="fas fa-folder"></i>
                 </div>
             </div>
-
-            <div class="stat-card">
-                <div>
-                    <div class="stat-title">Danh mục con</div>
-                    <div class="stat-value">
-                        <fmt:formatNumber value="${totalChildCategories}" pattern="#,###"/>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h4 class="mb-0">${totalChildCategories}</h4>
+                                <p class="text-muted mb-0">Danh mục con</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-folder-open fa-2x text-info"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-icon warning">
-                    <i class="fas fa-folder-open"></i>
                 </div>
             </div>
-
-            <div class="stat-card">
-                <div>
-                    <div class="stat-title">Danh mục mới (tháng)</div>
-                    <div class="stat-value">
-                        <fmt:formatNumber value="${newCategoriesThisMonth}" pattern="#,###"/>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h4 class="mb-0">${newCategoriesThisMonth}</h4>
+                                <p class="text-muted mb-0">Mới tháng này</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-chart-line fa-2x text-warning"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-icon info">
-                    <i class="fas fa-plus-circle"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Action Buttons Card -->
+        <!-- Categories Table -->
         <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Danh sách Danh mục</h5>
-                    <a href="${pageContext.request.contextPath}/admin/categories?action=add" 
-                       class="btn btn-success btn-action">
-                        <i class="fas fa-plus-circle"></i> Thêm Danh mục
-                    </a>
-                </div>
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0"><i class="fas fa-list"></i> Danh sách danh mục</h5>
             </div>
-        </div>
-
-        <!-- Categories Table Card -->
-        <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên danh mục</th>
-                                <th>Danh mục cha</th>
-                                <th>Số sản phẩm</th>
-                                <th>Loại</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="category" items="${categories}">
+                <c:if test="${empty categories}">
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5>Không có danh mục nào</h5>
+                        <p class="text-muted">Hãy thêm danh mục đầu tiên của bạn</p>
+                        <a href="${pageContext.request.contextPath}/admin/categories?action=add" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Thêm danh mục
+                        </a>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty categories}">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <td>${category.categoryId}</td>
-                                    <td>
-                                        <strong>${category.categoryName}</strong>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${category.parentCategoryId == null}">
-                                                <span class="text-muted">Không có</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${category.parentCategoryName}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark">
-                                            ${category.productCount} sản phẩm
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge ${category.parentCategoryId == null ? 'badge-parent' : 'badge-child'}">
-                                            ${category.parentCategoryId == null ? 'Danh mục cha' : 'Danh mục con'}
-                                        </span>
-                                    </td>
-                                    
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${category.categoryId}" 
-                                               class="btn btn-sm btn-outline-warning btn-action" title="Chỉnh sửa">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger btn-action" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#deleteModal${category.categoryId}"
-                                                    title="Xóa"
-                                                    <c:if test="${category.productCount > 0}">disabled</c:if>>
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-
-                                        <!-- Delete Confirmation Modal -->
-                                        <div class="modal fade" id="deleteModal${category.categoryId}" tabindex="-1" aria-labelledby="deleteModalLabel${category.categoryId}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel${category.categoryId}">Xác nhận xóa</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <c:choose>
-                                                            <c:when test="${category.productCount > 0}">
-                                                                <div class="alert alert-warning mb-0">
-                                                                    <i class="fas fa-exclamation-triangle"></i>
-                                                                    <strong>Không thể xóa danh mục!</strong><br>
-                                                                    Danh mục <strong>${category.categoryName}</strong> đang có 
-                                                                    <strong>${category.productCount}</strong> sản phẩm. 
-                                                                    Vui lòng di chuyển hoặc xóa các sản phẩm trước khi xóa danh mục.
-                                                                </div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <p>Bạn có chắc chắn muốn xóa danh mục <strong>${category.categoryName}</strong>?</p>
-                                                                <small class="text-danger">Hành động này không thể hoàn tác!</small>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                        <c:if test="${category.productCount == 0}">
-                                                            <form action="${pageContext.request.contextPath}/admin/categories" method="post" style="display: inline;">
-                                                                <input type="hidden" name="action" value="delete">
-                                                                <input type="hidden" name="id" value="${category.categoryId}">
-                                                                <button type="submit" class="btn btn-danger">Xóa</button>
-                                                            </form>
-                                                        </c:if>
-                                                    </div>
-                                                </div>
+                                    <th>ID</th>
+                                    <th>Tên danh mục</th>
+                                    <th>Danh mục cha</th>
+                                    <th>Số sản phẩm</th>
+                                    <th>Loại</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="cat" items="${categories}" varStatus="status">
+                                    <tr>
+                                        <td><strong>#${cat.categoryId}</strong></td>
+                                        <td>
+                                            <div class="fw-semibold">${cat.categoryName}</div>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${empty cat.parentCategoryName}">
+                                                    <span class="text-muted">—</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${cat.parentCategoryName}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">${cat.productCount} SP</span>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${cat.parentCategoryId == null}">
+                                                    <span class="badge badge-parent">Danh mục cha</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge badge-child">Danh mục con</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <!-- Edit Button -->
+                                                <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.categoryId}" 
+                                                   class="btn btn-outline-primary" title="Chỉnh sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                
+                                                <!-- Delete Button với modal -->
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        onclick="showDeleteModal(${cat.categoryId}, '${cat.categoryName}')"
+                                                        title="Xóa">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            
-                            <c:if test="${empty categories}">
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">
-                                        <i class="fas fa-tags fa-2x mb-3"></i>
-                                        <p>Không có danh mục nào được tìm thấy</p>
-                                        <a href="${pageContext.request.contextPath}/admin/categories?action=add" 
-                                           class="btn btn-success mt-2">
-                                            <i class="fas fa-plus-circle"></i> Thêm danh mục đầu tiên
-                                        </a>
-                                    </td>
-                                </tr>
-                            </c:if>
-                        </tbody>
-                    </table>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xác nhận xóa -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle text-danger"></i> Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa danh mục "<strong><span id="categoryNameToDelete"></span></strong>" không?</p>
+                    <p class="text-danger mb-0">
+                        <small>
+                            <i class="fas fa-info-circle"></i> 
+                            Hành động này không thể hoàn tác! Tất cả sản phẩm và danh mục con liên quan sẽ bị ảnh hưởng.
+                        </small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <form id="deleteForm" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="id" id="categoryIdToDelete">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Xóa
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Animation for page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.stat-card, .card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'all 0.5s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        });
-
-        // Smooth scrolling for alerts
+    function showDeleteModal(categoryId, categoryName) {
+        // Đặt thông tin vào modal
+        document.getElementById('categoryNameToDelete').textContent = categoryName;
+        document.getElementById('categoryIdToDelete').value = categoryId;
+        
+        // Đặt action cho form
+        document.getElementById('deleteForm').action = '${pageContext.request.contextPath}/admin/categories';
+        
+        // Hiển thị modal
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+    
+    // Tự động ẩn alert sau 5 giây
+    document.addEventListener('DOMContentLoaded', function() {
         const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            alert.style.transition = 'all 0.3s ease';
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
         });
 
-        // Xử lý modal để tránh lỗi overlay
-        document.addEventListener('DOMContentLoaded', function() {
-            // Đảm bảo modal hoạt động đúng
-            var modals = document.querySelectorAll('.modal');
-            modals.forEach(function(modal) {
-                modal.addEventListener('show.bs.modal', function () {
-                    // Đảm bảo backdrop hiển thị đúng
-                    document.body.classList.add('modal-open');
-                });
-                
-                modal.addEventListener('hidden.bs.modal', function () {
-                    // Dọn dẹp khi modal đóng
-                    document.body.classList.remove('modal-open');
-                    document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
-                        backdrop.remove();
-                    });
-                });
+        // Thêm hiệu ứng hover cho các element
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
             });
         });
+    });
     </script>
 </body>
 </html>

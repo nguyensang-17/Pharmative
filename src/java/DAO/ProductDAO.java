@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ProductDAO {
 
@@ -54,6 +56,36 @@ public class ProductDAO {
              ResultSet rs = st.executeQuery(sql)) {
             return rs.next() ? rs.getInt(1) : 0;
         }
+    }
+    
+    // Lấy top sản phẩm bán chạy
+    public Map<String, Integer> getTopSellingProducts(int limit) throws SQLException {
+        Map<String, Integer> topProducts = new LinkedHashMap<>();
+        String sql = """
+            SELECT 
+                p.product_name,
+                SUM(od.quantity) as total_sold
+            FROM order_details od
+            JOIN products p ON od.product_id = p.product_id
+            JOIN orders o ON od.order_id = o.order_id
+            WHERE o.status = 'completed'
+            GROUP BY p.product_id, p.product_name
+            ORDER BY total_sold DESC
+            LIMIT ?
+            """;
+            
+        try (Connection c = DBContext.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String productName = rs.getString("product_name");
+                    int totalSold = rs.getInt("total_sold");
+                    topProducts.put(productName, totalSold);
+                }
+            }
+        }
+        return topProducts;
     }
 
     /** Lọc theo đúng category_id (đơn) – ít dùng cho menu, giữ lại để tái sử dụng */
