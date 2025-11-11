@@ -11,7 +11,6 @@ public class OrderDAO {
 
     // PHƯƠNG THỨC LẤY TẤT CẢ ĐƠN HÀNG CHO ADMIN - ĐÃ SỬA
     public List<Order> getAllOrders() throws SQLException {
-        // THÊM CÁC CỘT ward, district, city VÀO SELECT
         String sql = "SELECT o.*, u.fullname, u.email, u.phone_number, "
                   + "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
                   + "FROM orders o "
@@ -27,6 +26,74 @@ public class OrderDAO {
         return list;
     }
 
+    // PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG - ĐÃ BỔ SUNG THÊM FILTER
+    public List<Order> searchOrders(String keyword, String status, String paymentMethod, String dateFrom, String dateTo) throws SQLException {
+        StringBuilder sql = new StringBuilder(
+                  "SELECT o.*, u.fullname, u.email, u.phone_number, "
+                  + "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
+                  + "FROM orders o "
+                  + "LEFT JOIN users u ON o.user_id = u.user_id "
+                  + "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id "
+                  + "WHERE 1=1"
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        // Tìm kiếm theo keyword
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (o.order_id LIKE ? OR u.fullname LIKE ? OR u.email LIKE ? OR u.phone_number LIKE ? OR o.customer_name LIKE ?)");
+            String likeKeyword = "%" + keyword.trim() + "%";
+            for (int i = 0; i < 5; i++) {
+                params.add(likeKeyword);
+            }
+        }
+
+        // Tìm kiếm theo trạng thái
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND LOWER(o.status) = LOWER(?)");
+            params.add(status.trim());
+        }
+
+        // Tìm kiếm theo phương thức thanh toán - THÊM MỚI
+        if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+            sql.append(" AND LOWER(o.payment_method) = LOWER(?)");
+            params.add(paymentMethod.trim());
+        }
+
+        // Tìm kiếm theo ngày từ
+        if (dateFrom != null && !dateFrom.trim().isEmpty()) {
+            sql.append(" AND DATE(o.order_date) >= ?");
+            params.add(dateFrom.trim());
+        }
+
+        // Tìm kiếm theo ngày đến - THÊM MỚI
+        if (dateTo != null && !dateTo.trim().isEmpty()) {
+            sql.append(" AND DATE(o.order_date) <= ?");
+            params.add(dateTo.trim());
+        }
+
+        sql.append(" ORDER BY o.order_date DESC");
+
+        System.out.println("SQL Search: " + sql.toString());
+        System.out.println("Params: " + params);
+
+        List<Order> list = new ArrayList<>();
+        try ( Connection c = DBContext.getConnection();  PreparedStatement ps = c.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
+            }
+        }
+        return list;
+    }
+
+    // CÁC PHƯƠNG THỨC KHÁC GIỮ NGUYÊN...
     public boolean createOrder(Order order) {
         Connection conn = null;
         PreparedStatement psOrder = null;
@@ -151,9 +218,6 @@ public class OrderDAO {
 
     /**
      * Lấy thông tin đơn hàng theo ID
-     *
-     * @param orderId ID của đơn hàng
-     * @return Đối tượng Order hoặc null nếu không tìm thấy
      */
     public Order getOrderById(int orderId) {
         Connection conn = null;
@@ -162,26 +226,18 @@ public class OrderDAO {
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM orders WHERE order_id = ?";
+            String sql = "SELECT o.*, u.fullname, u.email, u.phone_number, "
+                       + "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
+                       + "FROM orders o "
+                       + "LEFT JOIN users u ON o.user_id = u.user_id "
+                       + "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id "
+                       + "WHERE o.order_id = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                Order order = new Order();
-                order.setOrderId(rs.getInt("order_id"));
-                order.setUserId(rs.getInt("user_id"));
-                order.setCustomerName(rs.getString("customer_name"));
-                order.setCustomerEmail(rs.getString("customer_email"));
-                order.setCustomerPhone(rs.getString("customer_phone"));
-                order.setShippingAddress(rs.getString("shipping_address"));
-                order.setPaymentMethod(rs.getString("payment_method"));
-                order.setNote(rs.getString("note"));
-                order.setTotalAmount(rs.getBigDecimal("total_amount"));
-                order.setStatus(rs.getString("status"));
-                order.setOrderDate(rs.getTimestamp("order_date"));
-
-                return order;
+                return map(rs);
             }
 
         } catch (SQLException e) {
@@ -207,10 +263,6 @@ public class OrderDAO {
 
     /**
      * Cập nhật trạng thái đơn hàng
-     *
-     * @param orderId ID đơn hàng
-     * @param status Trạng thái mới
-     * @return true nếu thành công
      */
     public boolean updateOrderStatus(int orderId, String status) {
         Connection conn = null;
@@ -243,7 +295,7 @@ public class OrderDAO {
         }
     }
 
-    // PHƯƠNG THỨC LẤY CHI TIẾT ĐƠN HÀNG - ĐÃ SỬA
+    // PHƯƠNG THỨC LẤY CHI TIẾT ĐƠN HÀNG
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) throws SQLException {
         String sql = "SELECT od.*, p.product_name, p.image_url "
                   + "FROM order_details od "
@@ -398,65 +450,7 @@ public class OrderDAO {
         return o;
     }
 
-    // PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG
-// PHƯƠNG THỨC TÌM KIẾM ĐƠN HÀNG - CHỈ TÌM GẦN ĐÚNG
-    public List<Order> searchOrders(String keyword, String status, String dateFrom) throws SQLException {
-        StringBuilder sql = new StringBuilder(
-                  "SELECT o.*, u.fullname, u.email, u.phone_number, "
-                  + "a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
-                  + "FROM orders o "
-                  + "LEFT JOIN users u ON o.user_id = u.user_id "
-                  + "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id "
-                  + "WHERE 1=1"
-        );
-
-        List<Object> params = new ArrayList<>();
-
-        // Tìm kiếm theo keyword - CHỈ TÌM GẦN ĐÚNG
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND (o.order_id LIKE ? OR u.fullname LIKE ? OR u.email LIKE ? OR u.phone_number LIKE ?)");
-            String likeKeyword = "%" + keyword.trim() + "%";
-            params.add(likeKeyword);
-            params.add(likeKeyword);
-            params.add(likeKeyword);
-            params.add(likeKeyword);
-        }
-
-        // Tìm kiếm theo trạng thái - CHỈ TÌM GẦN ĐÚNG (để hỗ trợ cả chữ hoa/thường)
-        if (status != null && !status.trim().isEmpty()) {
-            sql.append(" AND LOWER(o.status) LIKE LOWER(?)");
-            params.add("%" + status.trim() + "%");
-        }
-
-        // Tìm kiếm theo ngày từ - VẪN TÌM CHÍNH XÁC (vì ngày thường cần chính xác)
-        if (dateFrom != null && !dateFrom.trim().isEmpty()) {
-            sql.append(" AND DATE(o.order_date) >= ?");
-            params.add(dateFrom.trim());
-        }
-
-        sql.append(" ORDER BY o.order_date DESC");
-
-        System.out.println("SQL Search: " + sql.toString());
-        System.out.println("Params: " + params);
-
-        List<Order> list = new ArrayList<>();
-        try ( Connection c = DBContext.getConnection();  PreparedStatement ps = c.prepareStatement(sql.toString())) {
-
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(map(rs));
-                }
-            }
-        }
-        return list;
-    }
-
     public List<Order> getByUser(int userId, int limit) throws SQLException {
-        // SỬA: THÊM ĐẦY ĐỦ CÁC CỘT
         String sql = "SELECT o.*, a.recipient_name, a.recipient_phone, a.street_address, a.ward, a.district, a.city "
                   + "FROM orders o "
                   + "LEFT JOIN addresses a ON o.shipping_address_id = a.address_id "
@@ -475,7 +469,6 @@ public class OrderDAO {
     }
 
     public List<Order> getOrdersByUserId(int userId) {
-        // FIX: Lấy trực tiếp shipping_address từ bảng orders (không cần JOIN addresses)
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.total_amount, o.status, "
                   + "o.customer_name, o.customer_email, o.customer_phone, "
                   + "o.shipping_address, o.payment_method, o.note, o.shipping_address_id "
@@ -524,7 +517,7 @@ public class OrderDAO {
         return list;
     }
 
-    // CÁC PHƯƠNG THỨC THỐNG KÊ GIỮ NGUYÊN
+    // CÁC PHƯƠNG THỨC THỐNG KÊ
     public int countAllOrders() throws SQLException {
         String sql = "SELECT COUNT(*) FROM orders";
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {

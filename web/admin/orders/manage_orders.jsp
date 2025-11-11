@@ -32,150 +32,33 @@
                 margin: 0;
             }
 
-            /* Entrance Animations */
-            .main-content {
-                animation: fadeIn 0.6s ease-out;
-            }
-
-            .page-header {
-                animation: slideInDown 0.5s ease-out 0.2s both;
-            }
-
-            .stat-card {
-                animation: fadeInUp 0.5s ease-out both;
-            }
-
+            /* Animation Keyframes và Hover Effects (giữ nguyên) */
+            .main-content { animation: fadeIn 0.6s ease-out; }
+            .page-header { animation: slideInDown 0.5s ease-out 0.2s both; }
+            .stat-card { animation: fadeInUp 0.5s ease-out both; }
             .stat-card:nth-child(1) { animation-delay: 0.3s; }
             .stat-card:nth-child(2) { animation-delay: 0.4s; }
             .stat-card:nth-child(3) { animation-delay: 0.5s; }
             .stat-card:nth-child(4) { animation-delay: 0.6s; }
+            .stat-card:nth-child(5) { animation-delay: 0.7s; }
 
-            .card {
-                animation: fadeIn 0.6s ease-out both;
-            }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+            @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
-            .card:nth-child(1) { animation-delay: 0.4s; }
-            .card:nth-child(2) { animation-delay: 0.5s; }
-
-            .table tbody tr {
-                animation: fadeInLeft 0.4s ease-out both;
-            }
-
-            .table tbody tr:nth-child(1) { animation-delay: 0.5s; }
-            .table tbody tr:nth-child(2) { animation-delay: 0.6s; }
-            .table tbody tr:nth-child(3) { animation-delay: 0.7s; }
-            .table tbody tr:nth-child(4) { animation-delay: 0.8s; }
-
-            /* Animation Keyframes */
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-
-            @keyframes fadeInUp {
-                from { 
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to { 
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes fadeInLeft {
-                from { 
-                    opacity: 0;
-                    transform: translateX(-20px);
-                }
-                to { 
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-
-            @keyframes slideInDown {
-                from { 
-                    opacity: 0;
-                    transform: translateY(-30px);
-                }
-                to { 
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            /* Hover Effects */
-            .stat-card {
+            .stat-card, .card, .btn, .nav-link, .table tbody tr, .btn-group .btn, .badge, .status-badge {
                 transition: all 0.3s ease;
             }
 
-            .stat-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 25px rgba(117,178,57,0.15);
-            }
-
-            .card {
-                transition: all 0.3s ease;
-            }
-
-            .card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(24,39,75,0.12);
-            }
-
-            .btn {
-                transition: all 0.3s ease;
-            }
-
-            .btn:hover {
-                transform: translateY(-2px);
-            }
-
-            .btn-success:hover {
-                box-shadow: 0 4px 12px rgba(117,178,57,0.3);
-            }
-
-            .nav-link {
-                transition: all 0.3s ease;
-            }
-
-            .nav-link:hover {
-                transform: translateX(5px);
-            }
-
-            .table tbody tr {
-                transition: all 0.3s ease;
-            }
-
-            .table tbody tr:hover {
-                background-color: var(--brand-green-soft);
-                transform: translateX(5px);
-            }
-
-            .btn-group .btn {
-                transition: all 0.3s ease;
-            }
-
-            .btn-group .btn:hover {
-                transform: scale(1.1);
-            }
-
-            .badge {
-                transition: all 0.3s ease;
-            }
-
-            .badge:hover {
-                transform: scale(1.05);
-            }
-
-            .status-badge {
-                transition: all 0.3s ease;
-            }
-
-            .status-badge:hover {
-                transform: scale(1.05);
-            }
+            .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(117,178,57,0.15); }
+            .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(24,39,75,0.12); }
+            .btn:hover { transform: translateY(-2px); }
+            .btn-success:hover { box-shadow: 0 4px 12px rgba(117,178,57,0.3); }
+            .nav-link:hover { transform: translateX(5px); }
+            .table tbody tr:hover { background-color: var(--brand-green-soft); transform: translateX(5px); }
+            .btn-group .btn:hover { transform: scale(1.1); }
+            .badge:hover, .status-badge:hover { transform: scale(1.05); }
 
             /* Sidebar Styles (giữ nguyên) */
             .sidebar {
@@ -189,116 +72,21 @@
                 flex-direction: column;
             }
 
-            .sidebar-header {
-                padding: 24px 20px;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                text-align: center;
-            }
-
-            .sidebar-header h3 {
-                margin: 0;
-                font-weight: 700;
-                font-size: 1.4rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .user-info {
-                padding: 16px 20px;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-
-            .user-avatar {
-                width: 42px;
-                height: 42px;
-                border-radius: 50%;
-                background: rgba(255,255,255,0.2);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.2rem;
-            }
-
-            .user-details {
-                flex: 1;
-            }
-
-            .user-name {
-                font-weight: 600;
-                font-size: 0.95rem;
-                margin-bottom: 4px;
-            }
-
-            .user-role {
-                font-size: 0.8rem;
-                opacity: 0.8;
-                background: rgba(255,255,255,0.15);
-                padding: 2px 8px;
-                border-radius: 12px;
-                display: inline-block;
-            }
-
-            .nav-menu {
-                flex: 1;
-                padding: 20px 0;
-                overflow-y: auto;
-            }
-
-            .nav-item {
-                margin-bottom: 4px;
-            }
-
-            .nav-link {
-                display: flex;
-                align-items: center;
-                padding: 14px 20px;
-                color: rgba(255,255,255,0.85);
-                text-decoration: none;
-                transition: all 0.2s ease;
-                font-weight: 500;
-                border-left: 3px solid transparent;
-            }
-
-            .nav-link:hover, .nav-link.active {
-                background: rgba(255,255,255,0.1);
-                color: white;
-                border-left-color: white;
-            }
-
-            .nav-link i {
-                width: 24px;
-                margin-right: 12px;
-                font-size: 1.1rem;
-            }
-
-            .sidebar-footer {
-                padding: 16px 20px;
-                border-top: 1px solid rgba(255,255,255,0.1);
-            }
-
-            .logout-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                width: 100%;
-                padding: 12px;
-                background: rgba(255,255,255,0.15);
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-weight: 600;
-                transition: all 0.2s ease;
-            }
-
-            .logout-btn:hover {
-                background: rgba(255,255,255,0.25);
-            }
+            .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+            .sidebar-header h3 { margin: 0; font-weight: 700; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+            .user-info { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+            .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+            .user-details { flex: 1; }
+            .user-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+            .user-role { font-size: 0.8rem; opacity: 0.8; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; display: inline-block; }
+            .nav-menu { flex: 1; padding: 20px 0; overflow-y: auto; }
+            .nav-item { margin-bottom: 4px; }
+            .nav-link { display: flex; align-items: center; padding: 14px 20px; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.2s ease; font-weight: 500; border-left: 3px solid transparent; }
+            .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; border-left-color: white; }
+            .nav-link i { width: 24px; margin-right: 12px; font-size: 1.1rem; }
+            .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+            .logout-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: rgba(255,255,255,0.15); color: white; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s ease; }
+            .logout-btn:hover { background: rgba(255,255,255,0.25); }
 
             /* Main Content */
             .main-content {
@@ -354,12 +142,13 @@
                 font-size: 0.85rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
+                white-space: nowrap;
             }
 
             /* Stats Cards */
             .stats-cards {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 18px;
                 margin-bottom: 28px;
             }
@@ -409,21 +198,11 @@
                 transform: scale(1.1);
             }
 
-            .stat-icon.primary {
-                background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark));
-            }
-            .stat-icon.success {
-                background: linear-gradient(135deg, #8bc34a, #7cb342);
-            }
-            .stat-icon.warning {
-                background: linear-gradient(135deg, #cddc39, #d4e157);
-            }
-            .stat-icon.info {
-                background: linear-gradient(135deg, #4caf50, #66bb6a);
-            }
-            .stat-icon.danger {
-                background: linear-gradient(135deg, #f44336, #e53935);
-            }
+            .stat-icon.primary { background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark)); }
+            .stat-icon.success { background: linear-gradient(135deg, #8bc34a, #7cb342); }
+            .stat-icon.warning { background: linear-gradient(135deg, #cddc39, #d4e157); }
+            .stat-icon.info { background: linear-gradient(135deg, #4caf50, #66bb6a); }
+            .stat-icon.danger { background: linear-gradient(135deg, #f44336, #e53935); }
 
             /* Status Badges */
             .status-badge {
@@ -432,165 +211,130 @@
                 font-size: 0.8rem;
                 font-weight: 600;
                 text-transform: capitalize;
-            }
-            /* Thêm vào phần CSS hiện có */
-.stats-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 18px;
-    margin-bottom: 28px;
-}
-
-.stat-icon.success { 
-    background: linear-gradient(135deg, #8bc34a, #7cb342); 
-}
-
-/* Responsive cho 5 cards */
-@media (max-width: 1200px) {
-    .stats-cards {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-}
-
-@media (max-width: 992px) {
-    .stats-cards {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .stats-cards { 
-        grid-template-columns: repeat(2, 1fr); 
-    }
-}
-
-@media (max-width: 576px) {
-    .stats-cards { 
-        grid-template-columns: 1fr; 
-    }
-}
-
-            .status-pending {
-                background: #fff3cd;
-                color: #856404;
+                display: inline-block;
+                min-width: 100px;
+                text-align: center;
             }
 
-            .status-processing {
-                background: #cce7ff;
-                color: #004085;
-            }
+            .status-pending { background: #fff3cd; color: #856404; }
+            .status-processing { background: #cce7ff; color: #004085; }
+            .status-delivered { background: #d4edda; color: #155724; }
+            .status-cancelled { background: #f8d7da; color: #721c24; }
+            .status-payment_failed { background: #f8d7da; color: #721c24; }
+            .status-shipped { background: #d1ecf1; color: #0c5460; }
 
-            .status-completed, .status-delivered {
-                background: #d4edda;
-                color: #155724;
-            }
-
-            .status-cancelled {
-                background: #f8d7da;
-                color: #721c24;
-            }
-
-            /* CSS cho trạng thái loading */
-            .btn.disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-                pointer-events: none;
-            }
-
-            .fa-spin {
-                animation: fa-spin 1s infinite linear;
-            }
-
-            @keyframes fa-spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-
-            /* Đảm bảo nút export có cùng style với các nút khác */
-            .btn-outline-secondary {
-                border: 1px solid #6c757d;
-                color: #6c757d;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-            }
-
-            .btn-outline-secondary:hover {
-                background-color: #6c757d;
-                color: white;
-                text-decoration: none;
-            }
-
-            /* Style cho kết quả tìm kiếm */
-            .search-results-info {
-                background-color: #f8f9fa;
-                border-left: 4px solid var(--brand-green);
-                padding: 10px 15px;
-                margin-bottom: 15px;
-                border-radius: 4px;
-            }
-
-            .btn-sm {
+            /* Payment Method Badges */
+            .payment-badge {
                 padding: 0.25rem 0.5rem;
-                font-size: 0.875rem;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                background: #e9ecef;
+                color: #495057;
+                display: inline-block;
+            }
+
+            .payment-cod { background: #fff3cd; color: #856404; }
+            .payment-vnpay { background: #cce7ff; color: #004085; }
+            .payment-momo { background: #f8d7da; color: #721c24; }
+            .payment-bank { background: #d4edda; color: #155724; }
+
+            /* Customer Info Styles */
+            .customer-info {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .customer-name {
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 2px;
+            }
+
+            .customer-contact {
+                color: #6c757d;
+                font-size: 0.8rem;
+            }
+
+            .customer-email {
+                word-break: break-all;
+            }
+
+            /* Shipping Address */
+            .shipping-address {
+                font-size: 0.8rem;
+                color: #6c757d;
+                line-height: 1.4;
+                max-width: 200px;
+            }
+
+            /* Table responsive improvements */
+            .table-responsive {
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .table td {
+                vertical-align: middle;
+                padding: 12px 8px;
+            }
+
+            .order-id {
+                font-weight: 700;
+                color: var(--brand-green);
+            }
+
+            .amount {
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .action-buttons {
+                white-space: nowrap;
             }
 
             /* Responsive */
+            @media (max-width: 1200px) {
+                .stats-cards { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+                .table th:nth-child(4),
+                .table td:nth-child(4) { display: none; }
+            }
+
             @media (max-width: 992px) {
-                body {
-                    flex-direction: column;
-                }
-
-                .sidebar {
-                    width: 100%;
-                    height: auto;
-                }
-
-                .nav-menu {
-                    display: flex;
-                    overflow-x: auto;
-                    padding: 10px 0;
-                }
-
-                .nav-item {
-                    margin-bottom: 0;
-                    margin-right: 10px;
-                    flex-shrink: 0;
-                }
-
-                .nav-link {
-                    border-left: none;
-                    border-bottom: 3px solid transparent;
-                    padding: 10px 15px;
-                    white-space: nowrap;
-                }
-
-                .nav-link:hover, .nav-link.active {
-                    border-left-color: transparent;
-                    border-bottom-color: white;
-                    transform: translateY(-2px);
-                }
-
-                .user-info, .sidebar-footer {
-                    display: none;
-                }
+                body { flex-direction: column; }
+                .sidebar { width: 100%; height: auto; }
+                .nav-menu { display: flex; overflow-x: auto; padding: 10px 0; }
+                .nav-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; }
+                .nav-link { border-left: none; border-bottom: 3px solid transparent; padding: 10px 15px; white-space: nowrap; }
+                .nav-link:hover, .nav-link.active { border-left-color: transparent; border-bottom-color: white; transform: translateY(-2px); }
+                .user-info, .sidebar-footer { display: none; }
+                .stats-cards { grid-template-columns: repeat(3, 1fr); }
+                .table th:nth-child(3),
+                .table td:nth-child(3) { display: none; }
             }
 
             @media (max-width: 768px) {
                 .page-header { padding: 18px; border-radius: 12px; }
                 .page-header::before { width: 80px; height: 80px; }
                 .stats-cards { grid-template-columns: 1fr 1fr; }
+                .table th:nth-child(5),
+                .table td:nth-child(5) { display: none; }
             }
 
             @media (max-width: 576px) {
                 .stats-cards { grid-template-columns: 1fr; }
                 .main-content { padding: 15px; }
+                .table th:nth-child(2),
+                .table td:nth-child(2),
+                .table th:nth-child(6),
+                .table td:nth-child(6) { display: none; }
+                .btn-group { display: flex; flex-direction: column; gap: 4px; }
+                .btn-group .btn { margin: 0; }
             }
         </style>
     </head>
     <body>
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation (giữ nguyên) -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3><i class="fas fa-capsules"></i> Pharmative</h3>
@@ -686,97 +430,112 @@
             </c:if>
 
             <!-- Stats Cards -->
-            <!-- Stats Cards -->
-<div class="stats-cards">
-    <div class="stat-card">
-        <div>
-            <div class="stat-title">Tổng Orders</div>
-            <div class="stat-value">
-                <fmt:formatNumber value="${totalOrders}" pattern="#,###"/>
-            </div>
-        </div>
-        <div class="stat-icon primary">
-            <i class="fas fa-shopping-bag"></i>
-        </div>
-    </div>
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-title">Tổng Orders</div>
+                        <div class="stat-value">
+                            <fmt:formatNumber value="${totalOrders}" pattern="#,###"/>
+                        </div>
+                    </div>
+                    <div class="stat-icon primary">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
 
-    <div class="stat-card">
-        <div>
-            <div class="stat-title">Chờ xử lý</div>
-            <div class="stat-value">
-                <fmt:formatNumber value="${pendingOrders}" pattern="#,###"/>
-            </div>
-        </div>
-        <div class="stat-icon warning">
-            <i class="fas fa-clock"></i>
-        </div>
-    </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-title">Chờ xử lý</div>
+                        <div class="stat-value">
+                            <fmt:formatNumber value="${pendingOrders}" pattern="#,###"/>
+                        </div>
+                    </div>
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
 
-    <div class="stat-card">
-        <div>
-            <div class="stat-title">Đang xử lý</div>
-            <div class="stat-value">
-                <fmt:formatNumber value="${processingOrders}" pattern="#,###"/>
-            </div>
-        </div>
-        <div class="stat-icon info">
-            <i class="fas fa-truck"></i>
-        </div>
-    </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-title">Đang xử lý</div>
+                        <div class="stat-value">
+                            <fmt:formatNumber value="${processingOrders}" pattern="#,###"/>
+                        </div>
+                    </div>
+                    <div class="stat-icon info">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                </div>
 
-    <div class="stat-card">
-        <div>
-            <div class="stat-title">Đã giao</div>
-            <div class="stat-value">
-                <fmt:formatNumber value="${deliveredOrders}" pattern="#,###"/>
-            </div>
-        </div>
-        <div class="stat-icon success">
-            <i class="fas fa-check-circle"></i>
-        </div>
-    </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-title">Đã giao</div>
+                        <div class="stat-value">
+                            <fmt:formatNumber value="${deliveredOrders}" pattern="#,###"/>
+                        </div>
+                    </div>
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
 
-    <div class="stat-card">
-        <div>
-            <div class="stat-title">Đã hủy</div>
-            <div class="stat-value">
-                <fmt:formatNumber value="${cancelledOrders}" pattern="#,###"/>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-title">Đã hủy</div>
+                        <div class="stat-value">
+                            <fmt:formatNumber value="${cancelledOrders}" pattern="#,###"/>
+                        </div>
+                    </div>
+                    <div class="stat-icon danger">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="stat-icon danger">
-            <i class="fas fa-times-circle"></i>
-        </div>
-    </div>
-</div>
 
             <!-- Search and Filter Card -->
             <div class="card">
                 <div class="card-body">
                     <form action="${pageContext.request.contextPath}/admin/orders" method="get" class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <input type="text" class="form-control" name="keyword" 
                                    placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng..." 
                                    value="${param.keyword}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <select class="form-select" name="status">
                                 <option value="">Tất cả trạng thái</option>
                                 <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
                                 <option value="processing" ${param.status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="shipped" ${param.status == 'shipped' ? 'selected' : ''}>Đang giao</option>
                                 <option value="delivered" ${param.status == 'delivered' ? 'selected' : ''}>Đã giao</option>
                                 <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
+                                <option value="payment_failed" ${param.status == 'payment_failed' ? 'selected' : ''}>Lỗi thanh toán</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <select class="form-select" name="payment_method">
+                                <option value="">Tất cả PT thanh toán</option>
+                                <option value="cod" ${param.payment_method == 'cod' ? 'selected' : ''}>COD</option>
+                                <option value="vnpay" ${param.payment_method == 'vnpay' ? 'selected' : ''}>VNPAY</option>
+                                <option value="momo" ${param.payment_method == 'momo' ? 'selected' : ''}>MOMO</option>
+                                <option value="bank" ${param.payment_method == 'bank' ? 'selected' : ''}>Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <input type="date" class="form-control" name="dateFrom" 
                                    value="${param.dateFrom}">
                         </div>
                         <div class="col-md-2">
+                            <input type="date" class="form-control" name="dateTo" 
+                                   value="${param.dateTo}">
+                        </div>
+                        <div class="col-md-1">
                             <button type="submit" class="btn btn-success w-100">
-                                <i class="fas fa-search"></i> Tìm kiếm
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
-                        <c:if test="${not empty param.keyword or not empty param.status or not empty param.dateFrom}">
+                        
+                        <c:if test="${not empty param.keyword or not empty param.status or not empty param.payment_method or not empty param.dateFrom}">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
@@ -785,11 +544,22 @@
                                             <c:choose>
                                                 <c:when test="${param.status == 'pending'}">Trạng thái: Chờ xử lý</c:when>
                                                 <c:when test="${param.status == 'processing'}">Trạng thái: Đang xử lý</c:when>
+                                                <c:when test="${param.status == 'shipped'}">Trạng thái: Đang giao</c:when>
                                                 <c:when test="${param.status == 'delivered'}">Trạng thái: Đã giao</c:when>
                                                 <c:when test="${param.status == 'cancelled'}">Trạng thái: Đã hủy</c:when>
+                                                <c:when test="${param.status == 'payment_failed'}">Trạng thái: Lỗi thanh toán</c:when>
+                                            </c:choose>
+                                        </c:if>
+                                        <c:if test="${not empty param.payment_method}">
+                                            <c:choose>
+                                                <c:when test="${param.payment_method == 'cod'}">PT thanh toán: COD</c:when>
+                                                <c:when test="${param.payment_method == 'vnpay'}">PT thanh toán: VNPAY</c:when>
+                                                <c:when test="${param.payment_method == 'momo'}">PT thanh toán: MOMO</c:when>
+                                                <c:when test="${param.payment_method == 'bank'}">PT thanh toán: Bank Transfer</c:when>
                                             </c:choose>
                                         </c:if>
                                         <c:if test="${not empty param.dateFrom}">Từ ngày: ${param.dateFrom}</c:if>
+                                        <c:if test="${not empty param.dateTo}">Đến ngày: ${param.dateTo}</c:if>
                                     </small>
                                     <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-sm btn-outline-secondary">
                                         <i class="fas fa-times"></i> Xóa bộ lọc
@@ -805,13 +575,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">Danh sách đơn hàng</h5>
+                        <h5 class="card-title mb-0">
+                            Danh sách đơn hàng 
+                            <c:if test="${not empty orderList}">
+                                <span class="badge bg-success ms-2">${orderList.size()} đơn hàng</span>
+                            </c:if>
+                        </h5>
                         <div>
                             <a href="${pageContext.request.contextPath}/admin/orders/export" 
                                class="btn btn-outline-secondary me-2" id="exportBtn">
                                 <i class="fas fa-download"></i> Xuất file CSV
                             </a>
-                           
                         </div>
                     </div>
 
@@ -820,8 +594,10 @@
                             <thead>
                                 <tr>
                                     <th>Mã đơn hàng</th>
-                                    <th>Khách hàng</th>
+                                    <th>Thông tin khách hàng</th>
                                     <th>Ngày đặt</th>
+                                    <th>Địa chỉ giao hàng</th>
+                                    <th>PT thanh toán</th>
                                     <th>Tổng tiền</th>
                                     <th>Trạng thái</th>
                                     <th>Thao tác</th>
@@ -830,15 +606,56 @@
                             <tbody>
                                 <c:forEach var="order" items="${orderList}">
                                     <tr>
-                                        <td><strong>#${order.orderId}</strong></td>
-                                        <td>${order.customerName}</td>
+                                        <td>
+                                            <div class="order-id">#${order.orderId}</div>
+                                            <small class="text-muted">
+                                                <fmt:formatDate value="${order.orderDate}" pattern="HH:mm" />
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <div class="customer-name">${order.customerName}</div>
+                                                <div class="customer-contact">
+                                                    <i class="fas fa-envelope me-1"></i>
+                                                    <span class="customer-email">${order.customerEmail}</span>
+                                                </div>
+                                                <div class="customer-contact">
+                                                    <i class="fas fa-phone me-1"></i>
+                                                    ${order.customerPhone}
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>
                                             <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" />
                                         </td>
                                         <td>
-                                            <strong>
-                                                <fmt:formatNumber value="${order.totalAmount}" type="number" /> VNĐ
-                                            </strong>
+                                            <div class="shipping-address">
+                                                ${order.shippingAddress}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${order.paymentMethod == 'cod'}">
+                                                    <span class="payment-badge payment-cod">COD</span>
+                                                </c:when>
+                                                <c:when test="${order.paymentMethod == 'vnpay'}">
+                                                    <span class="payment-badge payment-vnpay">VNPAY</span>
+                                                </c:when>
+                                                <c:when test="${order.paymentMethod == 'momo'}">
+                                                    <span class="payment-badge payment-momo">MOMO</span>
+                                                </c:when>
+                                                <c:when test="${order.paymentMethod == 'bank'}">
+                                                    <span class="payment-badge payment-bank">Bank</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="payment-badge">${order.paymentMethod}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <div class="amount">
+                                                <fmt:formatNumber value="${order.totalAmount}" type="number" /> ₫
+                                            </div>
                                         </td>
                                         <td>
                                             <c:choose>
@@ -848,11 +665,17 @@
                                                 <c:when test="${order.status == 'PROCESSING' || order.status == 'processing'}">
                                                     <span class="status-badge status-processing">Đang xử lý</span>
                                                 </c:when>
+                                                <c:when test="${order.status == 'SHIPPED' || order.status == 'shipped'}">
+                                                    <span class="status-badge status-shipped">Đang giao</span>
+                                                </c:when>
                                                 <c:when test="${order.status == 'DELIVERED' || order.status == 'delivered'}">
                                                     <span class="status-badge status-delivered">Đã giao</span>
                                                 </c:when>
                                                 <c:when test="${order.status == 'CANCELLED' || order.status == 'cancelled'}">
                                                     <span class="status-badge status-cancelled">Đã hủy</span>
+                                                </c:when>
+                                                <c:when test="${order.status == 'PAYMENT_FAILED' || order.status == 'payment_failed'}">
+                                                    <span class="status-badge status-payment_failed">Lỗi thanh toán</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="status-badge">${order.status}</span>
@@ -860,7 +683,7 @@
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <div class="btn-group">
+                                            <div class="btn-group action-buttons">
                                                 <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=${order.orderId}" 
                                                    class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                     <i class="fas fa-eye"></i>
@@ -903,9 +726,14 @@
 
                                 <c:if test="${empty orderList}">
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">
+                                        <td colspan="8" class="text-center text-muted py-4">
                                             <i class="fas fa-shopping-bag fa-2x mb-3"></i>
                                             <p>Không có đơn hàng nào được tìm thấy</p>
+                                            <c:if test="${not empty param.keyword or not empty param.status}">
+                                                <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-times"></i> Xóa bộ lọc
+                                                </a>
+                                            </c:if>
                                         </td>
                                     </tr>
                                 </c:if>
@@ -913,7 +741,7 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Pagination (giữ nguyên) -->
                     <c:if test="${totalPages > 1}">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center">
@@ -922,7 +750,9 @@
                                        href="?page=${currentPage - 1}
                                        <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                       <c:if test="${not empty param.payment_method}">&payment_method=${param.payment_method}</c:if>
+                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>
+                                       <c:if test="${not empty param.dateTo}">&dateTo=${param.dateTo}</c:if>">
                                        Trước
                                     </a>
                                 </li>
@@ -933,7 +763,9 @@
                                            href="?page=${i}
                                            <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
                                            <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                           <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                           <c:if test="${not empty param.payment_method}">&payment_method=${param.payment_method}</c:if>
+                                           <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>
+                                           <c:if test="${not empty param.dateTo}">&dateTo=${param.dateTo}</c:if>">
                                            ${i}
                                         </a>
                                     </li>
@@ -944,7 +776,9 @@
                                        href="?page=${currentPage + 1}
                                        <c:if test="${not empty param.keyword}">&keyword=${param.keyword}</c:if>
                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>">
+                                       <c:if test="${not empty param.payment_method}">&payment_method=${param.payment_method}</c:if>
+                                       <c:if test="${not empty param.dateFrom}">&dateFrom=${param.dateFrom}</c:if>
+                                       <c:if test="${not empty param.dateTo}">&dateTo=${param.dateTo}</c:if>">
                                        Sau
                                     </a>
                                 </li>
@@ -974,19 +808,18 @@
                     });
                 }
                 
-                // Xử lý nút "Đơn hàng mới"
-                const newOrderBtn = document.getElementById('newOrderBtn');
-                if (newOrderBtn) {
-                    newOrderBtn.addEventListener('click', function() {
-                        alert('Chức năng tạo đơn hàng mới đang được phát triển');
+                // Tự động submit form khi thay đổi select
+                const statusSelect = document.querySelector('select[name="status"]');
+                const paymentSelect = document.querySelector('select[name="payment_method"]');
+                
+                if (statusSelect) {
+                    statusSelect.addEventListener('change', function() {
+                        this.form.submit();
                     });
                 }
                 
-                // Tự động submit form khi thay đổi select (tùy chọn)
-                const statusSelect = document.querySelector('select[name="status"]');
-                if (statusSelect) {
-                    statusSelect.addEventListener('change', function() {
-                        // Tự động submit form khi chọn trạng thái
+                if (paymentSelect) {
+                    paymentSelect.addEventListener('change', function() {
                         this.form.submit();
                     });
                 }
@@ -998,7 +831,7 @@
                         const submitBtn = this.querySelector('button[type="submit"]');
                         if (submitBtn) {
                             const originalHTML = submitBtn.innerHTML;
-                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm...';
+                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                             submitBtn.disabled = true;
                             
                             setTimeout(() => {
