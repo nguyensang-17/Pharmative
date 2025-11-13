@@ -681,12 +681,12 @@
                     <span>Quản lý Danh mục</span>
                 </a>
             </div>
-        </div>
-        
-        <div class="sidebar-footer">
-            <button class="logout-btn" onclick="location.href='${pageContext.request.contextPath}/logout'">
-                <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </button>
+            <div class="nav-item">
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -763,6 +763,31 @@
             </div>
         </div>
 
+        <!-- Quick Actions Card -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4"><i class="fas fa-bolt" style="color:var(--brand-green); margin-right:8px"></i> Thao tác nhanh</h5>
+                <div class="action-buttons">
+                    <a href="${pageContext.request.contextPath}/admin/users" class="action-btn">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Quản lý Users</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/orders" class="action-btn">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Quản lý Orders</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/products" class="action-btn">
+                        <i class="fas fa-box-open"></i>
+                        <span>Quản lý Products</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/categories" class="action-btn">
+                        <i class="fas fa-tags"></i>
+                        <span>Quản lý Danh mục</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Thống kê biểu đồ -->
         <div class="chart-grid">
             <!-- Biểu đồ doanh thu theo tháng -->
@@ -801,31 +826,6 @@
                 </h5>
                 <div class="chart-container">
                     <canvas id="topProductsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions Card -->
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title mb-4"><i class="fas fa-bolt" style="color:var(--brand-green); margin-right:8px"></i> Thao tác nhanh</h5>
-                <div class="action-buttons">
-                    <a href="${pageContext.request.contextPath}/admin/users" class="action-btn">
-                        <i class="fas fa-users-cog"></i>
-                        <span>Quản lý Users</span>
-                    </a>
-                    <a href="${pageContext.request.contextPath}/admin/orders" class="action-btn">
-                        <i class="fas fa-file-invoice"></i>
-                        <span>Quản lý Orders</span>
-                    </a>
-                    <a href="${pageContext.request.contextPath}/admin/products" class="action-btn">
-                        <i class="fas fa-box-open"></i>
-                        <span>Quản lý Products</span>
-                    </a>
-                    <a href="${pageContext.request.contextPath}/admin/categories" class="action-btn">
-                        <i class="fas fa-tags"></i>
-                        <span>Quản lý Danh mục</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -915,7 +915,8 @@
                     
                     <!-- Tính toán các chỉ số thực tế -->
                     <c:set var="revenueGrowth" value="12.5" />
-                    <c:set var="successRate" value="${(orderStatusStats['delivered'] / totalOrders) * 100}" />
+                    <c:set var="deliveredCount" value="${orderStatusStats['delivered'] != null ? orderStatusStats['delivered'] : 0}" />
+                    <c:set var="successRate" value="${totalOrders > 0 ? (deliveredCount / totalOrders) * 100 : 0}" />
                     <c:set var="todayVisits" value="1200" />
                     <c:set var="conversionRate" value="28.4" />
                     

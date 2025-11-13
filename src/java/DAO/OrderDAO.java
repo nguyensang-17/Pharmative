@@ -537,10 +537,10 @@ public class OrderDAO {
         String sql = """
             SELECT 
                 DATE_FORMAT(order_date, '%Y-%m') as month,
-                COALESCE(SUM(total_amount), 0) as revenue
+                COALESCE(SUM(total_amount), 0) / 1000000 as revenue
             FROM orders 
             WHERE order_date >= DATE_SUB(NOW(), INTERVAL ? MONTH)
-                AND status = 'completed'
+                AND status IN ('delivered', 'processing', 'shipped')
             GROUP BY DATE_FORMAT(order_date, '%Y-%m')
             ORDER BY month
             """;
@@ -622,16 +622,47 @@ public class OrderDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> activity = new HashMap<>();
-                    activity.put("orderId", rs.getInt("order_id"));
-                    activity.put("orderDate", rs.getTimestamp("order_date"));
-                    activity.put("status", rs.getString("status"));
-                    activity.put("totalAmount", rs.getDouble("total_amount"));
-                    activity.put("customerName", rs.getString("customer_name"));
+                    int orderId = rs.getInt("order_id");
+                    String status = rs.getString("status");
+                    double amount = rs.getDouble("total_amount");
+                    String customerName = rs.getString("customer_name");
+                    
+                    // Format for dashboard display
+                    activity.put("title", "Đơn hàng mới #" + orderId);
+                    activity.put("description", customerName + " - ₫" + String.format("%,.0f", amount));
+                    activity.put("time", "Vừa xong");
+                    activity.put("icon", "fas fa-shopping-cart");
+                    activity.put("type", "primary");
+                    activity.put("status", getStatusText(status));
+                    activity.put("badgeColor", getStatusBadgeColor(status));
+                    
                     activities.add(activity);
                 }
             }
         }
         return activities;
+    }
+    
+    private String getStatusText(String status) {
+        return switch (status) {
+            case "delivered" -> "Đã giao";
+            case "processing" -> "Đang xử lý";
+            case "shipped" -> "Đang giao";
+            case "cancelled" -> "Đã hủy";
+            case "pending" -> "Chờ xử lý";
+            default -> status;
+        };
+    }
+    
+    private String getStatusBadgeColor(String status) {
+        return switch (status) {
+            case "delivered" -> "bg-success";
+            case "processing" -> "bg-info";
+            case "shipped" -> "bg-primary";
+            case "cancelled" -> "bg-danger";
+            case "pending" -> "bg-warning";
+            default -> "bg-secondary";
+        };
     }
 
     public double getRevenueByDateRange(java.sql.Date startDate, java.sql.Date endDate) throws SQLException {

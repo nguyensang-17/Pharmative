@@ -106,7 +106,7 @@
 
             /* Features Section */
             .features-section {
-                padding: 80px 0;
+                padding: 0px 0;
                 background-color: var(--bg-light);
             }
 
@@ -226,7 +226,7 @@
 
             /* Testimonials */
             .testimonials-section {
-                padding: 80px 0;
+                padding: 0px 0;
                 background-color: var(--bg-light);
             }
 
@@ -257,12 +257,14 @@
             }
 
             .testimonial-card img {
-                width: 70px;
-                height: 70px;
+                width: 100px;
+                height: 500px;
                 border-radius: 50%;
                 object-fit: cover;
-                margin-right: 15px;
+                object-position: center top;
+                margin-right: 20px;
                 float: left;
+                border: 3px solid var(--primary-light);
             }
 
             .testimonial-card p {
@@ -278,7 +280,7 @@
 
             /* Why Us Section */
             .why-us-section {
-                padding: 80px 0;
+                padding: 0px 0;
             }
 
             .step-number {
@@ -291,7 +293,7 @@
                 align-items: center;
                 justify-content: center;
                 width: 40px;
-                height: 40px;
+                height: 60px;
                 background: var(--primary-color);
                 color: white;
                 border-radius: 50%;

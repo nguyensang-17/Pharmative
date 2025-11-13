@@ -460,13 +460,12 @@
                     <span>Quản lý Danh mục</span>
                 </a>
             </div>
-            
-        </div>
-        
-        <div class="sidebar-footer">
-            <button class="logout-btn" onclick="location.href='${pageContext.request.contextPath}/logout'">
-                <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </button>
+            <div class="nav-item">
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </div>
         </div>
     </div>
 

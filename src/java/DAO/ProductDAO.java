@@ -64,11 +64,11 @@ public class ProductDAO {
         String sql = """
             SELECT 
                 p.product_name,
-                SUM(od.quantity) as total_sold
+                COALESCE(SUM(od.quantity), 0) as total_sold
             FROM order_details od
             JOIN products p ON od.product_id = p.product_id
             JOIN orders o ON od.order_id = o.order_id
-            WHERE o.status = 'completed'
+            WHERE o.status IN ('delivered', 'processing', 'shipped')
             GROUP BY p.product_id, p.product_name
             ORDER BY total_sold DESC
             LIMIT ?
