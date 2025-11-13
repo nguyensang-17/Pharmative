@@ -257,8 +257,8 @@
             }
 
             .testimonial-card img {
-                width: 100px;
-                height: 500px;
+                width: 150px !important;
+                height: 300px;
                 border-radius: 50%;
                 object-fit: cover;
                 object-position: center top;
@@ -518,7 +518,7 @@
                                 </div>
                                 <div class="testimonial-card">
                                     <blockquote>
-                                        <img src="${cpath}/images/person_3.jpg" alt="Dược sĩ Giang Minh Quân">
+                                        <img src="${cpath}/images/anhThe.png" alt="Dược sĩ Giang Minh Quân">
                                         <p>"Chế độ bổ sung dinh dưỡng hợp lý giúp cơ thể khỏe mạnh, tăng sức đề kháng tự nhiên. Tư vấn miễn phí 24/7."</p>
                                     </blockquote>
                                     <p class="author">— DS. Giang Minh Quân</p>
