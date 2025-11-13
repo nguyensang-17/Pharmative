@@ -297,7 +297,7 @@
                     <div class="col-lg-8">
                         <!-- Featured News -->
                         <div class="news-card">
-                            <img src="${cpath}/images/news/featured-news.jpg" alt="Tin tức nổi bật" class="news-image">
+                            <img src="${cpath}/images/featured-news.jpg" alt="Tin tức nổi bật" class="news-image">
                             <div class="news-body">
                                 <span class="news-category">SỨC KHỎE</span>
                                 <h3 class="news-title">5 Loại Vitamin Thiết Yếu Cho Hệ Miễn Dịch Khỏe Mạnh</h3>
@@ -306,7 +306,7 @@
                                     <div class="news-date">
                                         <i class="icon-calendar"></i> 15/12/2024
                                     </div>
-                                    <a href="#" class="read-more">Đọc tiếp →</a>
+                                    <a href="https://www.vinmec.com/vie/bai-viet/danh-sach-cac-loai-vitamin-can-thiet-cho-co-the-vi" class="read-more">Đọc tiếp →</a>
                                 </div>
                             </div>
                         </div>
@@ -315,14 +315,14 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="news-card">
-                                    <img src="${cpath}/images/news/news-1.jpg" alt="Tin tức 1" class="news-image">
+                                    <img src="${cpath}/images/news-1.jpg" alt="Tin tức 1" class="news-image">
                                     <div class="news-body">
                                         <span class="news-category">DINH DƯỠNG</span>
                                         <h4 class="news-title">Chế Độ Ăn Cho Người Cao Huyết Áp</h4>
                                         <p class="news-excerpt">Những thực phẩm nên và không nên ăn để kiểm soát huyết áp hiệu quả...</p>
                                         <div class="news-meta">
                                             <div class="news-date">12/12/2024</div>
-                                            <a href="#" class="read-more">Đọc tiếp →</a>
+                                            <a href="https://www.vinmec.com/vie/bai-viet/luu-y-trong-che-do-cua-benh-nhan-tang-huyet-ap-vi" class="read-more">Đọc tiếp →</a>
                                         </div>
                                     </div>
                                 </div>
@@ -330,14 +330,14 @@
 
                             <div class="col-md-6 mb-4">
                                 <div class="news-card">
-                                    <img src="${cpath}/images/news/news-2.jpg" alt="Tin tức 2" class="news-image">
+                                    <img src="${cpath}/images/news-2.jpg" alt="Tin tức 2" class="news-image">
                                     <div class="news-body">
                                         <span class="news-category">THỂ DỤC</span>
                                         <h4 class="news-title">Bài Tập Thể Dục Tại Nhà Cho Người Bận Rộn</h4>
                                         <p class="news-excerpt">15 phút mỗi ngày với các bài tập đơn giản giúp duy trì sức khỏe...</p>
                                         <div class="news-meta">
                                             <div class="news-date">10/12/2024</div>
-                                            <a href="#" class="read-more">Đọc tiếp →</a>
+                                            <a href="https://onways.com/blogs/workout-tips-guides/bai-tap-gym-tai-nha-danh-cho-nhung-nguoi-ban-ron?srsltid=AfmBOopPf9yabrQtotiDKx3fCO-jOrkcb-fpah2KCXDBc81fqf8WZQtX" class="read-more">Đọc tiếp →</a>
                                         </div>
                                     </div>
                                 </div>
@@ -345,14 +345,14 @@
 
                             <div class="col-md-6 mb-4">
                                 <div class="news-card">
-                                    <img src="${cpath}/images/news/news-3.jpg" alt="Tin tức 3" class="news-image">
+                                    <img src="${cpath}/images/news-3.jpg" alt="Tin tức 3" class="news-image">
                                     <div class="news-body">
                                         <span class="news-category">SỨC KHỎE TÂM THẦN</span>
                                         <h4 class="news-title">Cách Giảm Căng Thẳng Trong Cuộc Sống Hiện Đại</h4>
                                         <p class="news-excerpt">Phương pháp đơn giản để quản lý stress và cải thiện sức khỏe tinh thần...</p>
                                         <div class="news-meta">
                                             <div class="news-date">08/12/2024</div>
-                                            <a href="#" class="read-more">Đọc tiếp →</a>
+                                            <a href="https://www.vinmec.com/vie/bai-viet/16-cach-don-gian-de-giam-cang-thang-va-lo-au-vi" class="read-more">Đọc tiếp →</a>
                                         </div>
                                     </div>
                                 </div>
@@ -360,14 +360,14 @@
 
                             <div class="col-md-6 mb-4">
                                 <div class="news-card">
-                                    <img src="${cpath}/images/news/news-4.jpg" alt="Tin tức 4" class="news-image">
+                                    <img src="${cpath}/images/news-4.jpg" alt="Tin tức 4" class="news-image">
                                     <div class="news-body">
                                         <span class="news-category">PHÒNG BỆNH</span>
                                         <h4 class="news-title">Dấu Hiệu Nhận Biết Sớm Bệnh Tim Mạch</h4>
                                         <p class="news-excerpt">Những triệu chứng cảnh báo sớm giúp phát hiện kịp thời các vấn đề tim mạch...</p>
                                         <div class="news-meta">
                                             <div class="news-date">05/12/2024</div>
-                                            <a href="#" class="read-more">Đọc tiếp →</a>
+                                            <a href="https://www.vinmec.com/vie/bai-viet/cac-bieu-hien-cua-benh-tim-giai-doan-dau-vi" class="read-more">Đọc tiếp →</a>
                                         </div>
                                     </div>
                                 </div>
@@ -410,21 +410,21 @@
                         <div class="sidebar-card">
                             <h4 class="sidebar-title">Tin mới nhất</h4>
                             <div class="recent-news-item">
-                                <img src="${cpath}/images/news/recent-1.jpg" alt="Tin gần đây 1" class="recent-news-image">
+                                <img src="${cpath}/images/recent-1.jpg" alt="Tin gần đây 1" class="recent-news-image">
                                 <div>
                                     <h5 class="recent-news-title">Cách Phòng Ngừa Cảm Cúm Mùa Đông</h5>
                                     <div class="recent-news-date">14/12/2024</div>
                                 </div>
                             </div>
                             <div class="recent-news-item">
-                                <img src="${cpath}/images/news/recent-2.jpg" alt="Tin gần đây 2" class="recent-news-image">
+                                <img src="${cpath}/images/recent-2.jpg" alt="Tin gần đây 2" class="recent-news-image">
                                 <div>
                                     <h5 class="recent-news-title">Lợi Ích Của Việc Uống Đủ Nước</h5>
                                     <div class="recent-news-date">13/12/2024</div>
                                 </div>
                             </div>
                             <div class="recent-news-item">
-                                <img src="${cpath}/images/news/recent-3.jpg" alt="Tin gần đây 3" class="recent-news-image">
+                                <img src="${cpath}/images/recent-3.jpg" alt="Tin gần đây 3" class="recent-news-image">
                                 <div>
                                     <h5 class="recent-news-title">Thực Phẩm Tốt Cho Xương Khớp</h5>
                                     <div class="recent-news-date">11/12/2024</div>

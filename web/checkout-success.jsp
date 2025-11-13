@@ -261,7 +261,7 @@
                     <a href="${cpath}/" class="btn btn-primary">
                         🏠 Về trang chủ
                     </a>
-                    <a href="${cpath}/order-history" class="btn btn-outline-primary">
+                    <a href="${cpath}/account" class="btn btn-outline-primary">
                         📋 Xem đơn hàng
                     </a>
                 </div>
