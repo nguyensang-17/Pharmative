@@ -393,6 +393,43 @@
                     </div>
                 </div>
                 
+                <!-- Change Password Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-key"></i>
+                        Đổi mật khẩu
+                    </h3>
+                    
+                    <form action="${pageContext.request.contextPath}/admin/users" method="post">
+                        <input type="hidden" name="action" value="reset-password">
+                        <input type="hidden" name="userId" value="${user.id}">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mật khẩu mới</label>
+                                <input type="password" class="form-control" name="newPassword" 
+                                       placeholder="Nhập mật khẩu mới" required minlength="6">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Xác nhận mật khẩu</label>
+                                <input type="password" class="form-control" name="confirmPassword" 
+                                       placeholder="Nhập lại mật khẩu mới" required minlength="6">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-warning text-white" 
+                                        onclick="return confirm('Bạn có chắc muốn đổi mật khẩu cho user này?')">
+                                    <i class="fas fa-sync-alt me-2"></i>
+                                    Cập nhật mật khẩu
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
                 <!-- User Statistics -->
                 <c:if test="${not empty stats}">
                     <div class="form-section">

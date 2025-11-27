@@ -82,12 +82,53 @@ public class UserManagementController extends HttpServlet {
         try {
             if ("update".equals(action)) {
                 updateUser(request, response);
+            } else if ("reset-password".equals(action)) {
+                resetUserPassword(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ServletException("Lỗi database: " + e.getMessage(), e);
+        }
+    }
+
+    // ========== 7. RESET PASSWORD (ADMIN) ==========
+    private void resetUserPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        
+        String userIdParam = request.getParameter("userId");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+        
+        if (userIdParam == null || userIdParam.isEmpty()) {
+            request.getSession().setAttribute("error", "Thiếu ID người dùng!");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
+            return;
+        }
+        
+        try {
+            int userId = Integer.parseInt(userIdParam);
+            
+            if (newPassword == null || newPassword.trim().length() < 6) {
+                 request.getSession().setAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự!");
+                 response.sendRedirect(request.getContextPath() + "/admin/users?action=edit&id=" + userId);
+                 return;
+            }
+            
+            if (!newPassword.equals(confirmPassword)) {
+                request.getSession().setAttribute("error", "Mật khẩu xác nhận không khớp!");
+                response.sendRedirect(request.getContextPath() + "/admin/users?action=edit&id=" + userId);
+                return;
+            }
+            
+            userDAO.updateUserPassword(userId, newPassword);
+            request.getSession().setAttribute("message", "✅ Đã đổi mật khẩu thành công!");
+            response.sendRedirect(request.getContextPath() + "/admin/users?action=edit&id=" + userId);
+            
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "ID không hợp lệ!");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
         }
     }
     
